@@ -1,6 +1,5 @@
 import * as React from 'react';
 import Avatar from '@mui/material/Avatar';
-import CssBaseline from '@mui/material/CssBaseline';
 import Link from '@mui/material/Link';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
@@ -57,7 +56,7 @@ export function SignIn() {
     const onSubmit = async (values: initialFValuesTypes, formikHelpers: FormikHelpers<any>) => {
         //history.push('/dashboard')
         setdisablebtn(true)
-       
+
         try {
             const res = await UsersRequest.login({ email: values.email_signin, password: values.password_signin })
 
@@ -82,7 +81,6 @@ export function SignIn() {
 
     return (
         <Grid container component="main" sx={{ height: '100vh' }}>
-            <CssBaseline />
             <Grid
                 item
                 xs={false}

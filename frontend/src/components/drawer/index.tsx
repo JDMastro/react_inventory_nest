@@ -1,21 +1,19 @@
 import Box from '@mui/material/Box';
-import CssBaseline from '@mui/material/CssBaseline';
 import Drawer from '@mui/material/Drawer';
 import { drawerProps } from "../../types/drawerType";
 import { Toolbar } from "@mui/material";
 const drawerWidth = 240;
 
 export function DrawerUi({ window, handleDrawerToggle, mobileOpen, appBar, listItems, main  } : drawerProps) {
-  
+
   const container = window !== undefined ? () => window().document.body : undefined;
 
   return (
     <Box sx={{ display: 'flex' }}>
-      <CssBaseline />
       {
           appBar
       }
-  
+
       <Box
         component="nav"
         sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
