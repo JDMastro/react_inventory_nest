@@ -130,10 +130,23 @@ export function SideBarList() {
                             selected={selectedIndex === 6}
                             onClick={(event: any) => handleListItemClick(event, 6)}
                             component={Link}
-                            to={`/dashboard/maestro/kindmovements`}>
+                            to={`/dashboard/maestro/kindmovements`}
+                        >
 
                             <ListItemText primary="Tipos de movimiento" />
                         </ListItemButton>
+
+
+                        <ListItemButton sx={{ pl: 5 }}
+                                        selected={selectedIndex === 6}
+                                        onClick={(event: any) => handleListItemClick(event, 6)}
+                                        component={Link}
+                                        to={`/dashboard/maestro/productions`}
+                        >
+
+                            <ListItemText primary="Produccion" />
+                        </ListItemButton>
+
 
 
 
