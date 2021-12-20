@@ -19,6 +19,11 @@ import { UsersRequest } from "../../services/usersService";
 
 import { useHistory } from "react-router-dom";
 
+import { useDispatch } from 'react-redux'
+
+import { Auth_Success } from "../../store/actions/auth.actions";
+
+
 function Copyright(props: any) {
     return (
         <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -39,6 +44,7 @@ export function SignIn() {
     const [openn, setOpenn] = React.useState(false);
 
     let history = useHistory();
+    const dispatch = useDispatch()
 
     const handleCloses = (event?: React.SyntheticEvent, reason?: string) => {
         if (reason === 'clickaway') {
@@ -63,11 +69,13 @@ export function SignIn() {
             if (res.success) {
                 handleClick()
                 setdisablebtn(false)
+                dispatch(Auth_Success(true))
                 history.push('/dashboard')
             } else {
                 handleClick()
                 setMsg(res.error)
                 setSeverity('error')
+                dispatch(Auth_Success(false))
                 setdisablebtn(false)
             }
         } catch (error) {

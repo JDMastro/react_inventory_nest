@@ -1,4 +1,4 @@
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, Redirect } from 'react-router-dom';
 
 import { Main } from "../views/main";
 import App from "../App";
@@ -13,11 +13,38 @@ import { Movements } from "../views/movements";
 import { Consecutive } from "../views/consecutive";
 import Production from "../views/productions";
 
+
+import { useSelector } from 'react-redux'
+
+const ProtectedRoute = ({ component: Component, ...rest } : any) => {
+
+    const login = useSelector((state : any) => state.AuthReducer.auth)
+
+    return (
+        <Route
+          { ...rest }
+          render={
+              (props) => {
+                  return login ? <Component { ...props } /> : <Redirect to={
+                      {
+                          pathname : "/",
+                          state : {
+                              from : props.location
+                          }
+                      }
+                  }/>
+              }
+          }
+         />
+    )
+}
+
+
 export const Routes = () => {
     return (
         <Switch>
             <Route exact path="/" component={App} />
-            <Route path="/dashboard" component={Main} />
+            <ProtectedRoute path="/dashboard" component={Main} />           
             <Route path="*" component={()=>{ return(<div>Page 404</div>) }}/>
         </Switch>
     )
@@ -26,18 +53,19 @@ export const Routes = () => {
 export const DashboardRoute = () => {
     return (
         <Switch>
-            <Route exact path="/dashboard/" component={()=> <div>Dashboard</div> } />
-            <Route exact path="/dashboard/maestro/units" component={Units} />
-            <Route exact path="/dashboard/maestro/product" component={Products} />
-            <Route exact path="/dashboard/maestro/person" component={Person} />
-            <Route exact path="/dashboard/maestro/kindid" component={KindIdentity} />
-            <Route exact path="/dashboard/maestro/status" component={Status} />
-            <Route exact path="/dashboard/maestro/kindmovements" component={KindMovements} />
-            <Route exact path="/dashboard/maestro/productions" component={Production} />
-            <Route exact path="/dashboard/inventary/movements" component={Movements} />
-            <Route exact path="/dashboard/inventary/consecutive" component={Consecutive} />
-            <Route exact path="/dashboard/security/users" component={Users} />
+            <ProtectedRoute exact path="/dashboard/" component={()=> <div>Dashboard</div> } />
+            <ProtectedRoute exact path="/dashboard/maestro/units" component={Units} />
+            <ProtectedRoute exact path="/dashboard/maestro/product" component={Products} />
+            <ProtectedRoute exact path="/dashboard/maestro/person" component={Person} />
+            <ProtectedRoute exact path="/dashboard/maestro/kindid" component={KindIdentity} />
+            <ProtectedRoute exact path="/dashboard/maestro/status" component={Status} />
+            <ProtectedRoute exact path="/dashboard/maestro/kindmovements" component={KindMovements} />
+            <ProtectedRoute exact path="/dashboard/inventary/movements" component={Movements} />
+            <ProtectedRoute exact path="/dashboard/inventary/consecutive" component={Consecutive} />
+            <ProtectedRoute exact path="/dashboard/security/users" component={Users} />
 
+            <ProtectedRoute exact path="/dashboard/maestro/productions" component={Production} />
+            
             <Route exact path="*" component={()=>{ return(<div>Page 404</div>) }}/>
         </Switch>
     )

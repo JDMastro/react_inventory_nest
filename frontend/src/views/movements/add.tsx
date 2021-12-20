@@ -1,9 +1,9 @@
 import { useState } from "react"
-import { Box, Grid, Stack, MenuItem } from '@mui/material/';
+import { Box, Grid, MenuItem, TableRow, TableCell, IconButton, Stack } from '@mui/material/';
 import SaveIcon from '@mui/icons-material/Save';
 import { initialValuesMovements } from "../../initialValues";
 import { movementsSchema } from "../../schemas/movementsSchema";
-import { UseForm, TextFieldUi, Snackbars, ButtonUi, SelectWrapperUi } from "../../components";
+import { UseForm, TextFieldUi, Snackbars, ButtonUi, SelectWrapperUi, TableNormalUi } from "../../components";
 
 import { FormikHelpers } from "formik";
 import { initialFValuesTypes } from "../../types/initialFValues";
@@ -13,14 +13,23 @@ import { ProductsRequest } from "../../services/productsService";
 
 import { MovementRequest } from "../../services/movementService";
 
+import DeleteIcon from '@mui/icons-material/Delete';
+
 export function AddMovements({ kindmov, handleClose, setRefresh, refresh }: any) {
 
+    const [severity, setSeverity] = useState("success");
+    const [msg, setMsg] = useState("success");
     const [openn, setOpenn] = useState(false);
     const [kindmov_selected, setkindmov_selected] = useState<any>(null);
     const [persons, setpersons] = useState([]);
     const [products, setproducts] = useState<any>([]);
     const [product_selected, setproduct_selected] = useState<any>(null);
+    const [movements, setmovements] = useState<any>([]);
+    const [numbers_orders, setnumbers_orders] = useState<any>([]);
 
+    const [disable, setdisable] = useState(false)
+    const [disablebtns, setdisablebtns] = useState(false)
+    
 
     const handleCloses = (event?: React.SyntheticEvent, reason?: string) => {
         if (reason === 'clickaway') {
@@ -35,27 +44,91 @@ export function AddMovements({ kindmov, handleClose, setRefresh, refresh }: any)
     };
 
     const onSubmit = async (values: initialFValuesTypes, formikHelpers: FormikHelpers<any>) => {
-        console.log(kindmov_selected)
-        console.log(values)
+      
+        setdisablebtns(true)
 
-        if(kindmov_selected.roles_id === 1)
-        {
+        if (kindmov_selected.roles_id === 1) {
             const res = await MovementRequest.createProvider({
-                classification_kindmovement_id : kindmov_selected.classification_kindmovement_id,
+                classification_kindmovement_id: kindmov_selected.classification_kindmovement_id,
                 require_consecutive: kindmov_selected.require_consecutive,
-                consecutive_id : kindmov_selected.consecutive_id,
-                status_id : kindmov_selected.status_id,
+                consecutive_id: kindmov_selected.consecutive_id,
+                status_id: kindmov_selected.status_id,
                 product_id: values.idproduct,
                 quantity: values.quantity,
                 total_purchasePrice: values.totalPrice,
                 unit_price: values.unitprice,
                 quantity_returned: values.orderReturned,
-                number_order : values.number_order,
+                number_order: values.number_order,
                 person_id: values.idperson,
                 kind_movements_id: formik.values.kindmovements,
-                observation: values.observation
+                observation: values.observation,
+                orderReturned: values.orderReturned
             })
+
+            
+
+            if(res.success){
+                formikHelpers.setFieldValue("number_order", res.new_number_order)
+            setmovements(res.movement)
+            setRefresh(!refresh)
+
+            
+            setSeverity("success")
+            setMsg("Guardado exitosamente")
+            handleClick()
+
+            }else{
+                formikHelpers.setFieldError("quantity", res.error.quantity)
+                setSeverity("error")
+                setMsg("¡Hubo un error :( !")
+                handleClick()
+            }
         }
+
+        if(kindmov_selected.roles_id === 2){
+            const res = await MovementRequest.createClient({
+                classification_kindmovement_id: kindmov_selected.classification_kindmovement_id,
+                require_consecutive: kindmov_selected.require_consecutive,
+                consecutive_id: kindmov_selected.consecutive_id,
+                status_id: kindmov_selected.status_id,
+                product_id: values.idproduct,
+                quantity: values.quantity,
+                total_purchasePrice: values.totalPrice,
+                unit_price: values.unitprice,
+                quantity_returned: values.orderReturned,
+                number_order: values.number_order,
+                person_id: values.idperson,
+                kind_movements_id: formik.values.kindmovements,
+                observation: values.observation,
+                orderReturned: values.orderReturned
+            })
+
+            
+
+            if(res.success){
+                formikHelpers.setFieldValue("number_order", res.new_number_order)
+            setmovements(res.movement)
+            setRefresh(!refresh)
+
+            
+            setSeverity("success")
+            setMsg("Guardado exitosamente")
+            handleClick()
+
+            }else{
+                formikHelpers.setFieldError("quantity", res.error.quantity)
+                setSeverity("error")
+                setMsg("¡Hubo un error :( !")
+                handleClick()
+            }
+        }
+
+        setdisablebtns(false)
+        setdisable(true)
+        formikHelpers.setFieldValue("quantity", "")
+        formikHelpers.setFieldValue("totalPrice", "")
+        formikHelpers.setFieldValue("unitprice", "")
+
     }
 
     const formik = UseForm(initialValuesMovements, movementsSchema, onSubmit)
@@ -73,7 +146,7 @@ export function AddMovements({ kindmov, handleClose, setRefresh, refresh }: any)
                 <Grid item xs={12}>
                     <SelectWrapperUi
                         name="kindmovements"
-                        disabled={false}
+                        disabled={disable}
                         value={formik.values.kindmovements}
                         onChange={(evt: any) => {
                             formik.handleChange(evt)
@@ -81,6 +154,9 @@ export function AddMovements({ kindmov, handleClose, setRefresh, refresh }: any)
                               A KINDMOV_SELECTED
                             */
                             const kind = kindmov.find((e: any) => e.id === evt.target.value)
+                            formik.setFieldValue("idproduct", "")
+                            formik.setFieldValue("idperson", "")
+                            formik.setFieldValue("orderReturned", "")
                             setkindmov_selected(kind)
                             getpersons(kind.roles_id)
                         }}
@@ -94,7 +170,7 @@ export function AddMovements({ kindmov, handleClose, setRefresh, refresh }: any)
                 <Grid item xs={12}>
                     <SelectWrapperUi
                         name="idperson"
-                        disabled={false}
+                        disabled={disable}
                         value={formik.values.idperson}
                         onChange={(evt: any) => {
                             /*formik.handleChange*/
@@ -114,6 +190,17 @@ export function AddMovements({ kindmov, handleClose, setRefresh, refresh }: any)
                         */
                             if (kindmov_selected && kindmov_selected.roles_id === 2)
                                 ProductsRequest.findProductByDerivate(true).then(e => setproducts(e))
+
+
+                            /*
+                            EN CASO DE QUE LA CLASIFICACION DEL TIPO DE MOVIMIENTO SEA SALIDA(2)
+                            SE VA A BUSCAR LAS ORDENES
+                            */
+
+                            //if (kindmov_selected.classification_kindmovement_id === 2)
+                                MovementRequest.findByPersonId(evt.target.value).then(e =>{ setnumbers_orders(e); console.log(e)})
+
+
                         }}
                         error={formik.errors.idperson}
                         label="Proveedor o Cliente"
@@ -143,10 +230,54 @@ export function AddMovements({ kindmov, handleClose, setRefresh, refresh }: any)
 
                 {
                     /* ESTE CAMPO SE VA A MOSTRA EN CASO DE QUE EL TIPO DE MOVIMIENTO SEA UNA SALIDA */
-                    kindmov_selected && kindmov_selected.classificationkindmovement_id === 2 ?
-                        (
-                            <div>Header drop list</div>
-                        ) : <span></span>
+                    /*
+                    
+                     kindmov_selected && kindmov_selected.classification_kindmovement_id === 2 && kindmov_selected.roles_id === 1 ||
+                    kindmov_selected && kindmov_selected.classification_kindmovement_id === 1 && kindmov_selected.roles_id === 2 ?
+                    
+                    */
+                   
+                       !kindmov_selected ? (<span></span>) :
+                       kindmov_selected.classification_kindmovement_id === 2 && kindmov_selected.roles_id === 1 ?
+                       (
+<Grid item xs={6}>
+                                <SelectWrapperUi
+                                    name="orderReturned"
+                                    value={formik.values.orderReturned}
+                                    onChange={(evt: any) => {
+                                        formik.setFieldValue("idproduct", "")
+                                        formik.handleChange(evt)
+
+                                        MovementRequest.findByHeader(evt.target.value).then(e => setproducts(e))
+                                    }}
+                                    error={formik.errors.orderReturned}
+                                    label="Orden a devolver"
+                                    menuItems={
+                                        numbers_orders.map((data: any, i: any) => <MenuItem value={data.h_id} key={i}>{`${data.h_number_order}`}</MenuItem>)
+                                    }
+
+                                />
+                            </Grid>) :
+                       kindmov_selected.classification_kindmovement_id === 1 && kindmov_selected.roles_id === 2 ?
+                       (
+<Grid item xs={6}>
+                                <SelectWrapperUi
+                                    name="orderReturned"
+                                    value={formik.values.orderReturned}
+                                    onChange={(evt: any) => {
+                                        formik.setFieldValue("idproduct", "")
+                                        formik.handleChange(evt)
+
+                                        MovementRequest.findByHeader(evt.target.value).then(e => setproducts(e))
+                                    }}
+                                    error={formik.errors.orderReturned}
+                                    label="Orden a devolver"
+                                    menuItems={
+                                        numbers_orders.map((data: any, i: any) => <MenuItem value={data.h_id} key={i}>{`${data.h_number_order}`}</MenuItem>)
+                                    }
+
+                                />
+                            </Grid>) : (<span></span>)
                 }
 
                 <Grid item xs={12}>
@@ -240,12 +371,19 @@ export function AddMovements({ kindmov, handleClose, setRefresh, refresh }: any)
                                ESTE CAMPO DE DESHABILITARA SI LA CLASIFICACION DEL TIPO MOVIMIENTO ES DIFERENTE
                                 A ENTRADA(1)
                             */
-                            kindmov_selected && kindmov_selected.classification_kindmovement_id === 1 ?
-                                false : true
+                                !kindmov_selected ? true :
+                                kindmov_selected.classification_kindmovement_id === 1 && kindmov_selected.roles_id === 1 ?
+                               false :
+                                kindmov_selected.classification_kindmovement_id === 2 && kindmov_selected.roles_id === 2 ?
+                             false : true
                         }
                         onChange={formik.handleChange}
                         type="number"
-                        value={formik.values.totalPrice}
+                        value={
+                            numbers_orders.length > 0 && formik.values.orderReturned !== "" ?
+                            formik.values.totalPrice = numbers_orders.find((e:any) => e.h_id === formik.values.orderReturned ).m_unit_price / formik.values.quantity
+                            :
+                            formik.values.totalPrice}
                     />
                 </Grid>
 
@@ -296,6 +434,74 @@ export function AddMovements({ kindmov, handleClose, setRefresh, refresh }: any)
 
 
             </Grid>
+
+
+
+
+            <Box style={{ marginTop: "5px" }}>
+                <TableNormalUi
+
+                    tableHead={
+                        <TableRow >
+                            <TableCell align="center" style={{ fontWeight: 'bold' }}>Id</TableCell>
+                            {/*<TableCell align="center" style={{ fontWeight : 'bold' }}>Tipo de Movimiento</TableCell>*/}
+                            <TableCell align="center" style={{ fontWeight: 'bold' }}>Producto</TableCell>
+                            <TableCell align="center" style={{ fontWeight: 'bold' }}>Cantidad</TableCell>
+                            <TableCell align="center" style={{ fontWeight: 'bold' }}>Precio Total</TableCell>
+                            <TableCell align="center" style={{ fontWeight: 'bold' }}>Precio unitario</TableCell>
+                            <TableCell align="center" style={{ fontWeight: 'bold' }}>Acción</TableCell>
+                        </TableRow>
+
+                    }
+
+                    tableBody={
+                        movements.map((e: any, i: any) =>
+                            <TableRow
+                                key={i}
+                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                            >
+                                <TableCell align="center">{e.m_id}</TableCell>
+                                {/*<TableCell align="center">{e.Header.KindMovements.name}</TableCell>*/}
+                                <TableCell align="center">{e.p_name}</TableCell>
+                                <TableCell align="center">{e.m_quantity}</TableCell>
+                                <TableCell align="center">{e.m_total_purchasePrice}</TableCell>
+                                <TableCell align="center">{
+                                    e.m_unit_price
+                                }</TableCell>
+                                <TableCell align="center"><IconButton aria-label="delete" onClick={() => MovementRequest.deleteNovement(e.m_id).then(e => MovementRequest.findMovementByNumberOrder(formik.values.number_order).then(e => setmovements(e)))} ><DeleteIcon fontSize="small" /></IconButton></TableCell>
+                            </TableRow>
+
+                        )
+
+                    }
+
+                />
+            </Box>
+
+
+
+
+
+            <Snackbars
+                msg={msg}
+                open={openn}
+                severity={severity}
+                handleClose={handleCloses}
+            />
+
+
+<Stack
+                direction="row"
+                justifyContent="space-between"
+                alignItems="flex-start"
+                spacing={2}
+            >
+                <ButtonUi disabled={disablebtns} text="cancel" type="button" onClick={handleClose} />
+                
+
+            </Stack>
+
+
         </Box>
     )
 }
@@ -306,21 +512,24 @@ export function AddMovements({ kindmov, handleClose, setRefresh, refresh }: any)
 /*
 
 HEADER DROP LIST
-
 <Grid item xs={6}>
-                        <SelectWrapperUi
-                            name="orderReturned"
-                            value={formik.values.orderReturned}
-                            onChange={}
-                            error={formik.errors.orderReturned}
-                            label="Orden a devolver"
-                            menuItems={
-                                
-                            }
+                                <SelectWrapperUi
+                                    name="orderReturned"
+                                    value={formik.values.orderReturned}
+                                    onChange={(evt: any) => {
+                                        formik.setFieldValue("idproduct", "")
+                                        formik.handleChange(evt)
 
-                        />
-                    </Grid>
+                                        MovementRequest.findByHeader(evt.target.value).then(e => setproducts(e))
+                                    }}
+                                    error={formik.errors.orderReturned}
+                                    label="Orden a devolver"
+                                    menuItems={
+                                        numbers_orders.map((data: any, i: any) => <MenuItem value={data.h_id} key={i}>{`${data.h_number_order}`}</MenuItem>)
+                                    }
 
+                                />
+                            </Grid>
 
 */
 

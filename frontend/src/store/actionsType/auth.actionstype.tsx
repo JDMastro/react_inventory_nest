@@ -1,0 +1,5 @@
+const AUTH_SUCCESS = "[AUTH] AUTH_SUCCESS"
+
+export {
+    AUTH_SUCCESS
+}

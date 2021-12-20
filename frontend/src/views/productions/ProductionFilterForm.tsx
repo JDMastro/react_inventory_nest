@@ -27,7 +27,6 @@ const ProductionFilterForm = ({ handleSubmit }: any) => {
                         yes={() => (
                             <SelectWrapperUi
                                 label='Productos'
-                                id="product"
                                 name="product"
                                 value={fields.product}
                                 onChange={(event: any) => {
