@@ -14,6 +14,11 @@ export class ConsecutiveService {
         return await this._consecutiveRepo.find();
     }
 
+    async findById(id : number)
+    {
+        return await this._consecutiveRepo.findOne(id)
+    }
+
     async findByPrefix(prefix : string){
         return await this._consecutiveRepo.findOne({ where:{ prefix } })
     }
@@ -24,11 +29,11 @@ export class ConsecutiveService {
     }
 
     async update(id: number, body: ConsecutiveDto) {
-        const { description, name, prefix } = body
+        const { description, name, prefix, last_inserted } = body
         const consecutive = await this._consecutiveRepo.findOne(id)
 
         await this._consecutiveRepo.merge(consecutive, {
-            description, name, prefix
+            description, name, prefix, last_inserted
         })
 
         return await this._consecutiveRepo.save(consecutive)

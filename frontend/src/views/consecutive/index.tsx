@@ -62,7 +62,7 @@ export function Consecutive()
                         <Avatar>
                             <SupervisedUserCircleIcon />
                         </Avatar>
-                        <Typography>Unidades</Typography>
+                        <Typography>Consecutivo</Typography>
                         {/*<IconButton aria-label="add" ><AddIcon fontSize="small" /></IconButton>*/}
 
                     </Stack>

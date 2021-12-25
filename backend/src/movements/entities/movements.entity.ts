@@ -41,4 +41,20 @@ export class Movements {
 
     @Column()
     status_id: number
+
+
+    @Column({ default : false })
+    suggest : boolean
+
+    @Column({ default : 0, type: 'float' })
+    suggest_units : number
+
+    @Column({ default : 0, type: 'float' })
+    suggest_generated : number
+
+    @Column({ default : 0, type: 'float' })
+    amount_used : number
+
+    @Column({ default : 0, type: 'float' })
+    waste_quantity : number
 }

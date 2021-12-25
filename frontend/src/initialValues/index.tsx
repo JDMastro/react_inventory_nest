@@ -95,3 +95,14 @@ export const initialValuesConsecutive: initialFValuesTypes = {
   description : "",
   prefix : ""
 }
+
+
+export const initialValuesconversion: initialFValuesTypes = {
+  conversion_from: "",
+  conversion_to: "",
+  conversion_quatity: "",
+  signs_id: ""
+}
+
+
+

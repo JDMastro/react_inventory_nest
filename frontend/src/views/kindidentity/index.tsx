@@ -60,7 +60,7 @@ export function KindIdentity() {
                         <Avatar>
                             <SupervisedUserCircleIcon />
                         </Avatar>
-                        <Typography>Unidades</Typography>
+                        <Typography>Tipos de identificación</Typography>
                         {/*<IconButton aria-label="add" ><AddIcon fontSize="small" /></IconButton>*/}
 
                     </Stack>

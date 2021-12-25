@@ -25,7 +25,7 @@ export function Movements() {
     };
 
     useEffect(() => {
-        KindMovementsRequest.getAll().then(e => setkindmov(e))
+        KindMovementsRequest.findAllWithoutProduction().then(e => setkindmov(e))
     }, [])
 
     useEffect(() => {

@@ -1,4 +1,9 @@
-import { Controller } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
+import { HeaderService } from "../service/header.service";
 
 @Controller('api/header')
-export class HeaderController {}
+export class HeaderController {
+    constructor(
+        private _headerService: HeaderService
+    ) { }
+}

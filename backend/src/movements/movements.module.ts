@@ -5,9 +5,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Movements } from "./entities/movements.entity";
 import { HeaderModule } from "../header/header.module";
 import { ConsecutiveModule } from "../consecutive/consecutive.module";
+import { ProductsModule } from "../products/products.module";
+import { ConversionModule } from "../conversion/conversion.module";
 
 @Module({
-  imports : [TypeOrmModule.forFeature([Movements]), HeaderModule,ConsecutiveModule],
+  imports : [TypeOrmModule.forFeature([Movements]), HeaderModule,ConsecutiveModule, ProductsModule, ConversionModule],
   providers: [MovementsService],
   controllers: [MovementsController]
 })

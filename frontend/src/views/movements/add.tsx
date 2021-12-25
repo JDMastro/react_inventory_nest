@@ -77,6 +77,11 @@ export function AddMovements({ kindmov, handleClose, setRefresh, refresh }: any)
             setMsg("Guardado exitosamente")
             handleClick()
 
+            
+        formikHelpers.setFieldValue("quantity", "")
+        formikHelpers.setFieldValue("totalPrice", "")
+        formikHelpers.setFieldValue("unitprice", "")
+
             }else{
                 formikHelpers.setFieldError("quantity", res.error.quantity)
                 setSeverity("error")
@@ -103,6 +108,9 @@ export function AddMovements({ kindmov, handleClose, setRefresh, refresh }: any)
                 orderReturned: values.orderReturned
             })
 
+
+            console.log(res)
+
             
 
             if(res.success){
@@ -110,6 +118,12 @@ export function AddMovements({ kindmov, handleClose, setRefresh, refresh }: any)
             setmovements(res.movement)
             setRefresh(!refresh)
 
+
+            
+
+            formikHelpers.setFieldValue("quantity", "")
+            formikHelpers.setFieldValue("totalPrice", "")
+            formikHelpers.setFieldValue("unitprice", "")
             
             setSeverity("success")
             setMsg("Guardado exitosamente")
@@ -125,9 +139,6 @@ export function AddMovements({ kindmov, handleClose, setRefresh, refresh }: any)
 
         setdisablebtns(false)
         setdisable(true)
-        formikHelpers.setFieldValue("quantity", "")
-        formikHelpers.setFieldValue("totalPrice", "")
-        formikHelpers.setFieldValue("unitprice", "")
 
     }
 

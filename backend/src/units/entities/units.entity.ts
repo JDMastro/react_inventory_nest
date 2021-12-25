@@ -1,5 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, Unique, OneToMany } from 'typeorm';
 import { Products } from "../../products/entities/products.entity";
+import { Conversion } from "../../conversion/entities/conversion.entity";
 
 
 @Entity()
@@ -16,5 +17,9 @@ export class Units {
 
   @OneToMany(() => Products, Products => Products.Units)
   Products: Products[];
+
+
+  @OneToMany(() => Conversion, Conversion => Conversion.Units)
+  Conversion: Conversion[];
 
 }

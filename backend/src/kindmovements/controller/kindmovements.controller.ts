@@ -14,6 +14,16 @@ export class kindmovementsController {
         return await this._kindmovementsService.findAll()
     }
 
+    @Get('findAllWithoutProduction')
+    async findAllWithoutProduction() {
+        return await this._kindmovementsService.findAllWithoutProduction()
+    }
+
+    @Get('findWithOnlyProduction')
+    async findWithOnlyProduction() {
+        return await this._kindmovementsService.findWithOnlyProduction()
+    }
+
     @Post()
     async create(@Body() body: kindmovementsDto) {
         const { consecutive_id, description, name, role_id, user_id, status_id, require_consecutive, classification_kindmovement_id } = body

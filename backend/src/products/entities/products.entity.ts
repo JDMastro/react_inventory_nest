@@ -93,4 +93,5 @@ export class Products {
     @ManyToOne(() => Movements, movements => movements.Products)
     movements: Movements[];
 
+
 }

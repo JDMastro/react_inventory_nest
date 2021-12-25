@@ -123,8 +123,8 @@ const theme = createTheme({
 ReactDOM.render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
+    <CssBaseline />
       <Provider store={store}>
-        <CssBaseline />
         <Router>
           <Routes />
         </Router>

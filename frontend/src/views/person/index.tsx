@@ -84,7 +84,7 @@ export function Person() {
                         <Avatar>
                             <SupervisedUserCircleIcon />
                         </Avatar>
-                        <Typography>Trabajadores</Typography>
+                        <Typography>Proveedores o Clientes</Typography>
                         {/*<IconButton aria-label="add" ><AddIcon fontSize="small" /></IconButton>*/}
 
                     </Stack>

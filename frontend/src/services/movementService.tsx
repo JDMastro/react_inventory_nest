@@ -7,7 +7,8 @@ const Requests = {
     findByPersonId : async (url : string) => await instance.get(url).then(responseBody),
     findByHeader : async (url : string) => await instance.get(url).then(responseBody),
     createClient : async (url : string, body: any) => await instance.post(url, body).then(responseBody),
-    getall : async (url:string) => await instance.get(url).then(responseBody)
+    getall : async (url:string) => await instance.get(url).then(responseBody),
+    createProduction : async(url : string, body:any) => await instance.post(url, body).then(responseBody),
 }
 
 export const MovementRequest =
@@ -18,6 +19,7 @@ export const MovementRequest =
     findByPersonId : async (person_id : number) => await Requests.findByPersonId(`movements/header/${person_id}`),
     findByHeader : async (header_id : number) => await Requests.findByHeader(`movements/header/product/${header_id}`),
     createClient : async (body: any) => await Requests.createClient('movements/client',body),
-    getall : async () => await Requests.getall('movements')
+    getall : async () => await Requests.getall('movements'),
+    createProduction : async (body: any) => await Requests.createClient('movements/productions',body),
 
 }

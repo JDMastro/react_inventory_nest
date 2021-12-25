@@ -4,6 +4,7 @@ import { getManager, Repository } from 'typeorm';
 import { Products } from "../entities/products.entity";
 import { ProductsDto } from "../dto/product.dto";
 import { Units } from "../../units/entities/units.entity";
+import { Header } from "../../header/entities/header.entity";
 
 @Injectable()
 export class ProductsService {
@@ -13,6 +14,10 @@ export class ProductsService {
 
     async findBySku(sku: string) {
         return await this._productsRepo.findOne({ sku })
+    }
+
+    async findById(id : number){
+        return await this._productsRepo.findOne(id)
     }
 
     async findByName(name: string) {
@@ -39,6 +44,19 @@ export class ProductsService {
         .innerJoin(Units, "u2", "u2.id = p.sale_unit_id")
         .where("p.product_parent_id = :parent_id", { parent_id })
         .getRawMany()
+    }
+
+    async findByHeader(header_id : number)
+    {
+        return getManager().createQueryBuilder("movements","m")
+        .select(["u.id as purchase_id", "u2.id as sale_id", "p.id", "p.name", "p.description", "p.sku", "p.code_bar", "p.current_existence", "p.reserved_quantity",
+                "u.code as purchase_unit", "u2.code as sale_unit", "p.to_discount"])
+                   .innerJoin(Products, "p", "m.product_id = p.id")
+                   .innerJoin(Header, "h", "h.id = m.header_id")
+                   .innerJoin(Units, "u", "p.purchase_unit_id = u.id ")
+                   .innerJoin(Units, "u2", "p.sale_unit_id = u2.id")
+                   .where("h.id = :header_id", { header_id })
+                   .getRawMany()
     }
 
     async create(body: ProductsDto) {

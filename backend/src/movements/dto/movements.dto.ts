@@ -10,5 +10,12 @@ export class MovementsDto {
     total_purchasePrice: number;
     unit_price: number;
     header_id: number
-    quantity_returned: number; 
+    quantity_returned: number;
+    status_id : number
+
+    suggest_units : number
+    suggest_generated : number
+    amount_used : number
+    waste_quantity : number
+
 }

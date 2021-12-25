@@ -62,7 +62,7 @@ export function Status()
                     <Avatar>
                         <SupervisedUserCircleIcon />
                     </Avatar>
-                    <Typography>Unidades</Typography>
+                    <Typography>Estados</Typography>
                     {/*<IconButton aria-label="add" ><AddIcon fontSize="small" /></IconButton>*/}
 
                 </Stack>

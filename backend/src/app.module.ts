@@ -14,9 +14,13 @@ import { RolesModule } from './roles/roles.module';
 import { ClassificationkindmovementModule } from './classificationkindmovement/classificationkindmovement.module';
 import { ConsecutiveModule } from './consecutive/consecutive.module';
 import { MovementsModule } from './movements/movements.module';
+import { ConversionModule } from './conversion/conversion.module';
+import { SignsModule } from './signs/signs.module';
+
 
 @Module({
   imports: [
+   
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'localhost',
@@ -41,6 +45,8 @@ import { MovementsModule } from './movements/movements.module';
     ClassificationkindmovementModule,
     ConsecutiveModule,
     MovementsModule,
+    ConversionModule,
+    SignsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

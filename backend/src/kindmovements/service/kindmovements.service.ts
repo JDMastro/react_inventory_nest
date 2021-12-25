@@ -3,12 +3,21 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { KindMovements } from "../entities/kindmovements.entity";
 import { kindmovementsDto } from "../dto/kindmovements.dto";
+import { Not } from "typeorm";
 
 @Injectable()
 export class kindmovementsService {
     constructor(
         @InjectRepository(KindMovements) private _kindMovementsRepo: Repository<KindMovements>,
     ) { }
+
+    async findAllWithoutProduction() {
+        return await this._kindMovementsRepo.find({ where : { classification_kindmovement_id : Not('3') } });
+    }
+
+    async findWithOnlyProduction() {
+        return await this._kindMovementsRepo.find({ where : { classification_kindmovement_id : 3 } });
+    }
 
     async findAll() {
         return await this._kindMovementsRepo.find();

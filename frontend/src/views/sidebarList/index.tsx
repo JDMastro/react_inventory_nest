@@ -61,6 +61,16 @@ export function SideBarList() {
                 <Collapse in={open} timeout="auto" unmountOnExit>
                     <List component="div" disablePadding>
 
+                    <ListItemButton sx={{ pl: 5 }}
+                                        selected={selectedIndex === 12}
+                                        onClick={(event: any) => handleListItemClick(event, 12)}
+                                        component={Link}
+                                        to={`/dashboard/maestro/conversion`}
+                        >
+
+                            <ListItemText primary="Conversión" />
+                        </ListItemButton>
+
 
                         <ListItemButton sx={{ pl: 5 }}
                             selected={selectedIndex === 10}
@@ -138,14 +148,16 @@ export function SideBarList() {
 
 
                         <ListItemButton sx={{ pl: 5 }}
-                                        selected={selectedIndex === 6}
-                                        onClick={(event: any) => handleListItemClick(event, 6)}
+                                        selected={selectedIndex === 11}
+                                        onClick={(event: any) => handleListItemClick(event, 11)}
                                         component={Link}
                                         to={`/dashboard/maestro/productions`}
                         >
 
                             <ListItemText primary="Produccion" />
                         </ListItemButton>
+
+                     
 
 
 
