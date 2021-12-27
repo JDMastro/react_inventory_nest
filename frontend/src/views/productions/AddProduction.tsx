@@ -21,7 +21,7 @@ export function AddProduction({ existence_converted, productparent, productchild
     useEffect(()=>{ 
         //console.log(number_order)
         if(!isEmpty(number_order))
-        MovementRequest.findMovementByNumberOrder(number_order).then(e => setmovements(e))
+        MovementRequest.findMovementByNumberOrder(number_order).then(e =>{ setmovements(e); console.log(e)})
     },[refresh])
 
     const handleCloses = (event?: React.SyntheticEvent, reason?: string) => {
@@ -265,9 +265,11 @@ export function AddProduction({ existence_converted, productparent, productchild
                         <TableRow >
                             <TableCell align="center" style={{ fontWeight: 'bold' }}>Id</TableCell>
                             <TableCell align="center" style={{ fontWeight: 'bold' }}>Producto</TableCell>
-                            <TableCell align="center" style={{ fontWeight: 'bold' }}>Cantidad</TableCell>
-                            <TableCell align="center" style={{ fontWeight: 'bold' }}>Precio Total</TableCell>
-                            <TableCell align="center" style={{ fontWeight: 'bold' }}>Precio unitario</TableCell>
+                            <TableCell align="center" style={{ fontWeight: 'bold' }}>Cant. a usar</TableCell>
+                            <TableCell align="center" style={{ fontWeight: 'bold' }}>Unid. sugeridas</TableCell>
+                            <TableCell align="center" style={{ fontWeight: 'bold' }}>Unid. generadas</TableCell>
+                            <TableCell align="center" style={{ fontWeight: 'bold' }}>Cant. total usada</TableCell>
+                            <TableCell align="center" style={{ fontWeight: 'bold' }}>Merma</TableCell>
                             <TableCell align="center" style={{ fontWeight: 'bold' }}>Acción</TableCell>
                         </TableRow>
 
@@ -282,10 +284,13 @@ export function AddProduction({ existence_converted, productparent, productchild
                                 <TableCell align="center">{e.m_id}</TableCell>
                                 <TableCell align="center">{e.p_name}</TableCell>
                                 <TableCell align="center">{e.m_quantity}</TableCell>
-                                <TableCell align="center">{e.m_total_purchasePrice}</TableCell>
+                                <TableCell align="center">{e.m_suggest_units}</TableCell>
                                 <TableCell align="center">{
-                                    e.m_unit_price
+                                    e.m_suggest_generated
                                 }</TableCell>
+                                <TableCell align="center">{e.m_amount_used}</TableCell>
+                                <TableCell align="center">{e.m_waste_quantity}</TableCell>
+                               
                                 <TableCell align="center"><IconButton aria-label="delete" onClick={() => MovementRequest.deleteNovement(e.m_id).then(e => MovementRequest.findMovementByNumberOrder(number_order).then(e =>{ setmovements(e); console.log(e)}  ))} ><DeleteIcon fontSize="small" /></IconButton></TableCell>
                             </TableRow>
 

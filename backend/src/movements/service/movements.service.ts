@@ -58,7 +58,7 @@ export class MovementsService {
     async findMovementByNumberOrder(order_number : string)
     {
         return await getManager().createQueryBuilder("movements","m")
-            .select(["m.id", "p.name", "m.quantity", "m.total_purchasePrice", "m.unit_price"])
+            .select(["m.suggest_units","m.suggest_generated", "m.amount_used", "m.waste_quantity" ,"m.id", "p.name", "m.quantity", "m.total_purchasePrice", "m.unit_price"])
             .innerJoin(Header, "h", "h.id = m.header_id")
             .innerJoin(Products, "p", "p.id = m.product_id")
             .where("h.number_order = :order_number",{ order_number })
