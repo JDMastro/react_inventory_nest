@@ -44,7 +44,6 @@ export function AddProduction({ kind_movement, existence_converted, productparen
             kind_movements_id: kind.id,
             observation: values.observation,
             person_id: 1,
-            total_purchase_price: values.total_purchase_price,
             units_generated: values.units_generated,
             status_id: kind.status_id,
             suggested_amount: values.suggested_amount
@@ -79,7 +78,6 @@ export function AddProduction({ kind_movement, existence_converted, productparen
         kind_movemet_id: "",
         number_order: "",
         observation: "",
-        total_purchase_price: "",
     }, ProductionsSchema, onSubmit)
 
     return (
@@ -250,18 +248,6 @@ export function AddProduction({ kind_movement, existence_converted, productparen
                             type="text"
                             value={formik.values.observation}
 
-                        />
-                    </Grid>
-
-                    <Grid item xs={6}>
-                        <TextFieldUi
-                            autofocus={false}
-                            error={formik.errors.total_purchase_price}
-                            label="Precio total por todos los productos"
-                            name="total_purchase_price"
-                            onChange={formik.handleChange}
-                            type="text"
-                            value={formik.values.total_purchase_price}
                         />
                     </Grid>
 

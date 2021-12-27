@@ -12,10 +12,13 @@ import Collapse from '@mui/material/Collapse';
 //import PersonIcon from '@mui/icons-material/Person';
 
 
+
 export function SideBarList() {
     const [selectedIndex, setSelectedIndex] = React.useState(0);
     const [open, setOpen] = React.useState(false);
     const [openInventary, setOpenInventary] = React.useState(false);
+ const [openConsultas, setConsultas] = React.useState(false);
+
 
     const handleClick = () => {
         setOpen(!open);
@@ -31,6 +34,10 @@ export function SideBarList() {
     ) => {
         setSelectedIndex(index);
     };
+
+    const handleClickConsultas = () => {
+        setConsultas(!openConsultas);
+      };
 
 
     return (
@@ -164,6 +171,39 @@ export function SideBarList() {
 
                     </List>
                 </Collapse>
+
+                
+                <ListItemButton onClick={handleClickConsultas}>
+          
+          <ListItemIcon style={{ marginRight: '-25px' }} >
+                <DashboardIcon fontSize="small" />
+              </ListItemIcon>
+
+          <ListItemText
+            primary="Consultas"
+          />
+          {openConsultas ? <ExpandLess /> : <ExpandMore />}
+        </ListItemButton>
+        <Collapse in={openConsultas} timeout="auto" unmountOnExit>
+          <List component="div" disablePadding>
+          <ListItemButton sx={{ pl: 5 }}
+              selected={selectedIndex === 14}
+              onClick={(event: any) => handleListItemClick(event, 14)}
+              component={Link}
+              to={`/dashboard/inventary/outputs`}>
+
+              <ListItemText
+                disableTypography
+                primary="Por estado"
+              />
+            </ListItemButton>
+
+
+
+
+          </List>
+        </Collapse>
+
 
 
                 <ListItemButton onClick={handleClickInventary}>

@@ -104,5 +104,8 @@ export const initialValuesconversion: initialFValuesTypes = {
   signs_id: ""
 }
 
-
+export const initialValuesOutputsFilter: initialFValuesTypes = {
+  status_id: "",
+  person_id: ""
+}
 

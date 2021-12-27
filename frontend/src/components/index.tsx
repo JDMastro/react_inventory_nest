@@ -11,6 +11,7 @@ import { Snackbars } from "./snackbars";
 import { TableNormalUi } from "./tableNormal";
 import { TextFieldUi } from "./textfield";
 import { FabUi } from "./fab";
+import { AccordioUi } from "./accordion";
 
 export {
     AppbarUi,
@@ -25,5 +26,6 @@ export {
     Snackbars,
     TableNormalUi,
     TextFieldUi,
-    FabUi
+    FabUi,
+    AccordioUi
 }

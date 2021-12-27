@@ -13,6 +13,12 @@ export class StatusController {
         return await this._statusService.findAll()
     }
 
+    @Get('getAllNumberOrdersbyStatus/:status_id/:person_id')
+      async getAllNumberOrdersbyStatus(@Param('status_id') status_id : number,@Param('person_id')  person_id : number)
+      {
+        return await this._statusService.getAllNumberOrdersbyStatus(status_id, person_id)
+      }
+
     @Post()
     async create(@Body() body: StatusDto) {
         const { code, description, name } = body
@@ -53,5 +59,12 @@ export class StatusController {
             return { success: false, data: null, error: "Debe eliminar todos los registros que tengan este estado" }
         }
     }
+
+    @Get('getAllnumberOrders/:number_orders')
+    async getAllnumberOrders(@Param('number_orders') number_orders : number)
+    {
+      return await this._statusService.getAllnumberOrders(number_orders)
+    }
+
 
 }
