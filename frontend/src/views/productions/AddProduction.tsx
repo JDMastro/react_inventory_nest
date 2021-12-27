@@ -1,19 +1,28 @@
-import { Box, Grid, Stack } from '@mui/material';
+import { Box, Grid, Stack, TableCell, TableRow, IconButton } from '@mui/material';
 import { FormikHelpers } from 'formik';
-import { UseForm, TextFieldUi, ButtonUi, Snackbars } from "../../components";
+import { UseForm, TextFieldUi, ButtonUi, Snackbars, TableNormalUi } from "../../components";
 import { initialFValuesTypes } from '../../types/initialFValues';
 import { ProductionsSchema } from "../../schemas/productionsSchema";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { MovementRequest } from "../../services/movementService";
+import DeleteIcon from '@mui/icons-material/Delete';
+import { isEmpty } from 'lodash';
 
 
 export function AddProduction({ existence_converted, productparent, productchild, handleClose, setnumber_order, number_order, kind_mov, obsertvation }: any) {
 
     const [disablebtn, setdisablebtn] = useState(false);
-    //const [movements, setmovements] = useState<any>([]);
+    const [movements, setmovements] = useState<any>([]);
     const [severity, setSeverity] = useState("success");
     const [msg, setMsg] = useState("success");
     const [openn, setOpenn] = useState(false);
+    const [refresh, setrefresh] = useState(false);
+
+    useEffect(()=>{ 
+        //console.log(number_order)
+        if(!isEmpty(number_order))
+        MovementRequest.findMovementByNumberOrder(number_order).then(e => setmovements(e))
+    },[refresh])
 
     const handleCloses = (event?: React.SyntheticEvent, reason?: string) => {
         if (reason === 'clickaway') {
@@ -52,12 +61,14 @@ export function AddProduction({ existence_converted, productparent, productchild
             if (res.success) {
                 //formikHelpers.setFieldValue("number_order", )
                 setnumber_order(res.new_number_order)
-                
+               // setmovements(res.movement)
                 
                 setSeverity("success")
                 setMsg("Guardado exitosamente")
                 setdisablebtn(false)
-                handleClose()
+                //handleClose()
+                setrefresh(!refresh)
+                
             } else {
                 res.errors.map((e: any) => formikHelpers.setFieldError(e.field, e.msg))
                 setSeverity("error")
@@ -67,7 +78,6 @@ export function AddProduction({ existence_converted, productparent, productchild
             }
         })
 
-        console.log(kind_mov)
     }
      //number_order, kind_mov, obsertvation
     const formik = UseForm({
@@ -248,7 +258,45 @@ export function AddProduction({ existence_converted, productparent, productchild
 
                 </Grid>
 
-          
+                <Box style={{ marginTop: "5px" }}>
+                <TableNormalUi
+
+                    tableHead={
+                        <TableRow >
+                            <TableCell align="center" style={{ fontWeight: 'bold' }}>Id</TableCell>
+                            <TableCell align="center" style={{ fontWeight: 'bold' }}>Producto</TableCell>
+                            <TableCell align="center" style={{ fontWeight: 'bold' }}>Cantidad</TableCell>
+                            <TableCell align="center" style={{ fontWeight: 'bold' }}>Precio Total</TableCell>
+                            <TableCell align="center" style={{ fontWeight: 'bold' }}>Precio unitario</TableCell>
+                            <TableCell align="center" style={{ fontWeight: 'bold' }}>Acción</TableCell>
+                        </TableRow>
+
+                    }
+
+                    tableBody={
+                        movements.map((e: any, i: any) =>
+                            <TableRow
+                                key={i}
+                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                            >
+                                <TableCell align="center">{e.m_id}</TableCell>
+                                <TableCell align="center">{e.p_name}</TableCell>
+                                <TableCell align="center">{e.m_quantity}</TableCell>
+                                <TableCell align="center">{e.m_total_purchasePrice}</TableCell>
+                                <TableCell align="center">{
+                                    e.m_unit_price
+                                }</TableCell>
+                                <TableCell align="center"><IconButton aria-label="delete" onClick={() => MovementRequest.deleteNovement(e.m_id).then(e => MovementRequest.findMovementByNumberOrder(number_order).then(e =>{ setmovements(e); console.log(e)}  ))} ><DeleteIcon fontSize="small" /></IconButton></TableCell>
+                            </TableRow>
+
+                        )
+
+                    }
+
+                />
+            </Box>
+
+                
                 <Stack
                     direction="row"
                     justifyContent="space-between"

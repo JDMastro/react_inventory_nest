@@ -652,7 +652,6 @@ export class MovementsController {
     @Post('productions')
     async createProductions(@Body() body: any) {
        
-        console.log(body)
         
         const check_product_parent = await this._productsService.findById(body.product_parent_id)
         const check_product_child = await this._productsService.findById(body.product_child_id)
@@ -889,6 +888,7 @@ export class MovementsController {
 
     @Delete(':id')
     async remove(@Param('id') id: number) {
+        console.log(id)
         try {
             const movement = await this._movementsService.findById(id)
             const product = await this._productsService.findById(movement.product_id)
@@ -967,7 +967,9 @@ export class MovementsController {
             //console.log(movement)
             //console.log(product)
 
-            return { success: await this._movementsService.delete(id), data: null, error: null }
+            await this._movementsService.delete(id)
+
+            return { success: true, data: null, error: null }
         } catch (error) {
             return { success: false, data: null, error: "Debe eliminar todos los registros que deveriven de este" }
         }
