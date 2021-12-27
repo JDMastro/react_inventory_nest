@@ -16,6 +16,7 @@ import { ConsecutiveModule } from './consecutive/consecutive.module';
 import { MovementsModule } from './movements/movements.module';
 import { ConversionModule } from './conversion/conversion.module';
 import { SignsModule } from './signs/signs.module';
+import { SettingsModule } from './settings/settings.module';
 
 
 @Module({
@@ -26,7 +27,7 @@ import { SignsModule } from './signs/signs.module';
       host: 'localhost',
       port: 5432,
       username: 'postgres',
-      password: '1995',
+      password: '1234',
       database: 'test',
       entities: ['dist/**/*.entity{.ts,.js}'],
       synchronize: false,
@@ -47,6 +48,7 @@ import { SignsModule } from './signs/signs.module';
     MovementsModule,
     ConversionModule,
     SignsModule,
+    SettingsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

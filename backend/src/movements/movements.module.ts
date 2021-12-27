@@ -11,6 +11,6 @@ import { ConversionModule } from "../conversion/conversion.module";
 @Module({
   imports : [TypeOrmModule.forFeature([Movements]), HeaderModule,ConsecutiveModule, ProductsModule, ConversionModule],
   providers: [MovementsService],
-  controllers: [MovementsController]
+  controllers: [MovementsController],
 })
 export class MovementsModule {}

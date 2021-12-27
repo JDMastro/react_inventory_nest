@@ -1,7 +1,7 @@
 import React from "react";
 import { Stack, Box, Grid, Divider, MenuItem } from '@mui/material/';
 import { KindMovementsSchema } from "../../schemas/kindmovementsSchema";
-import { UseForm, TextFieldUi, Snackbars, ButtonUi, SelectWrapperUi } from "../../components";
+import { UseForm, TextFieldUi, Snackbars, ButtonUi, SelectWrapperUi, CheckboxUi } from "../../components";
 import { initialFValuesTypes } from "../../types/initialFValues";
 import { KindMovementsRequest } from "../../services/kindmovementsService";
 import { FormikHelpers } from "formik";
@@ -31,6 +31,13 @@ export function UpdateMovements({ consecutives, Classificationkindmovement, role
         setdisablebtn(true)
 
         try {
+
+            if(values.require_consecutive && values.consecutive_id==="")
+        {
+            formikHelpers.setFieldError("consecutive_id", "Este campo es requerido")
+            
+            setdisablebtn(false)
+        }else{
             await KindMovementsRequest.update(data.id,{
                 name: values.name,
                 description: values.description,
@@ -38,16 +45,19 @@ export function UpdateMovements({ consecutives, Classificationkindmovement, role
                 classification_kindmovement_id : values.classificationkindmovement_id,
                 status_id : values.status_id,
                 user_id : 0,
-                consecutive_id :values.consecutive_id === "" ? null : values.consecutive_id,
+                consecutive_id :values.consecutive_id === "" || !values.require_consecutive ? null : values.consecutive_id,
                 require_consecutive : values.require_consecutive
             })
+
+
             setMsg("Guardado exitosamente")
             handleClick()
 
             setRefresh(!refresh)
             handleClose()
             setdisablebtn(false)
-            setdisablebtn(false)
+        }
+            
         } catch (error) {
             console.log(error)
             setSeverity("error")
@@ -65,7 +75,9 @@ export function UpdateMovements({ consecutives, Classificationkindmovement, role
         iduser: data.iduser,
         status_id : data.status_id,
         roles_id : data.roles_id,
-        classificationkindmovement_id : data.classification_kindmovement_id
+        classificationkindmovement_id : data.classification_kindmovement_id,
+        require_consecutive : data.require_consecutive,
+        consecutive_id : data.consecutive_id === null ? "" : data.consecutive_id
 
     }, KindMovementsSchema, onSubmit)
 
@@ -136,6 +148,29 @@ export function UpdateMovements({ consecutives, Classificationkindmovement, role
 
                         />
                     </Grid>
+
+                    <Grid item xs={6}>
+                        <CheckboxUi
+                            checked={formik.values.require_consecutive}
+                            label='Requiere consecutivo'
+                            name="require_consecutive"
+                            onChange={formik.handleChange}
+                        />
+                    </Grid>
+
+                    {
+                        formik.values.require_consecutive &&  <Grid item xs={6}>
+                        <SelectWrapperUi
+                            label='Consecutivo'
+                            name="consecutive_id"
+                            value={formik.values.consecutive_id}
+                            onChange={formik.handleChange}
+                            error={formik.errors.consecutive_id}
+                            menuItems={consecutives.map((data: any, i: any) => <MenuItem value={data.id} key={i}>{`${data.description}`}</MenuItem>)}
+
+                        />
+                    </Grid>
+                    }
 
                     
 

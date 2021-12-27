@@ -11,8 +11,8 @@ import { AlertDialogUi } from "../../components/";
 import { ProductsRequest } from "../../services/productsService";
 
 import { AddProduction } from "./AddProduction";
-import AddIcon from '@mui/icons-material/Add';
 import { KindMovementsRequest } from "../../services/kindmovementsService";
+import SettingsIcon from '@mui/icons-material/Settings';
 
 
 const Production: React.FC = () => {
@@ -23,6 +23,16 @@ const Production: React.FC = () => {
     const [productParent, setproductParent] = React.useState({});
     const [existence_converted, setexistence_converted] = React.useState(0);
     const [kind_movement, setkind_movement] = useState([])
+    const [isEnable, setisEnable] = useState(true)
+
+    const [number_order, setnumber_order] = useState<any>("")
+
+    const [kind_mov, setkind_mov] = useState<any>(null)
+    const [disable_number_order, setdisable_number_order] = useState<any>(false)
+
+    const [obsertvation, setobsertvation] = useState("")
+
+
 
 
     useEffect(()=>{  KindMovementsRequest.findWithOnlyProduction().then(e => setkind_movement(e) ) },[])
@@ -51,7 +61,7 @@ const Production: React.FC = () => {
                 customBodyRenderLite: (value, tableMeta, updateValue) => {
                     return (
 
-                        <IconButton aria-label="update" onClick={() => handleClickOpenModalAdd(JSON.parse(JSON.stringify(productDerivate[value]))) }><AddIcon color="primary" fontSize="small" /></IconButton>
+                        <IconButton disabled={isEnable} aria-label="update" onClick={() => handleClickOpenModalAdd(JSON.parse(JSON.stringify(productDerivate[value]))) }><SettingsIcon color="primary" fontSize="small" /></IconButton>
                     );
                 }
             }
@@ -89,7 +99,7 @@ const Production: React.FC = () => {
                     }}
                     filterForm={
 
-                        <ProductionFilterForm handleSubmit={handleFormFilterSubmit} />
+                        <ProductionFilterForm obsertvation={obsertvation} setobsertvation={setobsertvation} disable_number_order={disable_number_order} setdisable_number_order={setdisable_number_order} kind_mov={kind_mov} setkind_mov={setkind_mov} number_order={number_order} setnumber_order={setnumber_order} setisEnable={setisEnable} handleSubmit={handleFormFilterSubmit} />
 
                     }
 
@@ -100,7 +110,7 @@ const Production: React.FC = () => {
             <AlertDialogUi
             maxWidth="md"
                 handleClose={handleCloseModalAdd}
-                content={<AddProduction kind_movement={kind_movement} existence_converted={existence_converted} productparent={productParent} productchild={productChild} handleClose={handleCloseModalAdd} />}
+                content={<AddProduction setnumber_order={setnumber_order} number_order={number_order} kind_mov={kind_mov} obsertvation={obsertvation} kind_movement={kind_movement} existence_converted={existence_converted} productparent={productParent} productchild={productChild} handleClose={handleCloseModalAdd} />}
                 open={openModalAdd}
                 title=""
             />

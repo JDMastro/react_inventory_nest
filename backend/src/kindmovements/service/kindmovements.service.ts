@@ -11,6 +11,11 @@ export class kindmovementsService {
         @InjectRepository(KindMovements) private _kindMovementsRepo: Repository<KindMovements>,
     ) { }
 
+    async findById(id:number)
+    {
+        return await this._kindMovementsRepo.findOne(id)
+    }
+
     async findAllWithoutProduction() {
         return await this._kindMovementsRepo.find({ where : { classification_kindmovement_id : Not('3') } });
     }

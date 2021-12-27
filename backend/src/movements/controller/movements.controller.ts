@@ -651,13 +651,14 @@ export class MovementsController {
 
     @Post('productions')
     async createProductions(@Body() body: any) {
+       
         console.log(body)
         
         const check_product_parent = await this._productsService.findById(body.product_parent_id)
         const check_product_child = await this._productsService.findById(body.product_child_id)
         let converted = 0
         const errors: any = []
-        const operation = await this._conversionService.getOperation(check_product_child.sale_unit_id, check_product_child.purchase_unit_id)
+        const operation = await this._conversionService.getOperation(check_product_parent.sale_unit_id, check_product_parent.purchase_unit_id)
         let new_number_order = ""
 
 
@@ -711,9 +712,9 @@ export class MovementsController {
                     unit_price : 0,
                     status_id : body.status_id,
                     amount_used : parseFloat(body.amount_to_take),
-                    suggest_generated : body.suggested_amount,
-                    suggest_units : body.units_generated,
-                    waste_quantity : body.waste_quantity
+                    suggest_generated : parseFloat(body.suggested_amount),
+                    suggest_units : parseFloat(body.units_generated),
+                    waste_quantity : parseFloat(body.waste_quantity)
                 })
 
                 await this._productsService.update(check_product_parent.id,{
@@ -768,9 +769,9 @@ export class MovementsController {
                         unit_price : 0,
                         status_id : body.status_id,
                         amount_used : parseFloat(body.amount_to_take),
-                        suggest_generated : body.suggested_amount,
-                        suggest_units : body.units_generated,
-                        waste_quantity : body.waste_quantity
+                        suggest_generated : parseFloat(body.suggested_amount),
+                        suggest_units : parseFloat(body.units_generated),
+                        waste_quantity : parseFloat(body.waste_quantity)
                     })
 
                     await this._productsService.update(check_product_parent.id,{
@@ -819,10 +820,10 @@ export class MovementsController {
                         //unit_price : parseFloat(body.total_purchase_price)/converted,
                         unit_price : 0,
                         status_id : body.status_id,
-                        amount_used : body.amount_to_take,
-                        suggest_generated : body.suggested_amount,
-                        suggest_units : body.units_generated,
-                        waste_quantity : body.waste_quantity
+                        amount_used : parseFloat(body.amount_to_take),
+                        suggest_generated : parseFloat(body.suggested_amount),
+                        suggest_units : parseFloat(body.units_generated),
+                        waste_quantity : parseFloat(body.waste_quantity)
                     })
 
                     await this._productsService.update(check_product_parent.id,{

@@ -5,6 +5,8 @@ import { Box, Grid, MenuItem } from '@mui/material/'
 //import useFormFields from "../../hooks/useFormFields";
 import { ProductsRequest } from "../../services/productsService";
 import { ConversionRequest } from "../../services/conversionService";
+import { SettingsRequest } from "../../services/settingsService"
+import { isEmpty, trim } from 'lodash';
 
 
 /*const products = [
@@ -15,7 +17,7 @@ import { ConversionRequest } from "../../services/conversionService";
     {id: 4, name: 'Pescado'},
 ]*/
 
-const ProductionFilterForm = ({ handleSubmit }: any) => {
+const ProductionFilterForm = ({ handleSubmit, setisEnable, number_order, setnumber_order, kind_mov, setkind_mov, disable_number_order, setdisable_number_order, obsertvation, setobsertvation }: any) => {
 
     const [products, setproducts] = useState([])
     const [product, setproduct] = useState<any>("")
@@ -23,12 +25,11 @@ const ProductionFilterForm = ({ handleSubmit }: any) => {
     const [sale_unit_parent, setsale_unit_parent] = useState<any>("")
     const [current_existence_parent, setcurrent_existence_parent] = useState<any>("")
     const [converted_current_existence_parent, setconverted_current_existence_parent] = useState<any>("")
-
-
+    
     const [severity, setSeverity] = useState("success");
     const [msg, setMsg] = useState("success");
     const [openn, setOpenn] = useState(false);
-    
+
     const handleCloses = (event?: React.SyntheticEvent, reason?: string) => {
         if (reason === 'clickaway') {
             return;
@@ -47,9 +48,9 @@ const ProductionFilterForm = ({ handleSubmit }: any) => {
 
 
     return (
-        <Box component="form">
+        <Box component="form" m={2}>
             <Grid container spacing={2}>
-                <Grid item xs={4}>
+                <Grid item xs={6}>
                     <Can
                         perform="users:create"
                         yes={() => (
@@ -72,9 +73,9 @@ const ProductionFilterForm = ({ handleSubmit }: any) => {
 
                                                 handleSubmit({
                                                     product: evt.target.value,
-                                                    existence_converted : e.converted
+                                                    existence_converted: e.converted
                                                 })
-                                            }else{
+                                            } else {
                                                 handleClick()
                                                 setSeverity("error")
                                                 setMsg(e.msg)
@@ -82,12 +83,29 @@ const ProductionFilterForm = ({ handleSubmit }: any) => {
 
                                                 handleSubmit({
                                                     product: evt.target.value,
-                                                    existence_converted : 0
+                                                    existence_converted: 0
                                                 })
                                             }
                                         })
 
-                                   
+                                    SettingsRequest.findByKey().then(e => {
+                                        setkind_mov(e);
+                                        console.log(e)
+                                        if (e.success) {
+                                            setdisable_number_order(e.data.require_consecutive)
+                                            if (e.data.require_consecutive) {
+                                                setisEnable(false)
+                                            } else {
+                                                setisEnable(true)
+                                            }
+                                        }
+                                    })
+
+                                    setnumber_order("")
+                                    setobsertvation("")
+
+
+
                                 }}
                                 menuItems={
                                     products.map(
@@ -107,7 +125,7 @@ const ProductionFilterForm = ({ handleSubmit }: any) => {
 
 
 
-                <Grid item xs={4}>
+                <Grid item xs={6}>
                     <Can
                         perform="users:create"
                         yes={() => (
@@ -130,7 +148,7 @@ const ProductionFilterForm = ({ handleSubmit }: any) => {
                 </Grid>
 
 
-                <Grid item xs={4}>
+                <Grid item xs={6}>
                     <Can
                         perform="users:create"
                         yes={() => (
@@ -146,6 +164,53 @@ const ProductionFilterForm = ({ handleSubmit }: any) => {
                                 inputInside={
                                     sale_unit_parent
                                 }
+                            />
+                        )}
+                    />
+
+                </Grid>
+
+
+                <Grid item xs={6}>
+                    <Can
+                        perform="users:create"
+                        yes={() => (
+                            <TextFieldUi
+                                autofocus={false}
+                                error={""}
+                                label="Numero de orden"
+                                disabled={disable_number_order}
+                                name="number_order"
+                                onChange={(evt: any) => {
+                                    setnumber_order(evt.target.value)
+                                    if (isEmpty(trim(evt.target.value)))
+                                        setisEnable(true)
+                                    else
+                                        setisEnable(false)
+                                }}
+                                type="text"
+                                value={number_order}
+
+                            />
+                        )}
+                    />
+
+                </Grid>
+
+
+                <Grid item xs={12}>
+                    <Can
+                        perform="users:create"
+                        yes={() => (
+                            <TextFieldUi
+                                autofocus={false}
+                                error={""}
+                                label="Observación"
+                                name="observation"
+                                onChange={(evt: any) => setobsertvation(evt.target.value)}
+                                type="text"
+                                value={obsertvation}
+
                             />
                         )}
                     />

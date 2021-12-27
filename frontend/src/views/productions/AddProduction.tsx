@@ -1,17 +1,16 @@
-import { Box, Grid, MenuItem, Stack, TableCell, TableRow, IconButton } from '@mui/material';
+import { Box, Grid, Stack } from '@mui/material';
 import { FormikHelpers } from 'formik';
-import { UseForm, TextFieldUi, ButtonUi, SelectWrapperUi, Snackbars, TableNormalUi } from "../../components";
+import { UseForm, TextFieldUi, ButtonUi, Snackbars } from "../../components";
 import { initialFValuesTypes } from '../../types/initialFValues';
 import { ProductionsSchema } from "../../schemas/productionsSchema";
 import { useState } from 'react';
 import { MovementRequest } from "../../services/movementService";
-import DeleteIcon from '@mui/icons-material/Delete';
 
 
-export function AddProduction({ kind_movement, existence_converted, productparent, productchild, handleClose }: any) {
+export function AddProduction({ existence_converted, productparent, productchild, handleClose, setnumber_order, number_order, kind_mov, obsertvation }: any) {
 
     const [disablebtn, setdisablebtn] = useState(false);
-    const [movements, setmovements] = useState<any>([]);
+    //const [movements, setmovements] = useState<any>([]);
     const [severity, setSeverity] = useState("success");
     const [msg, setMsg] = useState("success");
     const [openn, setOpenn] = useState(false);
@@ -32,30 +31,33 @@ export function AddProduction({ kind_movement, existence_converted, productparen
         //console.log(productparent)
         //console.log(productchild)
         setdisablebtn(true)
-        const kind = kind_movement.find((e: any) => e.id === values.kind_movemet_id)
+        //const kind = kind_movement.find((e: any) => e.id === values.kind_movemet_id)
         //console.log(kind_movement.find((e:any) => e.id === values.kind_movemet_id ))
         MovementRequest.createProduction({
             product_parent_id: productparent.p_id,
             product_child_id: productchild.p_id,
             amount_to_take: values.amount_to_take,
-            require_consecutive: kind.require_consecutive,
-            consecutive_id: kind.consecutive_id,
+            require_consecutive: kind_mov.data.require_consecutive,
+            consecutive_id: kind_mov.data.consecutive_id,
             number_order: values.number_order,
-            kind_movements_id: kind.id,
+            kind_movements_id: kind_mov.data.id,
             observation: values.observation,
             person_id: 1,
             units_generated: values.units_generated,
-            status_id: kind.status_id,
-            suggested_amount: values.suggested_amount
+            status_id: kind_mov.data.status_id,
+            suggested_amount: values.suggested_amount,
+            waste_quantity : values.waste_quantity
         }).then((res: any) => {
             console.log(res)
             if (res.success) {
-                formikHelpers.setFieldValue("number_order", res.new_number_order)
-                setmovements(res.movement)
+                //formikHelpers.setFieldValue("number_order", )
+                setnumber_order(res.new_number_order)
+                
                 
                 setSeverity("success")
                 setMsg("Guardado exitosamente")
                 setdisablebtn(false)
+                handleClose()
             } else {
                 res.errors.map((e: any) => formikHelpers.setFieldError(e.field, e.msg))
                 setSeverity("error")
@@ -64,8 +66,10 @@ export function AddProduction({ kind_movement, existence_converted, productparen
                 setdisablebtn(false)
             }
         })
-    }
 
+        console.log(kind_mov)
+    }
+     //number_order, kind_mov, obsertvation
     const formik = UseForm({
         product_parent_name: productchild.p_name,
         existence_converted: existence_converted,
@@ -75,9 +79,8 @@ export function AddProduction({ kind_movement, existence_converted, productparen
         total_amount_used: "",
         waste_quantity: "",
         suggested_amount: "",
-        kind_movemet_id: "",
-        number_order: "",
-        observation: "",
+        number_order: number_order,
+        observation: obsertvation,
     }, ProductionsSchema, onSubmit)
 
     return (
@@ -157,7 +160,7 @@ export function AddProduction({ kind_movement, existence_converted, productparen
                             name="suggested_amount"
                             onChange={formik.handleChange}
                             type="text"
-                            value={formik.values.amount_to_take === 0 ? "0" : "" + formik.values.amount_to_take / formik.values.to_discount}
+                            value={formik.values.amount_to_take === 0 ? formik.values.suggested_amount="0" : formik.values.suggested_amount="" + formik.values.amount_to_take / formik.values.to_discount}
 
                         />
                     </Grid>
@@ -180,12 +183,11 @@ export function AddProduction({ kind_movement, existence_converted, productparen
                         <TextFieldUi
                             autofocus={false}
                             error={formik.errors.total_amount_used}
-
                             label="Cantidad total usado"
                             name="total_amount_used"
                             onChange={formik.handleChange}
                             type="text"
-                            value={formik.values.total_amount_used}
+                            value={formik.values.units_generated === 0 ? "0" : formik.values.total_amount_used = "" + formik.values.units_generated * formik.values.to_discount}
                             inputInside={
                                 productparent.sale_unit
                             }
@@ -210,7 +212,7 @@ export function AddProduction({ kind_movement, existence_converted, productparen
                         />
                     </Grid>
 
-                    <Grid item xs={12}>
+                   {/* <Grid item xs={12}>
                         <SelectWrapperUi
                             name="kind_movemet_id"
                             label='Tipo de movimiento'
@@ -220,25 +222,12 @@ export function AddProduction({ kind_movement, existence_converted, productparen
                             menuItems={kind_movement.map((data: any, i: any) => <MenuItem value={data.id} key={i}>{`${data.name}`}</MenuItem>)}
 
                         />
-                    </Grid>
+                        </Grid>*/}
 
 
-                    <Grid item xs={6}>
-                        <TextFieldUi
-                            autofocus={false}
-                            error={formik.errors.number_order}
-                            label="Número de orden"
-                            disabled={formik.values.kind_movemet_id !== "" ? kind_movement.find((e: any) => e.id === formik.values.kind_movemet_id).require_consecutive ? true : false : true}
-                            name="number_order"
-                            onChange={formik.handleChange}
-                            type="text"
-                            value={formik.values.number_order}
+                  
 
-                        />
-                    </Grid>
-
-
-                    <Grid item xs={6}>
+                   {/* <Grid item xs={6}>
                         <TextFieldUi
                             autofocus={false}
                             error={formik.errors.observation}
@@ -249,7 +238,7 @@ export function AddProduction({ kind_movement, existence_converted, productparen
                             value={formik.values.observation}
 
                         />
-                    </Grid>
+                        </Grid>*/}
 
 
 
@@ -259,46 +248,7 @@ export function AddProduction({ kind_movement, existence_converted, productparen
 
                 </Grid>
 
-                <Box style={{ marginTop: "5px" }}>
-                <TableNormalUi
-
-                    tableHead={
-                        <TableRow >
-                            <TableCell align="center" style={{ fontWeight: 'bold' }}>Id</TableCell>
-                            {/*<TableCell align="center" style={{ fontWeight : 'bold' }}>Tipo de Movimiento</TableCell>*/}
-                            <TableCell align="center" style={{ fontWeight: 'bold' }}>Producto</TableCell>
-                            <TableCell align="center" style={{ fontWeight: 'bold' }}>Cantidad</TableCell>
-                            <TableCell align="center" style={{ fontWeight: 'bold' }}>Precio Total</TableCell>
-                            <TableCell align="center" style={{ fontWeight: 'bold' }}>Precio unitario</TableCell>
-                            <TableCell align="center" style={{ fontWeight: 'bold' }}>Acción</TableCell>
-                        </TableRow>
-
-                    }
-
-                    tableBody={
-                        movements.map((e: any, i: any) =>
-                            <TableRow
-                                key={i}
-                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                            >
-                                <TableCell align="center">{e.m_id}</TableCell>
-                                {/*<TableCell align="center">{e.Header.KindMovements.name}</TableCell>*/}
-                                <TableCell align="center">{e.p_name}</TableCell>
-                                <TableCell align="center">{e.m_quantity}</TableCell>
-                                <TableCell align="center">{e.m_total_purchasePrice}</TableCell>
-                                <TableCell align="center">{
-                                    e.m_unit_price
-                                }</TableCell>
-                                <TableCell align="center"><IconButton aria-label="delete" onClick={() => MovementRequest.deleteNovement(e.m_id).then(e => MovementRequest.findMovementByNumberOrder(formik.values.number_order).then(e => setmovements(e)))} ><DeleteIcon fontSize="small" /></IconButton></TableCell>
-                            </TableRow>
-
-                        )
-
-                    }
-
-                />
-            </Box>
-
+          
                 <Stack
                     direction="row"
                     justifyContent="space-between"

@@ -35,6 +35,8 @@ export function Addkindmovements({ consecutives, Classificationkindmovement, rol
         if(values.require_consecutive && values.consecutive_id==="")
         {
             formikHelpers.setFieldError("consecutive_id", "Este campo es requerido")
+            
+            setdisablebtn(false)
         }else{
             try {
                 await KindMovementsRequest.save({
@@ -153,7 +155,7 @@ export function Addkindmovements({ consecutives, Classificationkindmovement, rol
                             value={formik.values.consecutive_id}
                             onChange={formik.handleChange}
                             error={formik.errors.consecutive_id}
-                            menuItems={consecutives.map((data: any, i: any) => <MenuItem value={data.id} key={i}>{`${data.prefix}`}</MenuItem>)}
+                            menuItems={consecutives.map((data: any, i: any) => <MenuItem value={data.id} key={i}>{`${data.description}`}</MenuItem>)}
 
                         />
                     </Grid>
