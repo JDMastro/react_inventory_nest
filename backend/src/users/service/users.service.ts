@@ -6,11 +6,13 @@ import { UsersDto } from "../dto/users.dto";
 import { Kindidentity } from "../../kindidentity/entities/kindidentity.entity";
 import { Person } from "../../person/entities/person.entity";
 import { Roles } from "../../roles/entities/roles.entity";
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class UsersService {
     constructor(
         @InjectRepository(Users) private UsersRepo: Repository<Users>,
+        private jwtService: JwtService
     ) { }
 
     async findAll() {
@@ -25,6 +27,11 @@ export class UsersService {
         .innerJoin(Roles,"r","r.id = p.roles_id")
         .where("r.name = 'EMPLEADO'")
         .getRawMany()
+    }
+
+    async verifyToken(token : any)
+    {
+        return await this.jwtService.verifyAsync(token)
     }
 
     async findUserByEmail(email : string)

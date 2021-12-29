@@ -35,7 +35,7 @@ export class UsersController {
         if (! await compare_password(password, user.password))
             return { success: false, data: null, error: "Credenciales invalidas" }
 
-        const jwt = await this.jwtService.signAsync({ id : user.id })
+        const jwt = await this.jwtService.signAsync({ id : user.person_id })
 
         response.cookie('jwt',jwt,{ httpOnly : true, path : "/" })
 
@@ -199,7 +199,7 @@ export class UsersController {
             if(!data)
                throw new UnauthorizedException()
 
-            return data
+            return data['id']
         } catch (e) {
             throw new UnauthorizedException()
         }

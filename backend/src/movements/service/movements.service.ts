@@ -9,16 +9,19 @@ import { Products } from "../../products/entities/products.entity";
 
 import { KindMovements } from "../../kindmovements/entities/kindmovements.entity";
 import { ClassificationKindMovement } from "../../classificationkindmovement/entities/classificationkindmovement.entity";
+import { Person } from 'src/person/entities/person.entity';
+import { SettingsService } from "../../settings/service/settings.service";
 
 @Injectable()
 export class MovementsService {
     constructor(
         @InjectRepository(Movements) private _movementsRepo: Repository<Movements>,
+        private _settingsService : SettingsService
     ) { }
 
     async create(body : MovementsDto)
     {
-        const { product_id, quantity, total_purchasePrice, unit_price, header_id, quantity_returned, status_id, amount_used, suggest_units, waste_quantity, suggest_generated  } = body
+        const { person_id, product_id, quantity, total_purchasePrice, unit_price, header_id, quantity_returned, status_id, amount_used, suggest_units, waste_quantity, suggest_generated  } = body
         return await this._movementsRepo.save({ 
             product_id, 
             quantity, 
@@ -30,7 +33,8 @@ export class MovementsService {
             amount_used,
             suggest_units, 
             waste_quantity, 
-            suggest_generated
+            suggest_generated,
+            person_id
          })
     }
 
@@ -70,5 +74,18 @@ export class MovementsService {
     async delete(id: number) {
         await this._movementsRepo.delete(id)
         return true
+    }
+
+    async findStartedMovements(product_parent_id : number)
+    {
+        const status_id = await this._settingsService.findByKey("ESTADO_SUGERIDO")
+        return await getManager().createQueryBuilder("movements","m")
+           .select(["p.fullname", "sum(m.amount_used) as total_amount_used"])
+           .innerJoin(Header, "h", "h.id = m.header_id")
+           .innerJoin(Person, "p", "p.id = h.person_id")
+           .innerJoin(Products, "p2", `m.product_id  = p2.id and p2.product_parent_id = ${product_parent_id}`)
+           .where("m.status_id = :status_id", { status_id : parseInt(status_id.value) })
+           .groupBy("p.fullname")
+           .getRawMany()
     }
 }

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Put, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Put, Param, Delete, ParseIntPipe, UnauthorizedException, Req } from '@nestjs/common';
 import { MovementsRequest } from "../dto/movements.request";
 import { ConsecutiveService } from "../../consecutive/service/consecutive.service";
 import { HeaderService } from "../../header/service/header.service";
@@ -6,6 +6,10 @@ import { MovementsService } from "../service/movements.service";
 import { ProductsService } from "../../products/service/products.service";
 //import { getManager } from 'typeorm';
 import { ConversionService } from "../../conversion/service/conversion.service";
+import { SettingsService } from "../../settings/service/settings.service";
+import { UsersService } from "../../users/service/users.service";
+
+import { Response, Request } from "express";
 
 
 
@@ -17,6 +21,8 @@ export class MovementsController {
         private _movementsService: MovementsService,
         private _productsService: ProductsService,
         private _conversionService: ConversionService,
+        private _settingsService : SettingsService,
+        private _usersService : UsersService
 
     ) { }
 
@@ -72,7 +78,8 @@ export class MovementsController {
                     amount_used : 0,
                     suggest_generated : 0,
                     suggest_units : 0,
-                    waste_quantity : 0
+                    waste_quantity : 0,
+                    person_id : null
                 })
 
                 await this._productsService.update(product_id, {
@@ -122,7 +129,8 @@ export class MovementsController {
                         amount_used : 0,
                         suggest_generated : 0,
                         suggest_units : 0,
-                        waste_quantity : 0
+                        waste_quantity : 0,
+                        person_id : null
                     })
 
                     await this._productsService.update(product_id, {
@@ -153,7 +161,8 @@ export class MovementsController {
                         amount_used : 0,
                         suggest_generated : 0,
                         suggest_units : 0,
-                        waste_quantity : 0
+                        waste_quantity : 0,
+                        person_id : null
                     })
 
                     await this._productsService.update(product_id, {
@@ -217,7 +226,8 @@ export class MovementsController {
                         amount_used : 0,
                         suggest_generated : 0,
                         suggest_units : 0,
-                        waste_quantity : 0
+                        waste_quantity : 0,
+                        person_id : null
                     })
 
                     await this._productsService.update(product_id, {
@@ -267,7 +277,8 @@ export class MovementsController {
                             amount_used : 0,
                             suggest_generated : 0,
                             suggest_units : 0,
-                            waste_quantity : 0
+                            waste_quantity : 0,
+                            person_id : null
                         })
 
                         await this._productsService.update(product_id, {
@@ -298,7 +309,8 @@ export class MovementsController {
                             amount_used : 0,
                             suggest_generated : 0,
                             suggest_units : 0,
-                            waste_quantity : 0
+                            waste_quantity : 0,
+                            person_id : null
                         })
 
                         await this._productsService.update(product_id, {
@@ -385,7 +397,8 @@ export class MovementsController {
                         amount_used : 0,
                         suggest_generated : 0,
                         suggest_units : 0,
-                        waste_quantity : 0
+                        waste_quantity : 0,
+                        person_id : null
                     })
     
                     await this._productsService.update(product_id, {
@@ -435,7 +448,8 @@ export class MovementsController {
                             amount_used : 0,
                             suggest_generated : 0,
                             suggest_units : 0,
-                            waste_quantity : 0
+                            waste_quantity : 0,
+                            person_id : null
                         })
     
                         await this._productsService.update(product_id, {
@@ -466,7 +480,8 @@ export class MovementsController {
                             amount_used : 0,
                             suggest_generated : 0,
                             suggest_units : 0,
-                            waste_quantity : 0
+                            waste_quantity : 0,
+                            person_id : null
                         })
     
                         await this._productsService.update(product_id, {
@@ -535,7 +550,8 @@ export class MovementsController {
                         amount_used : 0,
                         suggest_generated : 0,
                         suggest_units : 0,
-                        waste_quantity : 0
+                        waste_quantity : 0,
+                        person_id : null
                     })
 
                     await this._productsService.update(product_id, {
@@ -585,7 +601,8 @@ export class MovementsController {
                             amount_used : 0,
                             suggest_generated : 0,
                             suggest_units : 0,
-                            waste_quantity : 0
+                            waste_quantity : 0,
+                            person_id : null
                         })
 
                         await this._productsService.update(product_id, {
@@ -616,7 +633,8 @@ export class MovementsController {
                             amount_used : 0,
                             suggest_generated : 0,
                             suggest_units : 0,
-                            waste_quantity : 0
+                            waste_quantity : 0,
+                            person_id : null
                         })
 
                         await this._productsService.update(product_id, {
@@ -650,238 +668,258 @@ export class MovementsController {
     }
 
     @Post('productions')
-    async createProductions(@Body() body: any) {
-       
+    async createProductions(@Req() request :Request, @Body() body: any) {
+        try {
+            const cookie = request.cookies['jwt']
+
+            const data = await this._usersService.verifyToken(cookie)
+            if(!data)
+               throw new UnauthorizedException()
+
+               const check_settings = await this._settingsService.findByKey("ESTADO_PRODUCIDO_ACEPTADO")
+
         
-        const check_product_parent = await this._productsService.findById(body.product_parent_id)
-        const check_product_child = await this._productsService.findById(body.product_child_id)
-        let converted = 0
-        const errors: any = []
-        const operation = await this._conversionService.getOperation(check_product_parent.sale_unit_id, check_product_parent.purchase_unit_id)
-        let new_number_order = ""
-
-
-        if (check_product_child.purchase_unit_id === check_product_child.sale_unit_id) {
-            converted = body.amount_to_take
-        } else {
-            if (operation)
-                converted = eval(`${body.amount_to_take}${operation.s_sign}${operation.c_conversion_quatity}`)
-            else
-               errors.push({ field: "", msg: `esta operacion no existe en la tabla de conversion, por favor registrela` })
+               const check_product_parent = await this._productsService.findById(body.product_parent_id)
+               const check_product_child = await this._productsService.findById(body.product_child_id)
+               let converted = 0
+               let converted_waste = 0
+               let converted_total_amount_used = 0
+               const errors: any = []
+               const operation = await this._conversionService.getOperation(check_product_parent.sale_unit_id, check_product_parent.purchase_unit_id)
+               let new_number_order = ""
+       
+       
+               if (check_product_child.purchase_unit_id === check_product_child.sale_unit_id) {
+                   converted = body.amount_to_take
+               } else {
+                   if (operation){
+                       converted = eval(`${body.amount_to_take}${operation.s_sign}${operation.c_conversion_quatity}`)
+                       converted_waste = eval(`${body.waste_quantity}${operation.s_sign}${operation.c_conversion_quatity}`)
+                       if(body.total_amount_used !== "")
+                       converted_total_amount_used = eval(`${body.total_amount_used}${operation.s_sign}${operation.c_conversion_quatity}`)
+       
+                   }else{
+                      errors.push({ field: "", msg: `esta operacion no existe en la tabla de conversion, por favor registrela` })}
+               }
+       
+       
+       
+                   
+                //console.log(converted)
+               if (converted > check_product_parent.current_existence)
+                   errors.push({ field: "amount_to_take", msg: "El padre de este producto no tiene esa cantidad" })
+       
+       
+               if (errors.length < 1) {
+                   if(body.require_consecutive && body.consecutive_id && body.number_order === "")
+                   {
+                        /* SE OBTIENE EL CONSECUTIVO */
+                        const consecutive = await this._consecutiveService.findById(body.consecutive_id)
+                        /* SE CREA EL NUMBER_ORDER */
+                        new_number_order = `${consecutive.prefix}${consecutive.last_inserted}`
+                        const new_last_inserted = consecutive.last_inserted + 1
+                        /* SE ACTUALIZA EL CONSECUTIVO */
+       
+                        await this._consecutiveService.update(consecutive.id, {
+                           description: consecutive.description,
+                           name: consecutive.name,
+                           prefix: consecutive.prefix,
+                           last_inserted: new_last_inserted
+                       })
+       
+                        const header_res = await this._headerService.create({
+                           kind_movements_id : body.kind_movements_id,
+                           number_order : new_number_order,
+                           observation : body.observation,
+                           person_id : data['id'],
+                       })
+       
+                       await this._movementsService.create({
+                           header_id: header_res.id,
+                           product_id : body.product_child_id,
+                           quantity : body.amount_to_take,
+                           quantity_returned: 0,
+                           total_purchasePrice : 0,
+                           unit_price : 0,
+                           status_id : body.total_amount_used > 0 ? parseInt(check_settings.value) : body.status_id,
+                           amount_used : parseFloat(body.amount_to_take),
+                           suggest_generated : parseFloat(body.suggested_amount),
+                           suggest_units : parseFloat(body.units_generated),
+                           waste_quantity : parseFloat(body.waste_quantity),
+                           person_id : data['id']
+                       })
+       
+                       
+       
+                       await this._productsService.update(check_product_parent.id,{
+                           current_existence : body.total_amount_used > 0 ? check_product_parent.current_existence - (converted_total_amount_used + converted_waste) : check_product_parent.current_existence,
+                           description : check_product_parent.description,
+                           isderivate : check_product_parent.isderivate,
+                           name : check_product_parent.name,
+                           product_parent_id : check_product_parent.product_parent_id,
+                           purchase_unit_id : check_product_parent.purchase_unit_id,
+                           reserved_quantity : check_product_parent.reserved_quantity,
+                           sale_unit_id : check_product_parent.sale_unit_id,
+                           sku : check_product_parent.sku,
+                           user_id : check_product_parent.user_id,
+                           code_bar : check_product_parent.code_bar,
+                           to_discount : check_product_parent.to_discount,
+                           waste_quantity : check_product_parent.waste_quantity
+                       })
+       
+                       await this._productsService.update(check_product_child.id,{
+                           current_existence : eval(`${check_product_child.current_existence} + ${converted}`),
+                           description : check_product_child.description,
+                           isderivate : check_product_child.isderivate,
+                           name : check_product_child.name,
+                           product_parent_id : check_product_child.product_parent_id,
+                           purchase_unit_id : check_product_child.purchase_unit_id,
+                           reserved_quantity : check_product_child.reserved_quantity,
+                           sale_unit_id : check_product_child.sale_unit_id,
+                           sku : check_product_child.sku,
+                           user_id : check_product_child.user_id,
+                           code_bar : check_product_child.code_bar,
+                           to_discount : check_product_child.to_discount,
+                           waste_quantity : check_product_child.waste_quantity
+                       })
+                   }else{
+                       const check_order_number = await this._headerService.findByOrderNumber(body.number_order)
+                       new_number_order = body.number_order
+       
+                       if (!check_order_number) {
+                           const header_res = await this._headerService.create({
+                               kind_movements_id : body.kind_movements_id,
+                               number_order : body.number_order,
+                               observation : body.observation,
+                               person_id : data['id'],
+                           })
+       
+                           await this._movementsService.create({
+                               header_id: header_res.id,
+                               product_id : body.product_child_id,
+                               quantity : body.amount_to_take,
+                               quantity_returned: 0,
+                               total_purchasePrice : 0,
+                               unit_price : 0,
+                               status_id : body.total_amount_used > 0 ? parseInt(check_settings.value) : body.status_id,
+                               amount_used : parseFloat(body.amount_to_take),
+                               suggest_generated : parseFloat(body.suggested_amount),
+                               suggest_units : parseFloat(body.units_generated),
+                               waste_quantity : parseFloat(body.waste_quantity),
+                               person_id : data['id']
+                           })
+       
+                           await this._productsService.update(check_product_parent.id,{
+                               current_existence : body.total_amount_used > 0 ? check_product_parent.current_existence - (converted_total_amount_used + converted_waste) : check_product_parent.current_existence,
+                               description : check_product_parent.description,
+                               isderivate : check_product_parent.isderivate,
+                               name : check_product_parent.name,
+                               product_parent_id : check_product_parent.product_parent_id,
+                               purchase_unit_id : check_product_parent.purchase_unit_id,
+                               reserved_quantity : check_product_parent.reserved_quantity,
+                               sale_unit_id : check_product_parent.sale_unit_id,
+                               sku : check_product_parent.sku,
+                               user_id : check_product_parent.user_id,
+                               code_bar : check_product_parent.code_bar,
+                               to_discount : check_product_parent.to_discount,
+                               waste_quantity : check_product_parent.waste_quantity
+                           })
+       
+                           await this._productsService.update(check_product_child.id,{
+                               current_existence : eval(`${check_product_child.current_existence} + ${converted}`),
+                               description : check_product_child.description,
+                               isderivate : check_product_child.isderivate,
+                               name : check_product_child.name,
+                               product_parent_id : check_product_child.product_parent_id,
+                               purchase_unit_id : check_product_child.purchase_unit_id,
+                               reserved_quantity : check_product_child.reserved_quantity,
+                               sale_unit_id : check_product_child.sale_unit_id,
+                               sku : check_product_child.sku,
+                               user_id : check_product_child.user_id,
+                               code_bar : check_product_child.code_bar,
+                               to_discount : check_product_child.to_discount,
+                               waste_quantity : check_product_child.waste_quantity
+                           })
+       
+       
+       
+       
+                       }else{
+                           await this._movementsService.create({
+                               header_id: check_order_number.id,
+                               product_id : body.product_child_id,
+                               quantity : body.amount_to_take,
+                               quantity_returned: 0,
+                               total_purchasePrice : 0,
+                               //total_purchasePrice : body.total_purchase_price,
+                               //unit_price : parseFloat(body.total_purchase_price)/converted,
+                               unit_price : 0,
+                               status_id : body.total_amount_used > 0 ? parseInt(check_settings.value) : body.status_id,
+                               amount_used : parseFloat(body.amount_to_take),
+                               suggest_generated : parseFloat(body.suggested_amount),
+                               suggest_units : parseFloat(body.units_generated),
+                               waste_quantity : parseFloat(body.waste_quantity),
+                               person_id : data['id']
+                           })
+       
+                           await this._productsService.update(check_product_parent.id,{
+                               current_existence : body.total_amount_used > 0 ? check_product_parent.current_existence - (converted_total_amount_used + converted_waste) : check_product_parent.current_existence,
+                               description : check_product_parent.description,
+                               isderivate : check_product_parent.isderivate,
+                               name : check_product_parent.name,
+                               product_parent_id : check_product_parent.product_parent_id,
+                               purchase_unit_id : check_product_parent.purchase_unit_id,
+                               reserved_quantity : check_product_parent.reserved_quantity,
+                               sale_unit_id : check_product_parent.sale_unit_id,
+                               sku : check_product_parent.sku,
+                               user_id : check_product_parent.user_id,
+                               code_bar : check_product_parent.code_bar,
+                               to_discount : check_product_parent.to_discount,
+                               waste_quantity : check_product_parent.waste_quantity
+                           })
+       
+                           await this._productsService.update(check_product_child.id,{
+                               current_existence : eval(`${check_product_child.current_existence} + ${converted}`),
+                               description : check_product_child.description,
+                               isderivate : check_product_child.isderivate,
+                               name : check_product_child.name,
+                               product_parent_id : check_product_child.product_parent_id,
+                               purchase_unit_id : check_product_child.purchase_unit_id,
+                               reserved_quantity : check_product_child.reserved_quantity,
+                               sale_unit_id : check_product_child.sale_unit_id,
+                               sku : check_product_child.sku,
+                               user_id : check_product_child.user_id,
+                               code_bar : check_product_child.code_bar,
+                               to_discount : check_product_child.to_discount,
+                               waste_quantity : check_product_child.waste_quantity
+                           })
+       
+                       }
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+                   }
+       
+                   return { success: true, movement: await this._movementsService.findMovementByNumberOrder(new_number_order), new_number_order }
+               } else {
+                   return { success: false, data: null, errors }
+               }
+        } catch (error) {
+            throw new UnauthorizedException()
         }
-
-
-
-            
-
-        if (converted > check_product_parent.current_existence)
-            errors.push({ field: "amount_to_take", msg: "El padre de este producto no tiene esa cantidad" })
-
-
-        if (errors.length < 1) {
-            if(body.require_consecutive && body.consecutive_id && body.number_order === "")
-            {
-                 /* SE OBTIENE EL CONSECUTIVO */
-                 const consecutive = await this._consecutiveService.findById(body.consecutive_id)
-                 /* SE CREA EL NUMBER_ORDER */
-                 new_number_order = `${consecutive.prefix}${consecutive.last_inserted}`
-                 const new_last_inserted = consecutive.last_inserted + 1
-                 /* SE ACTUALIZA EL CONSECUTIVO */
-
-                 await this._consecutiveService.update(consecutive.id, {
-                    description: consecutive.description,
-                    name: consecutive.name,
-                    prefix: consecutive.prefix,
-                    last_inserted: new_last_inserted
-                })
-
-                 const header_res = await this._headerService.create({
-                    kind_movements_id : body.kind_movements_id,
-                    number_order : new_number_order,
-                    observation : body.observation,
-                    person_id : body.person_id,
-                })
-
-                await this._movementsService.create({
-                    header_id: header_res.id,
-                    product_id : body.product_child_id,
-                    quantity : body.amount_to_take,
-                    quantity_returned: 0,
-                    total_purchasePrice : 0,
-                    unit_price : 0,
-                    status_id : body.status_id,
-                    amount_used : parseFloat(body.amount_to_take),
-                    suggest_generated : parseFloat(body.suggested_amount),
-                    suggest_units : parseFloat(body.units_generated),
-                    waste_quantity : parseFloat(body.waste_quantity)
-                })
-
-                await this._productsService.update(check_product_parent.id,{
-                    current_existence : check_product_parent.current_existence - converted,
-                    description : check_product_parent.description,
-                    isderivate : check_product_parent.isderivate,
-                    name : check_product_parent.name,
-                    product_parent_id : check_product_parent.product_parent_id,
-                    purchase_unit_id : check_product_parent.purchase_unit_id,
-                    reserved_quantity : check_product_parent.reserved_quantity,
-                    sale_unit_id : check_product_parent.sale_unit_id,
-                    sku : check_product_parent.sku,
-                    user_id : check_product_parent.user_id,
-                    code_bar : check_product_parent.code_bar,
-                    to_discount : check_product_parent.to_discount,
-                    waste_quantity : check_product_parent.waste_quantity
-                })
-
-                await this._productsService.update(check_product_child.id,{
-                    current_existence : eval(`${check_product_child.current_existence} + ${converted}`),
-                    description : check_product_child.description,
-                    isderivate : check_product_child.isderivate,
-                    name : check_product_child.name,
-                    product_parent_id : check_product_child.product_parent_id,
-                    purchase_unit_id : check_product_child.purchase_unit_id,
-                    reserved_quantity : check_product_child.reserved_quantity,
-                    sale_unit_id : check_product_child.sale_unit_id,
-                    sku : check_product_child.sku,
-                    user_id : check_product_child.user_id,
-                    code_bar : check_product_child.code_bar,
-                    to_discount : check_product_child.to_discount,
-                    waste_quantity : check_product_child.waste_quantity
-                })
-            }else{
-                const check_order_number = await this._headerService.findByOrderNumber(body.number_order)
-                new_number_order = body.number_order
-
-                if (!check_order_number) {
-                    const header_res = await this._headerService.create({
-                        kind_movements_id : body.kind_movements_id,
-                        number_order : body.number_order,
-                        observation : body.observation,
-                        person_id : body.person_id,
-                    })
-
-                    await this._movementsService.create({
-                        header_id: header_res.id,
-                        product_id : body.product_child_id,
-                        quantity : body.amount_to_take,
-                        quantity_returned: 0,
-                        total_purchasePrice : 0,
-                        unit_price : 0,
-                        status_id : body.status_id,
-                        amount_used : parseFloat(body.amount_to_take),
-                        suggest_generated : parseFloat(body.suggested_amount),
-                        suggest_units : parseFloat(body.units_generated),
-                        waste_quantity : parseFloat(body.waste_quantity)
-                    })
-
-                    await this._productsService.update(check_product_parent.id,{
-                        current_existence : check_product_parent.current_existence - converted,
-                        description : check_product_parent.description,
-                        isderivate : check_product_parent.isderivate,
-                        name : check_product_parent.name,
-                        product_parent_id : check_product_parent.product_parent_id,
-                        purchase_unit_id : check_product_parent.purchase_unit_id,
-                        reserved_quantity : check_product_parent.reserved_quantity,
-                        sale_unit_id : check_product_parent.sale_unit_id,
-                        sku : check_product_parent.sku,
-                        user_id : check_product_parent.user_id,
-                        code_bar : check_product_parent.code_bar,
-                        to_discount : check_product_parent.to_discount,
-                        waste_quantity : check_product_parent.waste_quantity
-                    })
-
-                    await this._productsService.update(check_product_child.id,{
-                        current_existence : eval(`${check_product_child.current_existence} + ${converted}`),
-                        description : check_product_child.description,
-                        isderivate : check_product_child.isderivate,
-                        name : check_product_child.name,
-                        product_parent_id : check_product_child.product_parent_id,
-                        purchase_unit_id : check_product_child.purchase_unit_id,
-                        reserved_quantity : check_product_child.reserved_quantity,
-                        sale_unit_id : check_product_child.sale_unit_id,
-                        sku : check_product_child.sku,
-                        user_id : check_product_child.user_id,
-                        code_bar : check_product_child.code_bar,
-                        to_discount : check_product_child.to_discount,
-                        waste_quantity : check_product_child.waste_quantity
-                    })
-
-
-
-
-                }else{
-                    await this._movementsService.create({
-                        header_id: check_order_number.id,
-                        product_id : body.product_child_id,
-                        quantity : body.amount_to_take,
-                        quantity_returned: 0,
-                        total_purchasePrice : 0,
-                        //total_purchasePrice : body.total_purchase_price,
-                        //unit_price : parseFloat(body.total_purchase_price)/converted,
-                        unit_price : 0,
-                        status_id : body.status_id,
-                        amount_used : parseFloat(body.amount_to_take),
-                        suggest_generated : parseFloat(body.suggested_amount),
-                        suggest_units : parseFloat(body.units_generated),
-                        waste_quantity : parseFloat(body.waste_quantity)
-                    })
-
-                    await this._productsService.update(check_product_parent.id,{
-                        current_existence : check_product_parent.current_existence - converted,
-                        description : check_product_parent.description,
-                        isderivate : check_product_parent.isderivate,
-                        name : check_product_parent.name,
-                        product_parent_id : check_product_parent.product_parent_id,
-                        purchase_unit_id : check_product_parent.purchase_unit_id,
-                        reserved_quantity : check_product_parent.reserved_quantity,
-                        sale_unit_id : check_product_parent.sale_unit_id,
-                        sku : check_product_parent.sku,
-                        user_id : check_product_parent.user_id,
-                        code_bar : check_product_parent.code_bar,
-                        to_discount : check_product_parent.to_discount,
-                        waste_quantity : check_product_parent.waste_quantity
-                    })
-
-                    await this._productsService.update(check_product_child.id,{
-                        current_existence : eval(`${check_product_child.current_existence} + ${converted}`),
-                        description : check_product_child.description,
-                        isderivate : check_product_child.isderivate,
-                        name : check_product_child.name,
-                        product_parent_id : check_product_child.product_parent_id,
-                        purchase_unit_id : check_product_child.purchase_unit_id,
-                        reserved_quantity : check_product_child.reserved_quantity,
-                        sale_unit_id : check_product_child.sale_unit_id,
-                        sku : check_product_child.sku,
-                        user_id : check_product_child.user_id,
-                        code_bar : check_product_child.code_bar,
-                        to_discount : check_product_child.to_discount,
-                        waste_quantity : check_product_child.waste_quantity
-                    })
-
-                }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            }
-
-            return { success: true, movement: await this._movementsService.findMovementByNumberOrder(new_number_order), new_number_order }
-        } else {
-            return { success: false, data: null, errors }
-        }
-
-
     }
 
 
@@ -994,6 +1032,12 @@ export class MovementsController {
     @Get()
     async findAll() {
         return await this._movementsService.findAll()
+    }
+
+
+    @Get('findStartedMovements/:product_parent_id')
+    async findStartedMovements(@Param('product_parent_id') product_parent_id: number) {
+        return await this._movementsService.findStartedMovements(product_parent_id)
     }
 
 

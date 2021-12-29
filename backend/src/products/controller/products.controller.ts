@@ -1,11 +1,16 @@
-import { Controller, Get, Post, Body, Put, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Put, Param, Delete, UnauthorizedException, Req } from '@nestjs/common';
 import { ProductsDto } from "../dto/product.dto";
 import { ProductsService } from "../service/products.service";
+import { UsersService } from "../../users/service/users.service";
+
+import { Response, Request } from "express";
+
 
 @Controller('api/products')
 export class ProductsController {
     constructor(
-        private _productsService: ProductsService
+        private _productsService: ProductsService,
+        private _usersService : UsersService
     ) { }
 
     @Post()
@@ -47,14 +52,40 @@ export class ProductsController {
 
     }
 
-    @Get(':isderivate')
+    @Get('parents/:isderivate')
     async findProductByDerivate(@Param('isderivate') isderivate: boolean) {
         return await this._productsService.findProductByDerivate(isderivate)
     }
 
+    @Get('suggest/:product_parent_id')
+    async getByStatusSuggest(@Req() request :Request, @Param('product_parent_id') product_parent_id : number)
+    {
+        //return await this._productsService.getByStatusSuggest(person_id, product_parent_id)
+        try {
+            const cookie = request.cookies['jwt']
+
+            const data = await this._usersService.verifyToken(cookie)
+            if(!data)
+               throw new UnauthorizedException()
+
+               console.log("---->",data['id'])
+
+            return await this._productsService.getByStatusSuggest(data['id'], product_parent_id)
+        } catch (error) {
+            throw new UnauthorizedException()
+        }
+    }
+
     @Get('derivate/:parent_id')
     async findProductByParent(@Param('parent_id') parent_id : number) {
+        
         return await this._productsService.findProductByParent(parent_id)
+    }
+
+    @Get("parent/producction")
+    async findProductParentProducction()
+    {
+        return await this._productsService.findProductParentProducction()
     }
 
     @Put(':id')

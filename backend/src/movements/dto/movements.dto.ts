@@ -18,4 +18,7 @@ export class MovementsDto {
     amount_used : number
     waste_quantity : number
 
+
+    person_id : number
+
 }

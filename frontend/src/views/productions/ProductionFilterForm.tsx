@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { SelectWrapperUi, Snackbars, TextFieldUi } from "../../components";
+import { SelectWrapperUi, Snackbars, TextFieldUi, AlertDialogUi } from "../../components";
 import Can from "../../components/can";
-import { Box, Grid, MenuItem } from '@mui/material/'
+import { Box, Grid, IconButton, MenuItem } from '@mui/material/'
 //import useFormFields from "../../hooks/useFormFields";
 import { ProductsRequest } from "../../services/productsService";
 import { ConversionRequest } from "../../services/conversionService";
 import { SettingsRequest } from "../../services/settingsService"
 import { isEmpty, trim } from 'lodash';
+import { StartProduction } from "./StartProduction";
+import VisibilityIcon from '@mui/icons-material/Visibility';
 
 
 /*const products = [
@@ -17,7 +19,7 @@ import { isEmpty, trim } from 'lodash';
     {id: 4, name: 'Pescado'},
 ]*/
 
-const ProductionFilterForm = ({ handleSubmit, setisEnable, number_order, setnumber_order, kind_mov, setkind_mov, disable_number_order, setdisable_number_order, obsertvation, setobsertvation }: any) => {
+const ProductionFilterForm = ({ reserved_quantity, setreserved_quantity, handleSubmit, setisEnable, number_order, setnumber_order, kind_mov, setkind_mov, disable_number_order, setdisable_number_order, obsertvation, setobsertvation }: any) => {
 
     const [products, setproducts] = useState([])
     const [product, setproduct] = useState<any>("")
@@ -25,6 +27,10 @@ const ProductionFilterForm = ({ handleSubmit, setisEnable, number_order, setnumb
     const [sale_unit_parent, setsale_unit_parent] = useState<any>("")
     const [current_existence_parent, setcurrent_existence_parent] = useState<any>("")
     const [converted_current_existence_parent, setconverted_current_existence_parent] = useState<any>("")
+    
+
+    const [openModal, setOpenModal] = React.useState(false);
+
     
     const [severity, setSeverity] = useState("success");
     const [msg, setMsg] = useState("success");
@@ -41,11 +47,20 @@ const ProductionFilterForm = ({ handleSubmit, setisEnable, number_order, setnumb
     const handleClick = () => {
         setOpenn(true);
     };
-    useEffect(() => { ProductsRequest.findProductByDerivate(false).then(e => setproducts(e)) }, [])
+    useEffect(() => { 
+        
+        ProductsRequest.findProductParentProducction().then(e => setproducts(e) ) 
+    }, [])
 
 
 
+    const handleClickOpen = () => {
+        setOpenModal(true);
+    };
 
+    const handleCloseModal = () => {
+        setOpenModal(false);
+    };
 
     return (
         <Box component="form" m={2}>
@@ -60,12 +75,12 @@ const ProductionFilterForm = ({ handleSubmit, setisEnable, number_order, setnumb
                                 value={product}
                                 onChange={(evt: any) => {
                                     setproduct(evt.target.value)
-
+                                    
 
                                     setpurchase_unit_parent(evt.target.value.purchase_unit)
                                     setsale_unit_parent(evt.target.value.sale_unit)
                                     setcurrent_existence_parent(evt.target.value.p_current_existence)
-
+                                    setreserved_quantity(evt.target.value.total_amount_used ? evt.target.value.total_amount_used : "0")
                                     ConversionRequest.turninto(evt.target.value)
                                         .then(e => {
                                             if (e.success) {
@@ -100,6 +115,9 @@ const ProductionFilterForm = ({ handleSubmit, setisEnable, number_order, setnumb
                                             }
                                         }
                                     })
+
+                                    if(evt.target.value.total_amount_used > 0 && evt.target.value.total_amount_used !== "")
+                                      handleClickOpen()
 
                                     //ProductsRequest
 
@@ -199,6 +217,44 @@ const ProductionFilterForm = ({ handleSubmit, setisEnable, number_order, setnumb
 
                 </Grid>
 
+                <Grid item xs={10}>
+                    <Can
+                        perform="users:create"
+                        yes={() => (
+                            <TextFieldUi
+                                autofocus={false}
+                                error={""}
+                                label="Cantidad reservada"
+                                disabled={true}
+                                name="reserved_quantity"
+                                onChange={(evt: any) => {
+                                    setnumber_order(evt.target.value)
+                                    if (isEmpty(trim(evt.target.value)))
+                                        setisEnable(true)
+                                    else
+                                        setisEnable(false)
+                                }}
+                                type="text"
+                                value={reserved_quantity}
+
+                            />
+                        )}
+                    />
+
+                </Grid>
+
+                {
+                 product === "" ? <span></span> :    <Grid item xs={2}>
+                 <Can
+                     perform="users:create"
+                     yes={() => (
+                         <IconButton aria-label="delete" onClick={() => handleClickOpen()} ><VisibilityIcon color="primary" fontSize="medium" /></IconButton>
+                     )}
+                 />
+
+             </Grid>
+             }
+
 
                 <Grid item xs={12}>
                     <Can
@@ -219,6 +275,9 @@ const ProductionFilterForm = ({ handleSubmit, setisEnable, number_order, setnumb
 
                 </Grid>
 
+           
+
+               
 
 
 
@@ -237,6 +296,13 @@ const ProductionFilterForm = ({ handleSubmit, setisEnable, number_order, setnumb
 
 
             </Grid>
+
+            <AlertDialogUi
+                handleClose={handleCloseModal}
+                content={<StartProduction handleClose={handleCloseModal} data={product} />}
+                open={openModal}
+                title=""
+            />
         </Box>
     );
 };

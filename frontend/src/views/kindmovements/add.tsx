@@ -155,7 +155,7 @@ export function Addkindmovements({ consecutives, Classificationkindmovement, rol
                             value={formik.values.consecutive_id}
                             onChange={formik.handleChange}
                             error={formik.errors.consecutive_id}
-                            menuItems={consecutives.map((data: any, i: any) => <MenuItem value={data.id} key={i}>{`${data.description}`}</MenuItem>)}
+                            menuItems={consecutives.map((data: any, i: any) => <MenuItem value={data.id} key={i}>{`${data.name}`}</MenuItem>)}
 
                         />
                     </Grid>

@@ -57,4 +57,7 @@ export class Movements {
 
     @Column({ default : 0, type: 'float' })
     waste_quantity : number
+
+    @Column({ nullable: true })
+    person_id : number
 }

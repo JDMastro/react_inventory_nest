@@ -27,7 +27,7 @@ import { SettingsModule } from './settings/settings.module';
       host: 'localhost',
       port: 5432,
       username: 'postgres',
-      password: '1234',
+      password: '1995',
       database: 'test',
       entities: ['dist/**/*.entity{.ts,.js}'],
       synchronize: false,

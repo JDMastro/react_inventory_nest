@@ -5,11 +5,10 @@ import { initialFValuesTypes } from '../../types/initialFValues';
 import { ProductionsSchema } from "../../schemas/productionsSchema";
 import { useState, useEffect } from 'react';
 import { MovementRequest } from "../../services/movementService";
-import DeleteIcon from '@mui/icons-material/Delete';
 import { isEmpty } from 'lodash';
 
 
-export function AddProduction({ existence_converted, productparent, productchild, handleClose, setnumber_order, number_order, kind_mov, obsertvation }: any) {
+export function AddProduction({ reserved_quantity, existence_converted, productparent, productchild, handleClose, setnumber_order, number_order, kind_mov, obsertvation }: any) {
 
     const [disablebtn, setdisablebtn] = useState(false);
     const [movements, setmovements] = useState<any>([]);
@@ -20,6 +19,7 @@ export function AddProduction({ existence_converted, productparent, productchild
 
     useEffect(()=>{ 
         //console.log(number_order)
+        console.log(productchild)
         if(!isEmpty(number_order))
         MovementRequest.findMovementByNumberOrder(number_order).then(e =>{ setmovements(e); console.log(e)})
     },[refresh])
@@ -52,10 +52,11 @@ export function AddProduction({ existence_converted, productparent, productchild
             kind_movements_id: kind_mov.data.id,
             observation: values.observation,
             person_id: 1,
-            units_generated: values.units_generated,
+            units_generated: values.units_generated === "" ? 0 : values.units_generated,
             status_id: kind_mov.data.status_id,
-            suggested_amount: values.suggested_amount,
-            waste_quantity : values.waste_quantity
+            suggested_amount: values.suggested_amount === "" ? 0 : values.suggested_amount,
+            waste_quantity : values.waste_quantity === "" ? 0 : values.waste_quantity,
+            total_amount_used : values.total_amount_used
         }).then((res: any) => {
             console.log(res)
             if (res.success) {
@@ -68,6 +69,8 @@ export function AddProduction({ existence_converted, productparent, productchild
                 setdisablebtn(false)
                 //handleClose()
                 setrefresh(!refresh)
+                setnumber_order(res.new_number_order)
+                
                 
             } else {
                 res.errors.map((e: any) => formikHelpers.setFieldError(e.field, e.msg))
@@ -77,14 +80,23 @@ export function AddProduction({ existence_converted, productparent, productchild
                 setdisablebtn(false)
             }
         })
+        //formik.values.suggested_amount
+        //formik.values.units_generated
+        //total_amount_used
+        //waste_quantity
+        formikHelpers.setFieldValue("amount_to_take","")
+        formikHelpers.setFieldValue("suggested_amount","")
+        formikHelpers.setFieldValue("units_generated","")
+        formikHelpers.setFieldValue("total_amount_used","")
+        formikHelpers.setFieldValue("total_amount_used","")
 
     }
      //number_order, kind_mov, obsertvation
     const formik = UseForm({
         product_parent_name: productchild.p_name,
-        existence_converted: existence_converted,
+        existence_converted: existence_converted - reserved_quantity,
         to_discount: productchild.p_to_discount,
-        amount_to_take: "",
+        amount_to_take: !productchild.m_amount_used ? "" : productchild.m_amount_used ,
         units_generated: "",
         total_amount_used: "",
         waste_quantity: "",
@@ -152,6 +164,7 @@ export function AddProduction({ existence_converted, productparent, productchild
                             error={formik.errors.amount_to_take}
                             label="Cantidad a usar *"
                             name="amount_to_take"
+                            disabled={!productchild.m_amount_used ? false : true}
                             onChange={formik.handleChange}
                             type="text"
                             value={formik.values.amount_to_take}
@@ -170,7 +183,7 @@ export function AddProduction({ existence_converted, productparent, productchild
                             name="suggested_amount"
                             onChange={formik.handleChange}
                             type="text"
-                            value={formik.values.amount_to_take === 0 ? formik.values.suggested_amount="0" : formik.values.suggested_amount="" + formik.values.amount_to_take / formik.values.to_discount}
+                            value={ formik.values.amount_to_take ? formik.values.suggested_amount=""+formik.values.amount_to_take/productchild.p_to_discount : formik.values.suggested_amount=""}
 
                         />
                     </Grid>
@@ -197,7 +210,7 @@ export function AddProduction({ existence_converted, productparent, productchild
                             name="total_amount_used"
                             onChange={formik.handleChange}
                             type="text"
-                            value={formik.values.units_generated === 0 ? "0" : formik.values.total_amount_used = "" + formik.values.units_generated * formik.values.to_discount}
+                            value={formik.values.total_amount_used}
                             inputInside={
                                 productparent.sale_unit
                             }
@@ -270,7 +283,7 @@ export function AddProduction({ existence_converted, productparent, productchild
                             <TableCell align="center" style={{ fontWeight: 'bold' }}>Unid. generadas</TableCell>
                             <TableCell align="center" style={{ fontWeight: 'bold' }}>Cant. total usada</TableCell>
                             <TableCell align="center" style={{ fontWeight: 'bold' }}>Merma</TableCell>
-                            <TableCell align="center" style={{ fontWeight: 'bold' }}>Acción</TableCell>
+                           {/* <TableCell align="center" style={{ fontWeight: 'bold' }}>Acción</TableCell>*/}
                         </TableRow>
 
                     }
@@ -291,7 +304,7 @@ export function AddProduction({ existence_converted, productparent, productchild
                                 <TableCell align="center">{e.m_amount_used}</TableCell>
                                 <TableCell align="center">{e.m_waste_quantity}</TableCell>
                                
-                                <TableCell align="center"><IconButton aria-label="delete" onClick={() => MovementRequest.deleteNovement(e.m_id).then(e => MovementRequest.findMovementByNumberOrder(number_order).then(e =>{ setmovements(e); console.log(e)}  ))} ><DeleteIcon fontSize="small" /></IconButton></TableCell>
+                                {/*<TableCell align="center"><IconButton aria-label="delete" onClick={() => MovementRequest.deleteNovement(e.m_id).then(e => MovementRequest.findMovementByNumberOrder(number_order).then(e =>{ setmovements(e); console.log(e)}  ))} ><DeleteIcon fontSize="small" /></IconButton></TableCell>*/}
                             </TableRow>
 
                         )

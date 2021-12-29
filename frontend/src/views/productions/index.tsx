@@ -13,6 +13,9 @@ import { ProductsRequest } from "../../services/productsService";
 import { AddProduction } from "./AddProduction";
 import { KindMovementsRequest } from "../../services/kindmovementsService";
 import SettingsIcon from '@mui/icons-material/Settings';
+//import { blue, yellow } from '@mui/material/colors';
+
+
 
 
 const Production: React.FC = () => {
@@ -32,11 +35,12 @@ const Production: React.FC = () => {
 
     const [obsertvation, setobsertvation] = useState("")
 
+    const [reserved_quantity, setreserved_quantity] = useState<any>("")
 
 
 
-    useEffect(()=>{  KindMovementsRequest.findWithOnlyProduction().then(e => setkind_movement(e) ) },[])
-    
+    useEffect(() => { KindMovementsRequest.findWithOnlyProduction().then(e => setkind_movement(e)) }, [])
+
 
     const handleClickOpenModalAdd = (data) => {
         setproductChild(data)
@@ -50,8 +54,10 @@ const Production: React.FC = () => {
     const columns = [
         { name: "p_id", label: "Id" },
         { name: "p_name", label: "Producto" },
-        { name: "purchase_unit", label: "Unidad de compra" },
-        { name: "sale_unit", label: "Unidad de venta" },
+        { name: "m_suggest_units", label: "Unid. sugeridas" },
+        { name: "m_suggest_generated", label: "Unid. generadas" },
+        { name: "m_amount_used", label: "Cant. usada" },
+        { name: "m_waste_quantity", label: "Merma" },
         {
             name: "Actions",
             options: {
@@ -61,19 +67,39 @@ const Production: React.FC = () => {
                 customBodyRenderLite: (value, tableMeta, updateValue) => {
                     return (
 
-                        <IconButton disabled={isEnable} aria-label="update" onClick={() => handleClickOpenModalAdd(JSON.parse(JSON.stringify(productDerivate[value]))) }><SettingsIcon color="primary" fontSize="small" /></IconButton>
+                        <IconButton disabled={isEnable} aria-label="update" onClick={() => handleClickOpenModalAdd(productDerivate[value]) }><SettingsIcon style={{ color : productDerivate[value] ? productDerivate[value].m_amount_used > 0 ?  "#FBFF18"  :  "#0378B2" : "#0378B2" }} color="primary" fontSize="small" /></IconButton>
                     );
                 }
             }
         },
     ];
 
+    {/* 
+
+        productDerivate[value].m_amount_used > 0 ?  "#FBFF18"  :  "#0378B2"
+    <IconButton disabled={isEnable} aria-label="update" onClick={() => handleClickOpenModalAdd(JSON.parse(JSON.stringify(productDerivate[value])))}><SettingsIcon color="primary" fontSize="small" /></IconButton>
+    
+    
+    <IconButton disabled={isEnable} aria-label="update" onClick={() => handleClickOpenModalAdd(JSON.parse(JSON.stringify(productDerivate[value]))) }><SettingsIcon color="primary" fontSize="small" /></IconButton> 
+    sx={JSON.parse(JSON.stringify(productDerivate[value])).m_amount_used > 0 ? { color: yellow[700] } : { color: blue[700] } }
+  
+    style={{ color : JSON.parse(JSON.stringify(productDerivate[value])).m_amount_used > 0 ?  "#FBFF18"  :  "#0378B2" }}
+    */}
+
+
     const handleFormFilterSubmit = async (data: any) => {
         //await refDatatable.current.filter({});
-        const res = await ProductsRequest.getDerivate(data.product.p_id)
+        //const res = await ProductsRequest.getDerivate(data.product.p_id)
         //await refDatatable.fetchData(res)
+        const res = await ProductsRequest.getByStatusSuggest(data.product.p_id)
         setproductParent(data.product)
         setproductDerivate(res)
+        
+        if(res.length > 0)
+        //res[0]?.h_number_order ? "" : 
+        res[0].h_number_order ? setnumber_order(res[0].h_number_order) : setnumber_order("")
+           //setnumber_order(res[0].h_number_order)
+        //console.log("----",res)
         setexistence_converted(data.existence_converted)
     }
 
@@ -99,7 +125,7 @@ const Production: React.FC = () => {
                     }}
                     filterForm={
 
-                        <ProductionFilterForm obsertvation={obsertvation} setobsertvation={setobsertvation} disable_number_order={disable_number_order} setdisable_number_order={setdisable_number_order} kind_mov={kind_mov} setkind_mov={setkind_mov} number_order={number_order} setnumber_order={setnumber_order} setisEnable={setisEnable} handleSubmit={handleFormFilterSubmit} />
+                        <ProductionFilterForm reserved_quantity={reserved_quantity} setreserved_quantity={setreserved_quantity} obsertvation={obsertvation} setobsertvation={setobsertvation} disable_number_order={disable_number_order} setdisable_number_order={setdisable_number_order} kind_mov={kind_mov} setkind_mov={setkind_mov} number_order={number_order} setnumber_order={setnumber_order} setisEnable={setisEnable} handleSubmit={handleFormFilterSubmit} />
 
                     }
 
@@ -108,9 +134,9 @@ const Production: React.FC = () => {
                 />
             </PapperBlock>
             <AlertDialogUi
-            maxWidth="md"
+                maxWidth="md"
                 handleClose={handleCloseModalAdd}
-                content={<AddProduction setnumber_order={setnumber_order} number_order={number_order} kind_mov={kind_mov} obsertvation={obsertvation} kind_movement={kind_movement} existence_converted={existence_converted} productparent={productParent} productchild={productChild} handleClose={handleCloseModalAdd} />}
+                content={<AddProduction reserved_quantity={reserved_quantity} setnumber_order={setnumber_order} number_order={number_order} kind_mov={kind_mov} obsertvation={obsertvation} kind_movement={kind_movement} existence_converted={existence_converted} productparent={productParent} productchild={productChild} handleClose={handleCloseModalAdd} />}
                 open={openModalAdd}
                 title=""
             />

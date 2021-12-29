@@ -5,11 +5,16 @@ import { Products } from "../entities/products.entity";
 import { ProductsDto } from "../dto/product.dto";
 import { Units } from "../../units/entities/units.entity";
 import { Header } from "../../header/entities/header.entity";
+import { Movements } from 'src/movements/entities/movements.entity';
+import { IsNull } from "typeorm";
+
+import { SettingsService } from '../../settings/service/settings.service'
 
 @Injectable()
 export class ProductsService {
     constructor(
         @InjectRepository(Products) private _productsRepo: Repository<Products>,
+        private _settingsService : SettingsService
     ) { }
 
     async findBySku(sku: string) {
@@ -24,6 +29,30 @@ export class ProductsService {
         return await this._productsRepo.findOne({ name })
     }
 
+    async getByStatusSuggest(person_id:number, product_parent_id : number)
+    {
+
+        const status_id = await this._settingsService.findByKey("ESTADO_SUGERIDO")
+        
+        //cambiar este query, quitar person_id de movements
+        return await getManager().createQueryBuilder("products" ,"p")
+          .select(["h.number_order","p.to_discount","p.name" , "p.id", "m.suggest_units", "m.suggest_generated", 
+          "m.amount_used", "m.waste_quantity"])
+          .leftJoin(Movements, "m", `p.id = m.product_id and (m.person_id = ${person_id} or m.person_id = null)`)
+          .leftJoin(Header, "h", `h.person_id = ${person_id} AND m.header_id = h.id`)
+          .where(`p.product_parent_id = ${product_parent_id} and (m.status_id = ${parseInt(status_id.value)} or m.status_id is null)`)
+          //.andWhere("(m.status_id = :status_id", { status_id : parseInt(status_id.value) })
+          //.orWhere("m.status_id m.status_id is null)")
+          //.groupBy(["p.id", "m.suggest_units" , "m.suggest_generated", "m.amount_used", "m.waste_quantity"])
+          .groupBy("p.id")
+          .addGroupBy("m.suggest_units")
+          .addGroupBy("m.suggest_generated")
+          .addGroupBy("m.amount_used")
+          .addGroupBy("m.waste_quantity")
+          .addGroupBy("h.number_order")
+          .getRawMany()
+    }
+
     async findProductByDerivate(isderivate: boolean) {
         //return await this._productsRepo.find({ isderivate })
         return await getManager().createQueryBuilder("products", "p")
@@ -33,6 +62,29 @@ export class ProductsService {
             .innerJoin(Units, "u2", "u2.id = p.sale_unit_id")
             .where("p.isderivate = :isderivate", { isderivate })
             .getRawMany()
+    }
+
+    async findProductParentProducction()
+    {
+        const status_id = await this._settingsService.findByKey("ESTADO_SUGERIDO")
+
+        return await getManager().createQueryBuilder("products","p")
+           .select(["u.id as purchase_id", "u2.id as sale_id", "p.id", "p.name", 
+           "p.description","p.sku", "p.code_bar", "p.current_existence", "p.reserved_quantity",
+           "u.code as purchase_unit", "u2.code as sale_unit", "p.to_discount", "total_amount_used"
+           ])
+           .innerJoin(Units, "u", "u.id = p.purchase_unit_id ")
+           .innerJoin(Units, "u2", "u2.id = p.sale_unit_id")
+           //.leftJoin("x","(select p2.product_parent_id ,sum(m.amount_used) as total_amount_used from movements m inner join products p2 on m.product_id = p2.id and not p2.product_parent_id isnull where m.status_id = 4 group by p2.product_parent_id) x on x.product_parent_id = p.id")
+           .leftJoinAndSelect(subQuery => {
+               return subQuery.from("movements", "m")
+                 .select(["p2.product_parent_id as product_parent_id" ,"sum(m.amount_used) as total_amount_used"])
+                 .innerJoin(Products, "p2", "m.product_id = p2.id and not p2.product_parent_id isnull")
+                 .where("m.status_id = :status_id",{ status_id : parseInt(status_id.value) })
+                 .groupBy("p2.product_parent_id")
+           },"x","x.product_parent_id = p.id")
+           .where("p.isderivate = :isderivate", { isderivate : false })
+           .getRawMany()
     }
 
     async findProductByParent(parent_id : number)

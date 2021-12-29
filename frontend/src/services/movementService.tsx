@@ -9,6 +9,7 @@ const Requests = {
     createClient : async (url : string, body: any) => await instance.post(url, body).then(responseBody),
     getall : async (url:string) => await instance.get(url).then(responseBody),
     createProduction : async(url : string, body:any) => await instance.post(url, body).then(responseBody),
+    findStartedMovements : async (url : string) => await instance.get(url).then(responseBody),
 }
 
 export const MovementRequest =
@@ -21,5 +22,6 @@ export const MovementRequest =
     createClient : async (body: any) => await Requests.createClient('movements/client',body),
     getall : async () => await Requests.getall('movements'),
     createProduction : async (body: any) => await Requests.createClient('movements/productions',body),
+    findStartedMovements : async (product_parent_id: number) => await Requests.findStartedMovements(`movements/findStartedMovements/${product_parent_id}`)
 
 }

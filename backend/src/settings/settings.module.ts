@@ -8,6 +8,7 @@ import { KindmovementsModule } from "../kindmovements/kindmovements.module";
 @Module({
   imports : [TypeOrmModule.forFeature([Settings]), KindmovementsModule],
   providers: [SettingsService],
-  controllers: [SettingsController]
+  controllers: [SettingsController],
+  exports:[SettingsService]
 })
 export class SettingsModule {}
