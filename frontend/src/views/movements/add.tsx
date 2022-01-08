@@ -392,7 +392,7 @@ export function AddMovements({ kindmov, handleClose, setRefresh, refresh }: any)
                         type="number"
                         value={
                             numbers_orders.length > 0 && formik.values.orderReturned !== "" ?
-                            formik.values.totalPrice = numbers_orders.find((e:any) => e.h_id === formik.values.orderReturned ).m_unit_price / formik.values.quantity
+                            formik.values.totalPrice = numbers_orders.find((e:any) => e.h_id === formik.values.orderReturned ).m_unit_price * formik.values.quantity
                             :
                             formik.values.totalPrice}
                     />

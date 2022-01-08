@@ -60,4 +60,10 @@ export class Movements {
 
     @Column({ nullable: true })
     person_id : number
+
+    @Column({ nullable: true })
+    observation : string
+
+    @Column("timestamp", { nullable: true, precision: 3, default: () => "CURRENT_TIMESTAMP(3)", onUpdate: "CURRENT_TIMESTAMP(3)" })
+    updateAt: Date;
 }

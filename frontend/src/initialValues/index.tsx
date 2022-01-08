@@ -45,7 +45,8 @@ export const initialValuesProductDad: initialFValuesTypes = {
 export const initialValuesStatus: initialFValuesTypes = {
   name: "",
   description: "",
-  code: ""
+  code: "",
+  is_to_employee : false
 }
 
 export const initialValuesKindId: initialFValuesTypes = {
@@ -109,3 +110,10 @@ export const initialValuesOutputsFilter: initialFValuesTypes = {
   person_id: ""
 }
 
+export const initialValuesProductionRejected: initialFValuesTypes = {
+  observation: "",
+}
+
+export const initialValuesStatusChange: initialFValuesTypes = {
+  status_id: "",
+}

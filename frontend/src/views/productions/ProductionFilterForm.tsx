@@ -49,7 +49,7 @@ const ProductionFilterForm = ({ reserved_quantity, setreserved_quantity, handleS
     };
     useEffect(() => { 
         
-        ProductsRequest.findProductParentProducction().then(e => setproducts(e) ) 
+        ProductsRequest.findProductParentProducction().then(e =>{ setproducts(e); console.log(e) }) 
     }, [])
 
 

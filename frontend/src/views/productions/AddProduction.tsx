@@ -42,53 +42,62 @@ export function AddProduction({ reserved_quantity, existence_converted, productp
         setdisablebtn(true)
         //const kind = kind_movement.find((e: any) => e.id === values.kind_movemet_id)
         //console.log(kind_movement.find((e:any) => e.id === values.kind_movemet_id ))
-        MovementRequest.createProduction({
-            product_parent_id: productparent.p_id,
-            product_child_id: productchild.p_id,
-            amount_to_take: values.amount_to_take,
-            require_consecutive: kind_mov.data.require_consecutive,
-            consecutive_id: kind_mov.data.consecutive_id,
-            number_order: values.number_order,
-            kind_movements_id: kind_mov.data.id,
-            observation: values.observation,
-            person_id: 1,
-            units_generated: values.units_generated === "" ? 0 : values.units_generated,
-            status_id: kind_mov.data.status_id,
-            suggested_amount: values.suggested_amount === "" ? 0 : values.suggested_amount,
-            waste_quantity : values.waste_quantity === "" ? 0 : values.waste_quantity,
-            total_amount_used : values.total_amount_used
-        }).then((res: any) => {
-            console.log(res)
-            if (res.success) {
-                //formikHelpers.setFieldValue("number_order", )
-                setnumber_order(res.new_number_order)
-               // setmovements(res.movement)
-                
-                setSeverity("success")
-                setMsg("Guardado exitosamente")
-                setdisablebtn(false)
-                //handleClose()
-                setrefresh(!refresh)
-                setnumber_order(res.new_number_order)
-                
-                
-            } else {
-                res.errors.map((e: any) => formikHelpers.setFieldError(e.field, e.msg))
-                setSeverity("error")
-                setMsg("¡Hubo un error :( !")
-                handleClick()
-                setdisablebtn(false)
-            }
-        })
+       
+
+       if(values.total_amount_used !== "" && parseFloat(values.total_amount_used) > values.amount_to_take)
+        {
+            //formikHelpers.setFieldError("total_amount_used","Este campo no puede ser mayor a la cantidad existente")
+            formik.setFieldError("total_amount_used","Este campo no puede ser mayor a la cantidad existente")
+            setdisablebtn(false)
+        }else{
+            MovementRequest.createProduction({
+                product_parent_id: productparent.p_id,
+                product_child_id: productchild.producto_id,
+                amount_to_take: values.amount_to_take,
+                require_consecutive: kind_mov.data.require_consecutive,
+                consecutive_id: kind_mov.data.consecutive_id,
+                number_order: values.number_order,
+                kind_movements_id: kind_mov.data.id,
+                observation: values.observation,
+                //person_id: 1,
+                units_generated: values.units_generated === "" ? 0 : values.units_generated,
+                status_id: kind_mov.data.status_id,
+                suggested_amount: values.suggested_amount === "" ? 0 : values.suggested_amount,
+                waste_quantity : values.waste_quantity === "" ? 0 : values.waste_quantity,
+                total_amount_used : values.total_amount_used
+            }).then((res: any) => {
+                console.log(res)
+                if (res.success) {
+                    //formikHelpers.setFieldValue("number_order", )
+                    setnumber_order(res.new_number_order)
+                   // setmovements(res.movement)
+                    
+                    setSeverity("success")
+                    setMsg("Guardado exitosamente")
+                    setdisablebtn(false)
+                    //handleClose()
+                    setrefresh(!refresh)
+                    setnumber_order(res.new_number_order)
+                    
+                    
+                } else {
+                    res.errors.map((e: any) => formikHelpers.setFieldError(e.field, e.msg))
+                    setSeverity("error")
+                    setMsg("¡Hubo un error :( !")
+                    handleClick()
+                    setdisablebtn(false)
+                }
+            })
+        }
         //formik.values.suggested_amount
         //formik.values.units_generated
         //total_amount_used
         //waste_quantity
-        formikHelpers.setFieldValue("amount_to_take","")
+        //formikHelpers.setFieldValue("amount_to_take","")
         formikHelpers.setFieldValue("suggested_amount","")
         formikHelpers.setFieldValue("units_generated","")
-        formikHelpers.setFieldValue("total_amount_used","")
-        formikHelpers.setFieldValue("total_amount_used","")
+       // formikHelpers.setFieldValue("total_amount_used","")
+       // formikHelpers.setFieldValue("total_amount_used","")
 
     }
      //number_order, kind_mov, obsertvation
@@ -96,7 +105,7 @@ export function AddProduction({ reserved_quantity, existence_converted, productp
         product_parent_name: productchild.p_name,
         existence_converted: existence_converted - reserved_quantity,
         to_discount: productchild.p_to_discount,
-        amount_to_take: !productchild.m_amount_used ? "" : productchild.m_amount_used ,
+        amount_to_take: !productchild.amount_used ? "" : productchild.amount_used ,
         units_generated: "",
         total_amount_used: "",
         waste_quantity: "",

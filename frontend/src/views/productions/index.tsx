@@ -1,7 +1,7 @@
 // @ts-nocheck
 /* eslint-disable */
 import React, { useEffect, useState } from "react";
-import { Box, IconButton } from '@mui/material';
+import { Box, IconButton, Stack } from '@mui/material';
 import MUIDataTable from '../../components/table';
 import PapperBlock from '../../components/papper-block';
 import ProductionFilterForm from './ProductionFilterForm';
@@ -14,6 +14,8 @@ import { AddProduction } from "./AddProduction";
 import { KindMovementsRequest } from "../../services/kindmovementsService";
 import SettingsIcon from '@mui/icons-material/Settings';
 //import { blue, yellow } from '@mui/material/colors';
+import ReplayIcon from '@mui/icons-material/Replay';
+import { ProductionRejected } from "./ProductionRejected";
 
 
 
@@ -21,9 +23,11 @@ import SettingsIcon from '@mui/icons-material/Settings';
 const Production: React.FC = () => {
     const refDatatable: any = React.useRef();
     const [productDerivate, setproductDerivate] = useState([])
+    const [openModalRejected, setOpenModalRejected] = React.useState(false);
     const [openModalAdd, setOpenModalAdd] = React.useState(false);
     const [productChild, setproductChild] = React.useState({});
     const [productParent, setproductParent] = React.useState({});
+    const [productRejected, setproductRejected] = React.useState({});
     const [existence_converted, setexistence_converted] = React.useState(0);
     const [kind_movement, setkind_movement] = useState([])
     const [isEnable, setisEnable] = useState(true)
@@ -51,6 +55,15 @@ const Production: React.FC = () => {
         setOpenModalAdd(false);
     };
 
+    const handleClickOpenModalRejected = (data) => {
+        setproductRejected(data)
+        setOpenModalRejected(true);
+    };
+
+    const handleCloseModalRejected = () => {
+        setOpenModalRejected(false);
+    };
+
     const columns = [
         { name: "p_id", label: "Id" },
         { name: "p_name", label: "Producto" },
@@ -66,8 +79,16 @@ const Production: React.FC = () => {
                 empty: true,
                 customBodyRenderLite: (value, tableMeta, updateValue) => {
                     return (
+                        <Stack
+                            direction="row"
+                            justifyContent="center"
+                            alignItems="center"
+                            spacing={2}
+                        >
+                            <IconButton disabled={isEnable} aria-label="update" onClick={() => handleClickOpenModalAdd(productDerivate[value])}><SettingsIcon style={{ color: productDerivate[value] ? productDerivate[value].amount_used > 0 ? "#FBFF18" : "#0378B2" : "#0378B2" }} color="primary" fontSize="small" /></IconButton>
+                            <IconButton disabled={productDerivate[value] ? productDerivate[value].amount_used > 0 ? false: true : false} aria-label="update" onClick={() =>{handleClickOpenModalRejected(productDerivate[value]); }}><ReplayIcon  /></IconButton>
+                    </Stack>
 
-                        <IconButton disabled={isEnable} aria-label="update" onClick={() => handleClickOpenModalAdd(productDerivate[value]) }><SettingsIcon style={{ color : productDerivate[value] ? productDerivate[value].m_amount_used > 0 ?  "#FBFF18"  :  "#0378B2" : "#0378B2" }} color="primary" fontSize="small" /></IconButton>
                     );
                 }
             }
@@ -94,6 +115,8 @@ const Production: React.FC = () => {
         const res = await ProductsRequest.getByStatusSuggest(data.product.p_id)
         setproductParent(data.product)
         setproductDerivate(res)
+
+        console.log(res)
         
         if(res.length > 0)
         //res[0]?.h_number_order ? "" : 
@@ -138,6 +161,14 @@ const Production: React.FC = () => {
                 handleClose={handleCloseModalAdd}
                 content={<AddProduction reserved_quantity={reserved_quantity} setnumber_order={setnumber_order} number_order={number_order} kind_mov={kind_mov} obsertvation={obsertvation} kind_movement={kind_movement} existence_converted={existence_converted} productparent={productParent} productchild={productChild} handleClose={handleCloseModalAdd} />}
                 open={openModalAdd}
+                title=""
+            />
+
+<AlertDialogUi
+                maxWidth="md"
+                handleClose={handleCloseModalRejected}
+                content={<ProductionRejected handleClose={handleCloseModalRejected} productRejected={productRejected} />}
+                open={openModalRejected}
                 title=""
             />
         </Box>

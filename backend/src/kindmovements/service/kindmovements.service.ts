@@ -17,15 +17,15 @@ export class kindmovementsService {
     }
 
     async findAllWithoutProduction() {
-        return await this._kindMovementsRepo.find({ where : { classification_kindmovement_id : Not('3') } });
+        return await this._kindMovementsRepo.find({ where : { classification_kindmovement_id : Not('3') }, order : { name : 'ASC' } });
     }
 
     async findWithOnlyProduction() {
-        return await this._kindMovementsRepo.find({ where : { classification_kindmovement_id : 3 } });
+        return await this._kindMovementsRepo.find({ where : { classification_kindmovement_id : 3 }, order : { name : 'ASC' } });
     }
 
     async findAll() {
-        return await this._kindMovementsRepo.find();
+        return await this._kindMovementsRepo.find({order : { name : 'ASC' }});
     }
 
     async create(body: kindmovementsDto) {

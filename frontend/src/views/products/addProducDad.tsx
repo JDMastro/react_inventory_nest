@@ -125,7 +125,7 @@ export function AddProductDad({ handleClose, units, setRefresh, refresh }: any) 
                         value={formik.values.purchase_unit_id}
                         onChange={formik.handleChange}
                         error={formik.errors.purchase_unit_id}
-                        menuItems={units.map((data: any, i: any) => <MenuItem value={data.id} key={i}>{`${data.code} : ${data.description}`}</MenuItem>)}
+                        menuItems={units.map((data: any, i: any) => <MenuItem value={data.id} key={i}>{`${data.description}`}</MenuItem>)}
 
                     />
                 </Grid>
@@ -137,7 +137,7 @@ export function AddProductDad({ handleClose, units, setRefresh, refresh }: any) 
                         value={formik.values.sale_unit_id}
                         onChange={formik.handleChange}
                         error={formik.errors.sale_unit_id}
-                        menuItems={units.map((data: any, i: any) => <MenuItem value={data.id} key={i}>{`${data.code} : ${data.description}`}</MenuItem>)}
+                        menuItems={units.map((data: any, i: any) => <MenuItem value={data.id} key={i}>{`${data.description}`}</MenuItem>)}
 
                     />
                 </Grid>

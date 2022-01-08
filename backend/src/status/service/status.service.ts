@@ -14,7 +14,7 @@ export class StatusService {
     ) { }
 
     async findAll() {
-        return await this._statusRepo.find();
+        return await this._statusRepo.find({ order : { name : 'ASC' } });
     }
 
     async findByCode (code:string)
@@ -22,20 +22,26 @@ export class StatusService {
         return await this._statusRepo.findOne({ code })
     }
 
+    async findStatusEmplyee()
+    {
+        return await this._statusRepo.find({ where : { is_to_employee : true } })
+    }
+
     async create(body : StatusDto){
-        const { description, code, name } = body
-        return await this._statusRepo.save({ code, description, name })
+        const { description, code, name, is_to_employee } = body
+        return await this._statusRepo.save({ code, description, name, is_to_employee })
     }
 
     async update(id: number, body: StatusDto)
     {
-        const { description, code, name } = body
+        const { description, code, name, is_to_employee } = body
         const statu = await this._statusRepo.findOne(id)
 
         await this._statusRepo.merge(statu,{
             code,
             description,
-            name
+            name,
+            is_to_employee
         })
 
         return await this._statusRepo.save(statu)
@@ -59,16 +65,18 @@ export class StatusService {
           .groupBy("h.number_order")
           .addGroupBy("ps.fullname")
           .addGroupBy("h.creation_at")
+          .orderBy("ps.fullname", "ASC")
           .getRawMany()
     }
 
-    async getAllnumberOrders(number_orders : number)
+    async getAllnumberOrders(number_orders : string)
     {
       return await getManager().createQueryBuilder("movements","m")
-      .select(["h.number_order", "p.name", "m.quantity", "h.creation_at"])
+      .select(["h.number_order", "p.name", "m.quantity", "h.creation_at", "m.id"])
           .innerJoin(Header, "h","h.id = m.header_id")
           .innerJoin(Products, "p","p.id = m.product_id ")
           .where("h.number_order = :number_orders",{ number_orders: number_orders})
+          .orderBy("p.name", "ASC")
           .getRawMany()
     }
 }

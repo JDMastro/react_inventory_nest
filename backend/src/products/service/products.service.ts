@@ -36,20 +36,31 @@ export class ProductsService {
         
         //cambiar este query, quitar person_id de movements
         return await getManager().createQueryBuilder("products" ,"p")
-          .select(["h.number_order","p.to_discount","p.name" , "p.id", "m.suggest_units", "m.suggest_generated", 
-          "m.amount_used", "m.waste_quantity"])
-          .leftJoin(Movements, "m", `p.id = m.product_id and (m.person_id = ${person_id} or m.person_id = null)`)
+          //.select(["m.id","h.number_order","p.to_discount","p.name" , "p.id", "m.suggest_units", "m.suggest_generated", "m.amount_used", "m.waste_quantity"])
+          .distinct(true)
+          .select([`case when m.status_id = ${parseInt(status_id.value)} then m.id else null end as id`,
+          `case when m.status_id = ${parseInt(status_id.value)} then h.number_order else '' end as number_order`,
+          "p.to_discount","p.name", "p.id as producto_id,m.suggest_units","m.suggest_generated",
+          `case when m.status_id = ${parseInt(status_id.value)} then m.amount_used else 0 end as amount_used`,
+          `case when m.status_id = ${parseInt(status_id.value)} then m.waste_quantity else 0 end as waste_quantity`])
+          .leftJoin(Movements, "m", `p.id = m.product_id and (m.person_id = ${person_id} or m.person_id = null) and (m.status_id=${parseInt(status_id.value)} or m.status_id is null)`)
           .leftJoin(Header, "h", `h.person_id = ${person_id} AND m.header_id = h.id`)
-          .where(`p.product_parent_id = ${product_parent_id} and (m.status_id = ${parseInt(status_id.value)} or m.status_id is null)`)
+          
+          //.where(`p.product_parent_id = ${product_parent_id} and (m.status_id = ${parseInt(status_id.value)} or m.status_id is null)`)
+          .where(`p.product_parent_id = ${product_parent_id}`)
           //.andWhere("(m.status_id = :status_id", { status_id : parseInt(status_id.value) })
           //.orWhere("m.status_id m.status_id is null)")
           //.groupBy(["p.id", "m.suggest_units" , "m.suggest_generated", "m.amount_used", "m.waste_quantity"])
+          
+          .orderBy("p.name", 'ASC')
           .groupBy("p.id")
+          .addGroupBy("p.name")
           .addGroupBy("m.suggest_units")
           .addGroupBy("m.suggest_generated")
           .addGroupBy("m.amount_used")
           .addGroupBy("m.waste_quantity")
           .addGroupBy("h.number_order")
+          .addGroupBy("m.id")
           .getRawMany()
     }
 
@@ -61,6 +72,7 @@ export class ProductsService {
             .innerJoin(Units, "u", "u.id = p.purchase_unit_id ")
             .innerJoin(Units, "u2", "u2.id = p.sale_unit_id")
             .where("p.isderivate = :isderivate", { isderivate })
+            .orderBy("p.name", 'ASC')
             .getRawMany()
     }
 
@@ -84,6 +96,7 @@ export class ProductsService {
                  .groupBy("p2.product_parent_id")
            },"x","x.product_parent_id = p.id")
            .where("p.isderivate = :isderivate", { isderivate : false })
+           .orderBy("p.name", 'ASC')
            .getRawMany()
     }
 
@@ -95,6 +108,7 @@ export class ProductsService {
         .innerJoin(Units, "u", "u.id = p.purchase_unit_id ")
         .innerJoin(Units, "u2", "u2.id = p.sale_unit_id")
         .where("p.product_parent_id = :parent_id", { parent_id })
+        .orderBy("p.name", 'ASC')
         .getRawMany()
     }
 
@@ -108,6 +122,7 @@ export class ProductsService {
                    .innerJoin(Units, "u", "p.purchase_unit_id = u.id ")
                    .innerJoin(Units, "u2", "p.sale_unit_id = u2.id")
                    .where("h.id = :header_id", { header_id })
+                   .orderBy("p.name", 'ASC')
                    .getRawMany()
     }
 

@@ -20,5 +20,5 @@ export class MovementsDto {
 
 
     person_id : number
-
+    observation : string
 }

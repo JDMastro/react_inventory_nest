@@ -11,7 +11,7 @@ export class kindidentityService {
     ) { }
 
     async findAll() {
-        return await this._kindidentityRepo.find();
+        return await this._kindidentityRepo.find({ order : { code : 'ASC' } });
     }
 
     async findByCode(code : string)

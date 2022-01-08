@@ -1,5 +1,5 @@
-import { Box, Grid, TableRow, TableCell } from '@mui/material';
-import { UseForm, SelectWrapperUi, ButtonUi, AccordioUi, TableNormalUi } from "../../components";
+import { Box, Grid, TableRow, TableCell, IconButton } from '@mui/material';
+import { UseForm, SelectWrapperUi, ButtonUi, AccordioUi, TableNormalUi, AlertDialogUi } from "../../components";
 import { PersonRequest } from "../../services/personService";
 import { StatusRequest } from "../../services/statusService";
 import { initialValuesOutputsFilter } from "../../initialValues";
@@ -10,6 +10,8 @@ import MenuItem from '@mui/material/MenuItem';
 import { FormikHelpers } from "formik";
 import { useEffect, useState } from 'react';
 import Search from '@mui/icons-material/Search';
+import { Status } from "./ChangeStatus";
+import EditIcon from '@mui/icons-material/Edit';
 
 export function OutPuts()
 {
@@ -18,14 +20,25 @@ export function OutPuts()
     const [disablebtns, setDisablebtns] = useState(false)
     const [number_orders, setNumber_orders] = useState([])
     const [orders, setOrders] = useState([])
+    const [openModalAdd, setOpenModalAdd] = useState(false);
 
     const [expanded, setExpanded] = useState<string | false>(false);
+    const [data, setdata] = useState({})
+
+    const handleClickOpenModalAdd = (data : any) => {
+        setdata(data)
+        setOpenModalAdd(true);
+    };
+
+    const handleCloseModalAdd = () => {
+        setOpenModalAdd(false);
+    };
 
 
 
     useEffect(() => {
         PersonRequest.getAll().then(e =>{ setPersons(e) })
-        StatusRequest.getAll().then(e => setStatus(e))
+        StatusRequest.findStatusEmplyee().then(e => setStatus(e))
 
     }, [])
 
@@ -43,7 +56,8 @@ export function OutPuts()
     const handleChangeAccordion =
         (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
             setExpanded(isExpanded ? panel : false);
-            StatusRequest.getAllnumberOrders(parseInt(panel)).then(e =>{ setOrders(e) })
+            console.log(panel)
+            StatusRequest.getAllnumberOrders(panel).then(e =>{ setOrders(e); console.log(e) })
         };
 
     return (
@@ -65,7 +79,7 @@ export function OutPuts()
                             value={formik.values.status_id}
                             onChange={formik.handleChange}
                             error={formik.errors.status_id}
-                            menuItems={status.map((data: any, i: any) => <MenuItem value={data.id} key={i}>{`${data.name} ${data.code}`}</MenuItem>)}
+                            menuItems={status.map((data: any, i: any) => <MenuItem value={data.id} key={i}>{`${data.name}`}</MenuItem>)}
 
                         />                    </Grid>
                     <Grid item xs={5}>
@@ -101,6 +115,7 @@ export function OutPuts()
                                             <TableCell align="left" style={{ fontWeight: 'bold' }}>Nombre</TableCell>
                                             <TableCell align="left" style={{ fontWeight: 'bold' }}>Cantidad</TableCell>
                                             <TableCell align="left" style={{ fontWeight: 'bold' }}>Fecha de Creación</TableCell>
+                                            <TableCell align="left" style={{ fontWeight: 'bold' }}>Acción</TableCell>
                                         </TableRow>
                                     }
                                     tableBody={
@@ -113,6 +128,7 @@ export function OutPuts()
                                        {/*<TableCell align="left">{e.Header.KindMovements.name}</TableCell>*/}
                                        <TableCell align="left">{e.m_quantity}</TableCell>
                                        <TableCell align="left">{e.creation_at}</TableCell>
+                                       <TableCell align="left"><IconButton aria-label="update" onClick={() => handleClickOpenModalAdd(e)}><EditIcon color="primary" fontSize="small" /></IconButton></TableCell>
                                       
                                    </TableRow>
                                        )
@@ -126,6 +142,14 @@ export function OutPuts()
                 }
 
             </Box>
+
+            <AlertDialogUi
+                maxWidth="md"
+                handleClose={handleCloseModalAdd}
+                content={<Status status_id={formik.values.status_id} person_id={formik.values.person_id} setNumber_orders={setNumber_orders} setExpanded={setExpanded} data={data} status={status} handleClose={handleCloseModalAdd} />}
+                open={openModalAdd}
+                title=""
+            />
         </div>
     )
 

@@ -61,17 +61,20 @@ export class ProductsController {
     async getByStatusSuggest(@Req() request :Request, @Param('product_parent_id') product_parent_id : number)
     {
         //return await this._productsService.getByStatusSuggest(person_id, product_parent_id)
-        try {
+       try {
             const cookie = request.cookies['jwt']
 
             const data = await this._usersService.verifyToken(cookie)
-            if(!data)
+            if(!data){
+                console.log(data)
                throw new UnauthorizedException()
-
-               console.log("---->",data['id'])
+             }               
+               
+            
 
             return await this._productsService.getByStatusSuggest(data['id'], product_parent_id)
         } catch (error) {
+            console.log(error)
             throw new UnauthorizedException()
         }
     }

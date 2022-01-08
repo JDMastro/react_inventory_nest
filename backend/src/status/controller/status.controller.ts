@@ -21,7 +21,7 @@ export class StatusController {
 
     @Post()
     async create(@Body() body: StatusDto) {
-        const { code, description, name } = body
+        const { code, description, name, is_to_employee } = body
 
         const check_code = await this._statusService.findByCode(code)
 
@@ -31,17 +31,17 @@ export class StatusController {
             errors: { field: "code", msg: "Esta código ya esta registrado" }
         } : {
             success: true,
-            data: await this._statusService.create({ code, description, name }),
+            data: await this._statusService.create({ code, description, name, is_to_employee }),
             errors: null
         }
     }
 
     @Put(':id')
     async update(@Param('id') id: number, @Body() body: StatusDto) {
-        const { code, description, name } = body
+        const { code, description, name, is_to_employee } = body
         try {
             // await this._unitsService.update(id, body)
-            return { success: true, data: await this._statusService.update(id, { description, code, name }), errors: null }
+            return { success: true, data: await this._statusService.update(id, { description, code, name, is_to_employee }), errors: null }
         } catch (err) {
             var regExp = /\(([^)]+)\)/;
             var error = regExp.exec(err.detail)[1]
@@ -61,9 +61,15 @@ export class StatusController {
     }
 
     @Get('getAllnumberOrders/:number_orders')
-    async getAllnumberOrders(@Param('number_orders') number_orders : number)
+    async getAllnumberOrders(@Param('number_orders') number_orders : string)
     {
       return await this._statusService.getAllnumberOrders(number_orders)
+    }
+
+    @Get('findStatusEmplyee')
+    async findStatusEmplyee()
+    {
+        return await this._statusService.findStatusEmplyee()
     }
 
 

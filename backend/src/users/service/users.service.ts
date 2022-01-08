@@ -26,6 +26,7 @@ export class UsersService {
         .innerJoin(Kindidentity, "k", "k.id = p.kind_id")
         .innerJoin(Roles,"r","r.id = p.roles_id")
         .where("r.name = 'EMPLEADO'")
+        .orderBy("p.fullname")
         .getRawMany()
     }
 

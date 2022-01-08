@@ -10,6 +10,8 @@ const Requests = {
     getall : async (url:string) => await instance.get(url).then(responseBody),
     createProduction : async(url : string, body:any) => await instance.post(url, body).then(responseBody),
     findStartedMovements : async (url : string) => await instance.get(url).then(responseBody),
+    productionrejected : async (url:string, body:any) => await instance.put(url, body).then(responseBody),
+    changeStatusMovement : async (url:string, body:any) => await instance.put(url, body).then(responseBody),
 }
 
 export const MovementRequest =
@@ -22,6 +24,8 @@ export const MovementRequest =
     createClient : async (body: any) => await Requests.createClient('movements/client',body),
     getall : async () => await Requests.getall('movements'),
     createProduction : async (body: any) => await Requests.createClient('movements/productions',body),
-    findStartedMovements : async (product_parent_id: number) => await Requests.findStartedMovements(`movements/findStartedMovements/${product_parent_id}`)
+    findStartedMovements : async (product_parent_id: number) => await Requests.findStartedMovements(`movements/findStartedMovements/${product_parent_id}`),
+    productionrejected : async (movement_id:number, body:any) => await Requests.productionrejected(`movements/productionrejected/${movement_id}`,body),
+    changeStatusMovement : async (movement_id:number, body:any) => await Requests.changeStatusMovement(`movements/changeStatusMovement/${movement_id}`,body)
 
 }

@@ -79,7 +79,8 @@ export class MovementsController {
                     suggest_generated : 0,
                     suggest_units : 0,
                     waste_quantity : 0,
-                    person_id : null
+                    person_id : null,
+                    observation : null
                 })
 
                 await this._productsService.update(product_id, {
@@ -130,7 +131,8 @@ export class MovementsController {
                         suggest_generated : 0,
                         suggest_units : 0,
                         waste_quantity : 0,
-                        person_id : null
+                        person_id : null,
+                        observation : null
                     })
 
                     await this._productsService.update(product_id, {
@@ -162,7 +164,8 @@ export class MovementsController {
                         suggest_generated : 0,
                         suggest_units : 0,
                         waste_quantity : 0,
-                        person_id : null
+                        person_id : null,
+                        observation: null
                     })
 
                     await this._productsService.update(product_id, {
@@ -227,7 +230,8 @@ export class MovementsController {
                         suggest_generated : 0,
                         suggest_units : 0,
                         waste_quantity : 0,
-                        person_id : null
+                        person_id : null,
+                        observation : null
                     })
 
                     await this._productsService.update(product_id, {
@@ -278,7 +282,8 @@ export class MovementsController {
                             suggest_generated : 0,
                             suggest_units : 0,
                             waste_quantity : 0,
-                            person_id : null
+                            person_id : null,
+                            observation : null
                         })
 
                         await this._productsService.update(product_id, {
@@ -310,7 +315,8 @@ export class MovementsController {
                             suggest_generated : 0,
                             suggest_units : 0,
                             waste_quantity : 0,
-                            person_id : null
+                            person_id : null,
+                            observation : null
                         })
 
                         await this._productsService.update(product_id, {
@@ -398,7 +404,8 @@ export class MovementsController {
                         suggest_generated : 0,
                         suggest_units : 0,
                         waste_quantity : 0,
-                        person_id : null
+                        person_id : null,
+                        observation: null
                     })
     
                     await this._productsService.update(product_id, {
@@ -449,7 +456,8 @@ export class MovementsController {
                             suggest_generated : 0,
                             suggest_units : 0,
                             waste_quantity : 0,
-                            person_id : null
+                            person_id : null,
+                            observation: null
                         })
     
                         await this._productsService.update(product_id, {
@@ -481,7 +489,8 @@ export class MovementsController {
                             suggest_generated : 0,
                             suggest_units : 0,
                             waste_quantity : 0,
-                            person_id : null
+                            person_id : null,
+                            observation: null
                         })
     
                         await this._productsService.update(product_id, {
@@ -551,7 +560,8 @@ export class MovementsController {
                         suggest_generated : 0,
                         suggest_units : 0,
                         waste_quantity : 0,
-                        person_id : null
+                        person_id : null,
+                        observation: null
                     })
 
                     await this._productsService.update(product_id, {
@@ -602,7 +612,8 @@ export class MovementsController {
                             suggest_generated : 0,
                             suggest_units : 0,
                             waste_quantity : 0,
-                            person_id : null
+                            person_id : null,
+                            observation: null
                         })
 
                         await this._productsService.update(product_id, {
@@ -634,7 +645,8 @@ export class MovementsController {
                             suggest_generated : 0,
                             suggest_units : 0,
                             waste_quantity : 0,
-                            person_id : null
+                            person_id : null,
+                            observation: null
                         })
 
                         await this._productsService.update(product_id, {
@@ -746,7 +758,8 @@ export class MovementsController {
                            suggest_generated : parseFloat(body.suggested_amount),
                            suggest_units : parseFloat(body.units_generated),
                            waste_quantity : parseFloat(body.waste_quantity),
-                           person_id : data['id']
+                           person_id : data['id'],
+                           observation: null
                        })
        
                        
@@ -766,9 +779,11 @@ export class MovementsController {
                            to_discount : check_product_parent.to_discount,
                            waste_quantity : check_product_parent.waste_quantity
                        })
+                       
+                       console.log(converted)
        
                        await this._productsService.update(check_product_child.id,{
-                           current_existence : eval(`${check_product_child.current_existence} + ${converted}`),
+                           current_existence : eval(`${check_product_child.current_existence} + ${parseFloat(body.suggested_amount)}`),
                            description : check_product_child.description,
                            isderivate : check_product_child.isderivate,
                            name : check_product_child.name,
@@ -806,7 +821,8 @@ export class MovementsController {
                                suggest_generated : parseFloat(body.suggested_amount),
                                suggest_units : parseFloat(body.units_generated),
                                waste_quantity : parseFloat(body.waste_quantity),
-                               person_id : data['id']
+                               person_id : data['id'],
+                               observation: null
                            })
        
                            await this._productsService.update(check_product_parent.id,{
@@ -826,7 +842,7 @@ export class MovementsController {
                            })
        
                            await this._productsService.update(check_product_child.id,{
-                               current_existence : eval(`${check_product_child.current_existence} + ${converted}`),
+                               current_existence : eval(`${check_product_child.current_existence} + ${parseFloat(body.suggested_amount)}`),
                                description : check_product_child.description,
                                isderivate : check_product_child.isderivate,
                                name : check_product_child.name,
@@ -859,7 +875,8 @@ export class MovementsController {
                                suggest_generated : parseFloat(body.suggested_amount),
                                suggest_units : parseFloat(body.units_generated),
                                waste_quantity : parseFloat(body.waste_quantity),
-                               person_id : data['id']
+                               person_id : data['id'],
+                               observation: null
                            })
        
                            await this._productsService.update(check_product_parent.id,{
@@ -880,6 +897,7 @@ export class MovementsController {
        
                            await this._productsService.update(check_product_child.id,{
                                current_existence : eval(`${check_product_child.current_existence} + ${converted}`),
+                               //current_existence : eval(`${check_product_child.current_existence} + ${parseFloat(body.suggested_amount)}`),
                                description : check_product_child.description,
                                isderivate : check_product_child.isderivate,
                                name : check_product_child.name,
@@ -918,6 +936,7 @@ export class MovementsController {
                    return { success: false, data: null, errors }
                }
         } catch (error) {
+            console.log(error)
             throw new UnauthorizedException()
         }
     }
@@ -1038,6 +1057,31 @@ export class MovementsController {
     @Get('findStartedMovements/:product_parent_id')
     async findStartedMovements(@Param('product_parent_id') product_parent_id: number) {
         return await this._movementsService.findStartedMovements(product_parent_id)
+    }
+
+
+    @Put('productionrejected/:movement_id')
+    async productionRejected(@Param('movement_id') movement_id: number, @Body() body:any)
+    {
+        try {
+            
+        await this._movementsService.updateProductionRejeted(movement_id, body)
+        } catch (error) {
+            console.log(error)
+        }
+
+        return { success: true, data : null, error : null }
+    }
+
+    @Put('changeStatusMovement/:movement_id')
+    async changeStatusMovement(@Param('movement_id') movement_id: number, @Body() body: any)
+    {
+        const { status_id } = body
+
+        this._movementsService.changeStatusMovement(movement_id, status_id)
+       
+        return { success : true, data : null, error : null }
+        
     }
 
 

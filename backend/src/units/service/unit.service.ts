@@ -11,7 +11,7 @@ export class UnitsService {
     ) { }
 
     async findAll() {
-        return await this._unitsRepo.find();
+        return await this._unitsRepo.find({ order : { code : 'ASC' } });
     }
 
     async findByCode(code : string)

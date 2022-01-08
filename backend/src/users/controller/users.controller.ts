@@ -37,7 +37,7 @@ export class UsersController {
 
         const jwt = await this.jwtService.signAsync({ id : user.person_id })
 
-        response.cookie('jwt',jwt,{ httpOnly : true, path : "/" })
+        response.cookie('jwt',jwt,{ httpOnly : true, path : "/", secure : true, sameSite :"none" })
 
         return { success: true, data: null, error: null }
     }

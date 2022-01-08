@@ -11,7 +11,7 @@ export class ConsecutiveService {
     ) { }
 
     async findAll() {
-        return await this._consecutiveRepo.find();
+        return await this._consecutiveRepo.find({ order : { name : 'ASC' } });
     }
 
     async findById(id : number)

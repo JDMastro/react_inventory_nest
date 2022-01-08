@@ -18,6 +18,9 @@ export class Status {
     @Column()
     code: string;
 
+    @Column({ default: false })
+    is_to_employee: boolean
+
     @OneToMany(() => KindMovements, KindMovements => KindMovements.Status)
     KindMovements: KindMovements[];
 

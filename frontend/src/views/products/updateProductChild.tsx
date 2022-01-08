@@ -138,7 +138,7 @@ export function UpdateProductChild({open, setOpen, derivate, handleClose, units,
                         value={formik.values.sale_unit_id}
                         onChange={formik.handleChange}
                         error={formik.errors.sale_unit_id}
-                        menuItems={units.map((data: any, i: any) => <MenuItem value={data.id} key={i}>{`${data.code} : ${data.description}`}</MenuItem>)}
+                        menuItems={units.map((data: any, i: any) => <MenuItem value={data.id} key={i}>{`${data.description}`}</MenuItem>)}
 
                     />
                 </Grid>

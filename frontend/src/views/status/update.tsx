@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Stack, Box, Grid, Divider } from '@mui/material/';
 import { StatusSchema } from "../../schemas/statusSchema";
-import { UseForm, TextFieldUi, Snackbars, ButtonUi } from "../../components";
+import { UseForm, TextFieldUi, Snackbars, ButtonUi, CheckboxUi } from "../../components";
 import { initialFValuesTypes } from "../../types/initialFValues";
 import { StatusRequest } from "../../services/statusService";
 import { FormikHelpers } from "formik";
@@ -31,7 +31,7 @@ export function UpdateStatus({ handleClose, setRefresh, refresh, data }: any)
         //setloading(true)
         setdisablebtn(true)
         try {
-            const res = await StatusRequest.update(data.id,{ code: values.code, description: values.description, name : values.name })
+            const res = await StatusRequest.update(data.id,{ code: values.code, description: values.description, name : values.name, is_to_employee : values.is_to_employee })
             if (res.success) {
                 setMsg("Actualzado corrrectamente")
                 handleClick()
@@ -56,7 +56,9 @@ export function UpdateStatus({ handleClose, setRefresh, refresh, data }: any)
     const formik = UseForm({
         code: data.code,
         description: data.description,
-        name : data.name
+        name : data.name,
+        is_to_employee : data.is_to_employee
+
     }, StatusSchema, onSubmit)
 
 
@@ -101,6 +103,20 @@ export function UpdateStatus({ handleClose, setRefresh, refresh, data }: any)
                             type="text"
                             value={formik.values.description}
                         />
+                    </Grid>
+
+                    <Grid item xs={12}>
+                       <CheckboxUi
+                         checked={formik.values.is_to_employee}
+                         label="Es para emplados"
+                         name="is_to_employee"
+                         onChange={formik.handleChange}
+                       />
+                    </Grid>
+
+
+                    <Grid item xs={12}>
+                        
                         <Divider style={{ marginTop : '15px' }} />
                     </Grid>
 

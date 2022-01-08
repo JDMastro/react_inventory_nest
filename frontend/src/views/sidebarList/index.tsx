@@ -13,6 +13,7 @@ import Collapse from '@mui/material/Collapse';
 
 
 
+
 export function SideBarList() {
     const [selectedIndex, setSelectedIndex] = React.useState(0);
     const [open, setOpen] = React.useState(false);
@@ -67,6 +68,16 @@ export function SideBarList() {
                 </ListItemButton>
                 <Collapse in={open} timeout="auto" unmountOnExit>
                     <List component="div" disablePadding>
+
+                    <ListItemButton sx={{ pl: 5 }}
+                            selected={selectedIndex === 15}
+                            onClick={(event: any) => handleListItemClick(event, 15)}
+                            component={Link}
+                            to={`/dashboard/maestro/settings`}
+                        >
+
+                            <ListItemText primary="Configuración" />
+                        </ListItemButton>
 
                     <ListItemButton sx={{ pl: 5 }}
                                         selected={selectedIndex === 12}
@@ -152,6 +163,8 @@ export function SideBarList() {
 
                             <ListItemText primary="Tipos de movimiento" />
                         </ListItemButton>
+
+                        
 
 
                        

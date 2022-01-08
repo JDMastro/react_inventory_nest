@@ -11,6 +11,6 @@ export class ClassificationKindMovementService {
 
     async findAll()
     {
-        return await this._classificationKindMovementRepo.find()
+        return await this._classificationKindMovementRepo.find({ order:{ name : 'ASC' } })
     }
 }
