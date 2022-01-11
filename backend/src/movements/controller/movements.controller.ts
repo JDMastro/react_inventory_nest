@@ -745,22 +745,42 @@ export class MovementsController {
                            observation : body.observation,
                            person_id : data['id'],
                        })
+
+                       if(body.movement_id){
+                           await this._movementsService.updateMovement(body.movement_id,{
+                            header_id: header_res.id,
+                            product_id : body.product_child_id,
+                            quantity : body.amount_to_take,
+                            quantity_returned: 0,
+                            total_purchasePrice : 0,
+                            unit_price : 0,
+                            status_id : body.total_amount_used > 0 ? parseInt(check_settings.value) : body.status_id,
+                            amount_used : parseFloat(body.amount_to_take),
+                            suggest_generated : parseFloat(body.units_generated),
+                            suggest_units : parseFloat(body.suggested_amount),
+                            waste_quantity : parseFloat(body.waste_quantity),
+                            person_id : data['id'],
+                            observation: null
+                           })
+                       }else{
+                        await this._movementsService.create({
+                            header_id: header_res.id,
+                            product_id : body.product_child_id,
+                            quantity : body.amount_to_take,
+                            quantity_returned: 0,
+                            total_purchasePrice : 0,
+                            unit_price : 0,
+                            status_id : body.total_amount_used > 0 ? parseInt(check_settings.value) : body.status_id,
+                            amount_used : parseFloat(body.amount_to_take),
+                            suggest_generated : parseFloat(body.units_generated),
+                            suggest_units : parseFloat(body.suggested_amount),
+                            waste_quantity : parseFloat(body.waste_quantity),
+                            person_id : data['id'],
+                            observation: null
+                        })
+                       }
        
-                       await this._movementsService.create({
-                           header_id: header_res.id,
-                           product_id : body.product_child_id,
-                           quantity : body.amount_to_take,
-                           quantity_returned: 0,
-                           total_purchasePrice : 0,
-                           unit_price : 0,
-                           status_id : body.total_amount_used > 0 ? parseInt(check_settings.value) : body.status_id,
-                           amount_used : parseFloat(body.amount_to_take),
-                           suggest_generated : parseFloat(body.suggested_amount),
-                           suggest_units : parseFloat(body.units_generated),
-                           waste_quantity : parseFloat(body.waste_quantity),
-                           person_id : data['id'],
-                           observation: null
-                       })
+                     
        
                        
        
@@ -780,10 +800,9 @@ export class MovementsController {
                            waste_quantity : check_product_parent.waste_quantity
                        })
                        
-                       console.log(converted)
        
                        await this._productsService.update(check_product_child.id,{
-                           current_existence : eval(`${check_product_child.current_existence} + ${parseFloat(body.suggested_amount)}`),
+                           current_existence : eval(`${check_product_child.current_existence} + ${parseFloat(body.units_generated)}`),
                            description : check_product_child.description,
                            isderivate : check_product_child.isderivate,
                            name : check_product_child.name,
@@ -808,8 +827,42 @@ export class MovementsController {
                                observation : body.observation,
                                person_id : data['id'],
                            })
+
+                           if(body.movement_id){
+                            await this._movementsService.updateMovement(body.movement_id,{
+                             header_id: header_res.id,
+                             product_id : body.product_child_id,
+                             quantity : body.amount_to_take,
+                             quantity_returned: 0,
+                             total_purchasePrice : 0,
+                             unit_price : 0,
+                             status_id : body.total_amount_used > 0 ? parseInt(check_settings.value) : body.status_id,
+                             amount_used : parseFloat(body.amount_to_take),
+                             suggest_generated : parseFloat(body.units_generated),
+                             suggest_units : parseFloat(body.suggested_amount),
+                             waste_quantity : parseFloat(body.waste_quantity),
+                             person_id : data['id'],
+                             observation: null
+                            })
+                        }else{
+                         await this._movementsService.create({
+                             header_id: header_res.id,
+                             product_id : body.product_child_id,
+                             quantity : body.amount_to_take,
+                             quantity_returned: 0,
+                             total_purchasePrice : 0,
+                             unit_price : 0,
+                             status_id : body.total_amount_used > 0 ? parseInt(check_settings.value) : body.status_id,
+                             amount_used : parseFloat(body.amount_to_take),
+                             suggest_generated : parseFloat(body.units_generated),
+                             suggest_units : parseFloat(body.suggested_amount),
+                             waste_quantity : parseFloat(body.waste_quantity),
+                             person_id : data['id'],
+                             observation: null
+                         })
+                        }
        
-                           await this._movementsService.create({
+                           /*await this._movementsService.create({
                                header_id: header_res.id,
                                product_id : body.product_child_id,
                                quantity : body.amount_to_take,
@@ -818,12 +871,12 @@ export class MovementsController {
                                unit_price : 0,
                                status_id : body.total_amount_used > 0 ? parseInt(check_settings.value) : body.status_id,
                                amount_used : parseFloat(body.amount_to_take),
-                               suggest_generated : parseFloat(body.suggested_amount),
-                               suggest_units : parseFloat(body.units_generated),
+                               suggest_generated : parseFloat(body.units_generated),
+                               suggest_units : parseFloat(body.suggested_amount),
                                waste_quantity : parseFloat(body.waste_quantity),
                                person_id : data['id'],
                                observation: null
-                           })
+                           })*/
        
                            await this._productsService.update(check_product_parent.id,{
                                current_existence : body.total_amount_used > 0 ? check_product_parent.current_existence - (converted_total_amount_used + converted_waste) : check_product_parent.current_existence,
@@ -842,7 +895,8 @@ export class MovementsController {
                            })
        
                            await this._productsService.update(check_product_child.id,{
-                               current_existence : eval(`${check_product_child.current_existence} + ${parseFloat(body.suggested_amount)}`),
+                               current_existence :  eval(`${check_product_child.current_existence} + ${parseFloat(body.units_generated)}`),
+                               //current_existence : eval(`${check_product_child.current_existence} + ${parseFloat(body.suggested_amount)}`),
                                description : check_product_child.description,
                                isderivate : check_product_child.isderivate,
                                name : check_product_child.name,
@@ -861,7 +915,7 @@ export class MovementsController {
        
        
                        }else{
-                           await this._movementsService.create({
+                           /*await this._movementsService.create({
                                header_id: check_order_number.id,
                                product_id : body.product_child_id,
                                quantity : body.amount_to_take,
@@ -872,12 +926,49 @@ export class MovementsController {
                                unit_price : 0,
                                status_id : body.total_amount_used > 0 ? parseInt(check_settings.value) : body.status_id,
                                amount_used : parseFloat(body.amount_to_take),
-                               suggest_generated : parseFloat(body.suggested_amount),
-                               suggest_units : parseFloat(body.units_generated),
+                              // suggest_generated : parseFloat(body.suggested_amount),
+                              // suggest_units : parseFloat(body.units_generated),
+                              
+                           suggest_generated : parseFloat(body.units_generated),
+                           suggest_units : parseFloat(body.suggested_amount),
                                waste_quantity : parseFloat(body.waste_quantity),
                                person_id : data['id'],
                                observation: null
-                           })
+                           })*/
+
+                           if(body.movement_id){
+                            await this._movementsService.updateMovement(body.movement_id,{
+                             header_id: check_order_number.id,
+                             product_id : body.product_child_id,
+                             quantity : body.amount_to_take,
+                             quantity_returned: 0,
+                             total_purchasePrice : 0,
+                             unit_price : 0,
+                             status_id : body.total_amount_used > 0 ? parseInt(check_settings.value) : body.status_id,
+                             amount_used : parseFloat(body.amount_to_take),
+                             suggest_generated : parseFloat(body.units_generated),
+                             suggest_units : parseFloat(body.suggested_amount),
+                             waste_quantity : parseFloat(body.waste_quantity),
+                             person_id : data['id'],
+                             observation: null
+                            })
+                        }else{
+                         await this._movementsService.create({
+                             header_id: check_order_number.id,
+                             product_id : body.product_child_id,
+                             quantity : body.amount_to_take,
+                             quantity_returned: 0,
+                             total_purchasePrice : 0,
+                             unit_price : 0,
+                             status_id : body.total_amount_used > 0 ? parseInt(check_settings.value) : body.status_id,
+                             amount_used : parseFloat(body.amount_to_take),
+                             suggest_generated : parseFloat(body.units_generated),
+                             suggest_units : parseFloat(body.suggested_amount),
+                             waste_quantity : parseFloat(body.waste_quantity),
+                             person_id : data['id'],
+                             observation: null
+                         })
+                        }
        
                            await this._productsService.update(check_product_parent.id,{
                                current_existence : body.total_amount_used > 0 ? check_product_parent.current_existence - (converted_total_amount_used + converted_waste) : check_product_parent.current_existence,
@@ -896,7 +987,7 @@ export class MovementsController {
                            })
        
                            await this._productsService.update(check_product_child.id,{
-                               current_existence : eval(`${check_product_child.current_existence} + ${converted}`),
+                               current_existence :  eval(`${check_product_child.current_existence} + ${parseFloat(body.units_generated)}`),
                                //current_existence : eval(`${check_product_child.current_existence} + ${parseFloat(body.suggested_amount)}`),
                                description : check_product_child.description,
                                isderivate : check_product_child.isderivate,
@@ -943,9 +1034,10 @@ export class MovementsController {
 
 
 
+
+
     @Delete(':id')
     async remove(@Param('id') id: number) {
-        console.log(id)
         try {
             const movement = await this._movementsService.findById(id)
             const product = await this._productsService.findById(movement.product_id)

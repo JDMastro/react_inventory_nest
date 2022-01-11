@@ -2,13 +2,14 @@ import { Box, Grid, Stack, TableCell, TableRow, IconButton } from '@mui/material
 import { FormikHelpers } from 'formik';
 import { UseForm, TextFieldUi, ButtonUi, Snackbars, TableNormalUi } from "../../components";
 import { initialFValuesTypes } from '../../types/initialFValues';
-import { ProductionsSchema } from "../../schemas/productionsSchema";
+import { ProductionsSchema, ProductionsWithQuantityToUsedSchema } from "../../schemas/productionsSchema";
 import { useState, useEffect } from 'react';
 import { MovementRequest } from "../../services/movementService";
+import { ProductsRequest } from "../../services/productsService";
 import { isEmpty } from 'lodash';
 
 
-export function AddProduction({ reserved_quantity, existence_converted, productparent, productchild, handleClose, setnumber_order, number_order, kind_mov, obsertvation }: any) {
+export function AddProduction({ setproductDerivate, reserved_quantity, existence_converted, productparent, productchild, handleClose, setnumber_order, number_order, kind_mov, obsertvation }: any) {
 
     const [disablebtn, setdisablebtn] = useState(false);
     const [movements, setmovements] = useState<any>([]);
@@ -43,6 +44,8 @@ export function AddProduction({ reserved_quantity, existence_converted, productp
         //const kind = kind_movement.find((e: any) => e.id === values.kind_movemet_id)
         //console.log(kind_movement.find((e:any) => e.id === values.kind_movemet_id ))
        
+        console.log(productchild)
+      
 
        if(values.total_amount_used !== "" && parseFloat(values.total_amount_used) > values.amount_to_take)
         {
@@ -51,6 +54,7 @@ export function AddProduction({ reserved_quantity, existence_converted, productp
             setdisablebtn(false)
         }else{
             MovementRequest.createProduction({
+                movement_id : productchild.id,
                 product_parent_id: productparent.p_id,
                 product_child_id: productchild.producto_id,
                 amount_to_take: values.amount_to_take,
@@ -78,6 +82,12 @@ export function AddProduction({ reserved_quantity, existence_converted, productp
                     //handleClose()
                     setrefresh(!refresh)
                     setnumber_order(res.new_number_order)
+
+                    ProductsRequest.getByStatusSuggest(productparent.p_id).then(e => setproductDerivate(e))
+
+                
+                    
+                    handleClose()
                     
                     
                 } else {
@@ -89,6 +99,8 @@ export function AddProduction({ reserved_quantity, existence_converted, productp
                 }
             })
         }
+
+
         //formik.values.suggested_amount
         //formik.values.units_generated
         //total_amount_used
@@ -112,7 +124,7 @@ export function AddProduction({ reserved_quantity, existence_converted, productp
         suggested_amount: "",
         number_order: number_order,
         observation: obsertvation,
-    }, ProductionsSchema, onSubmit)
+    }, !productchild.amount_used ? ProductionsSchema : ProductionsWithQuantityToUsedSchema , onSubmit)
 
     return (
         <div>
@@ -201,7 +213,7 @@ export function AddProduction({ reserved_quantity, existence_converted, productp
                         <TextFieldUi
                             autofocus={false}
                             error={formik.errors.units_generated}
-
+                            disabled={productchild.amount_used > 0 ? false : true}
                             label="Unidades generadas"
                             name="units_generated"
                             onChange={formik.handleChange}
@@ -216,6 +228,7 @@ export function AddProduction({ reserved_quantity, existence_converted, productp
                             autofocus={false}
                             error={formik.errors.total_amount_used}
                             label="Cantidad total usado"
+                            disabled={productchild.amount_used > 0 ? false : true}
                             name="total_amount_used"
                             onChange={formik.handleChange}
                             type="text"
@@ -231,7 +244,7 @@ export function AddProduction({ reserved_quantity, existence_converted, productp
                         <TextFieldUi
                             autofocus={false}
                             error={formik.errors.waste_quantity}
-
+                            disabled={productchild.amount_used > 0 ? false : true}
                             label="Merma"
                             name="waste_quantity"
                             onChange={formik.handleChange}

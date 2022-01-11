@@ -122,4 +122,29 @@ export class MovementsService {
            .groupBy("p.fullname")
            .getRawMany()
     }
+
+    async updateMovement (id: number, body:any)
+    {
+        const {header_id,product_id,quantity, quantity_returned,total_purchasePrice,
+            unit_price,status_id, amount_used, suggest_generated, suggest_units,
+            waste_quantity, person_id, observation } = body
+
+        const movement = await this._movementsRepo.findOne(id)
+        await this._movementsRepo.merge(movement, {
+            header_id,
+            product_id,
+            quantity,
+            quantity_returned,
+            total_purchasePrice,
+            unit_price,
+            status_id,
+            amount_used,
+            suggest_generated,
+            suggest_units,
+            waste_quantity,
+            person_id,
+            observation
+        })
+        return this._movementsRepo.save(movement)
+    }
 }

@@ -67,10 +67,10 @@ const Production: React.FC = () => {
     const columns = [
         { name: "p_id", label: "Id" },
         { name: "p_name", label: "Producto" },
-        { name: "m_suggest_units", label: "Unid. sugeridas" },
+        { name: "suggest_units", label: "Unid. sugeridas" },
         { name: "m_suggest_generated", label: "Unid. generadas" },
-        { name: "m_amount_used", label: "Cant. usada" },
-        { name: "m_waste_quantity", label: "Merma" },
+        { name: "amount_used", label: "Cant. usada" },
+        { name: "waste_quantity", label: "Merma" },
         {
             name: "Actions",
             options: {
@@ -114,6 +114,7 @@ const Production: React.FC = () => {
         //await refDatatable.fetchData(res)
         const res = await ProductsRequest.getByStatusSuggest(data.product.p_id)
         setproductParent(data.product)
+        console.log(res)
         setproductDerivate(res)
 
         console.log(res)
@@ -159,7 +160,7 @@ const Production: React.FC = () => {
             <AlertDialogUi
                 maxWidth="md"
                 handleClose={handleCloseModalAdd}
-                content={<AddProduction reserved_quantity={reserved_quantity} setnumber_order={setnumber_order} number_order={number_order} kind_mov={kind_mov} obsertvation={obsertvation} kind_movement={kind_movement} existence_converted={existence_converted} productparent={productParent} productchild={productChild} handleClose={handleCloseModalAdd} />}
+                content={<AddProduction setproductDerivate={setproductDerivate} reserved_quantity={reserved_quantity} setnumber_order={setnumber_order} number_order={number_order} kind_mov={kind_mov} obsertvation={obsertvation} kind_movement={kind_movement} existence_converted={existence_converted} productparent={productParent} productchild={productChild} handleClose={handleCloseModalAdd} />}
                 open={openModalAdd}
                 title=""
             />

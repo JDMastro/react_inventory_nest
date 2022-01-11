@@ -32,7 +32,8 @@ import { SettingsModule } from './settings/settings.module';
       entities: ['dist/**/*.entity{.ts,.js}'],
       synchronize: false,
       retryDelay: 3000,
-      retryAttempts: 10
+      retryAttempts: 10,
+      logging: true
     }),
     UsersModule,
     UnitsModule,

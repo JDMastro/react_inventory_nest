@@ -8,7 +8,14 @@ const Requests = {
     findByHeader : async (url : string) => await instance.get(url).then(responseBody),
     createClient : async (url : string, body: any) => await instance.post(url, body).then(responseBody),
     getall : async (url:string) => await instance.get(url).then(responseBody),
-    createProduction : async(url : string, body:any) => await instance.post(url, body).then(responseBody),
+    
+    
+    
+    createProduction: async(url : string, body:any) => await instance.post(url, body).then(responseBody),
+    //createProduction : async (url : string, body : any) => await instance.put(url, body),
+    
+    
+    
     findStartedMovements : async (url : string) => await instance.get(url).then(responseBody),
     productionrejected : async (url:string, body:any) => await instance.put(url, body).then(responseBody),
     changeStatusMovement : async (url:string, body:any) => await instance.put(url, body).then(responseBody),
@@ -23,9 +30,14 @@ export const MovementRequest =
     findByHeader : async (header_id : number) => await Requests.findByHeader(`movements/header/product/${header_id}`),
     createClient : async (body: any) => await Requests.createClient('movements/client',body),
     getall : async () => await Requests.getall('movements'),
-    createProduction : async (body: any) => await Requests.createClient('movements/productions',body),
+
+
+    //reserveProduction : async (body: any) => await Requests.reserveProduction('movements/productions/reserved',body),
+    createProduction : async (body: any) => await Requests.createClient(`movements/productions`,body),
+
     findStartedMovements : async (product_parent_id: number) => await Requests.findStartedMovements(`movements/findStartedMovements/${product_parent_id}`),
     productionrejected : async (movement_id:number, body:any) => await Requests.productionrejected(`movements/productionrejected/${movement_id}`,body),
     changeStatusMovement : async (movement_id:number, body:any) => await Requests.changeStatusMovement(`movements/changeStatusMovement/${movement_id}`,body)
 
+    
 }
