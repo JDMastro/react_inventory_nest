@@ -23,6 +23,8 @@ import { AddUsers } from "./add";
 import { UpdateUser } from "./update";
 import { DeleteUsers } from "./delete";
 
+import { formatWeight } from "../../utils/FormatNumbers";
+
 
 export function Users()
 {
@@ -109,7 +111,7 @@ export function Users()
                                     <TableCell align="left" component="th" scope="row">{data.u_id}</TableCell>
                                     <TableCell align="left">{data.u_code}</TableCell>
                                     <TableCell align="left">{data.u_email}</TableCell>
-                                    <TableCell align="left">{data.p_idnumber}</TableCell>
+                                    <TableCell align="left">{formatWeight(data.p_idnumber)}</TableCell>
                                     <TableCell align="left">{data.p_fullname}</TableCell>
                                     <TableCell align="left">{data.kind_code}</TableCell>
                                     

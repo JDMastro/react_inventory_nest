@@ -23,6 +23,8 @@ import { AddPerson } from "./add";
 import { UpdatePerson } from "./update";
 import { DeletePerson } from "./delete";
 
+import { formatWeight } from "../../utils/FormatNumbers";
+
 
 
 
@@ -113,7 +115,7 @@ export function Person() {
 
                                     <TableCell align="left" component="th" scope="row">{data.p_id}</TableCell>
                                     <TableCell align="left">{data.kind_code}</TableCell>
-                                    <TableCell align="left">{data.p_idnumber}</TableCell>
+                                    <TableCell align="left">{formatWeight(data.p_idnumber)}</TableCell>
                                     <TableCell align="left">{data.p_fullname}</TableCell>
                                     <TableCell align="left">{data.r_name}</TableCell>
 

@@ -14,6 +14,8 @@ import { AddConversion } from "./add";
 import { UpdateConversion } from "./update";
 import { DeleteConversion } from "./delete";
 
+import { formatWeight } from "../../utils/FormatNumbers";
+
 
 
 export function Conversion()
@@ -104,7 +106,7 @@ export function Conversion()
                                     <TableCell align="left">{data.code_from}</TableCell>
                                     <TableCell align="left">{data.code_to}</TableCell>
                                     <TableCell align="left">{data.s_sign}</TableCell>
-                                    <TableCell align="left">{data.c_conversion_quatity}</TableCell>
+                                    <TableCell align="left">{formatWeight(data.c_conversion_quatity)}</TableCell>
 
                                     <TableCell align="right">
                                         <Stack direction="row" alignItems="center">

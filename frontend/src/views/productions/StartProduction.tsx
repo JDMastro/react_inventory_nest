@@ -1,8 +1,9 @@
 
-import { Box, Stack, TableCell, TableRow } from "@mui/material";
+import { Box, Stack, TableCell, TableRow, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { MovementRequest } from "../../services/movementService";
 import { TableNormalUi, ButtonUi } from "../../components";
+
 
 export function StartProduction({ handleClose, data }: any) {
     const [persons, setpersons] = useState([])
@@ -10,6 +11,9 @@ export function StartProduction({ handleClose, data }: any) {
     useEffect(() => { MovementRequest.findStartedMovements(data.p_id).then(e => setpersons(e)) }, [])
     return (
         <Box>
+            <Typography>
+            El producto {data.p_name} tiene reservado las siguientes cantidades:
+            </Typography>
             <TableNormalUi
                 tableHead={
                     <TableRow >

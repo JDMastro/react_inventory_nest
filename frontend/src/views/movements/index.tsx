@@ -10,6 +10,8 @@ import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
 import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
 
+import { formatCurrency } from "../../utils/FormatNumbers";
+
 export function Movements() {
     const [openModalAdd, setOpenModalAdd] = React.useState(false);
     const [kindmov, setkindmov] = React.useState([]);
@@ -69,8 +71,8 @@ export function Movements() {
                             <TableCell align="left">{e.ckm_name}</TableCell>
                             <TableCell align="left">{e.p_name}</TableCell>
                             <TableCell align="left">{e.m_quantity}</TableCell>
-                            <TableCell align="left">{e.m_total_purchasePrice}</TableCell>
-                            <TableCell align="left">{e.m_unit_price}</TableCell>
+                            <TableCell align="left">{formatCurrency(e.m_total_purchasePrice)}</TableCell>
+                            <TableCell align="left">{formatCurrency(e.m_unit_price)}</TableCell>
                             
                         </TableRow>
                     )

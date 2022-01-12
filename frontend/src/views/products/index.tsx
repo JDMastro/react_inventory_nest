@@ -41,6 +41,8 @@ import AddIcon from '@mui/icons-material/Add';
 import { green } from '@mui/material/colors';
 import { red } from '@mui/material/colors';
 
+import { formatWeight } from "../../utils/FormatNumbers";
+
 function Row(props: { row: any, setRefresh: any, refresh: any, key:any }) {
     const { row, setRefresh, refresh, key } = props;
     const [open, setOpen] = React.useState(false);
@@ -111,8 +113,8 @@ function Row(props: { row: any, setRefresh: any, refresh: any, key:any }) {
                 <TableCell align="left">{row.p_description}</TableCell>
                 <TableCell align="left">{row.purchase_unit}</TableCell>
                 <TableCell align="left">{row.sale_unit}</TableCell>
-                <TableCell align="left">{row.p_current_existence}</TableCell>
-                <TableCell align="left">{row.p_reserved_quantity}</TableCell>
+                <TableCell align="left">{formatWeight(row.p_current_existence)}</TableCell>
+                <TableCell align="left">{formatWeight(row.p_reserved_quantity)}</TableCell>
                 <TableCell align="left">
                     <Stack direction="row" alignItems="left">
                         <IconButton aria-label="addchild" onClick={() => handleClickOpenModalAddChild(row)}><AddIcon fontSize="small" sx={{ color: green[700] }} color="primary" /></IconButton>
@@ -153,8 +155,8 @@ function Row(props: { row: any, setRefresh: any, refresh: any, key:any }) {
                                                 <TableCell align="left">{data.p_description}</TableCell>
                                                 <TableCell align="left">{data.purchase_unit}</TableCell>
                                                 <TableCell align="left">{data.sale_unit}</TableCell>
-                                                <TableCell align="left">{data.p_current_existence}</TableCell>
-                                                <TableCell align="left">{data.p_reserved_quantity}</TableCell>
+                                                <TableCell align="left">{formatWeight(data.p_current_existence)}</TableCell>
+                                                <TableCell align="left">{formatWeight(data.p_reserved_quantity)}</TableCell>
                                                 <TableCell align="left">
                                                     <Stack direction="row" alignItems="left">
                                                         <IconButton aria-label="update" onClick={() => handleClickOpenModalUpdateChild(data)}><EditIcon fontSize="small" color="primary" /></IconButton>

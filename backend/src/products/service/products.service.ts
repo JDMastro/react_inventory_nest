@@ -116,7 +116,7 @@ export class ProductsService {
     {
         return getManager().createQueryBuilder("movements","m")
         .select(["u.id as purchase_id", "u2.id as sale_id", "p.id", "p.name", "p.description", "p.sku", "p.code_bar", "p.current_existence", "p.reserved_quantity",
-                "u.code as purchase_unit", "u2.code as sale_unit", "p.to_discount"])
+                "u.code as purchase_unit", "u2.code as sale_unit", "p.to_discount", "m.unit_price"])
                    .innerJoin(Products, "p", "m.product_id = p.id")
                    .innerJoin(Header, "h", "h.id = m.header_id")
                    .innerJoin(Units, "u", "p.purchase_unit_id = u.id ")

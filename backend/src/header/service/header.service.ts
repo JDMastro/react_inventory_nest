@@ -27,10 +27,12 @@ export class HeaderService {
     async findByPersonId(person_id : number)
     {
         return await getManager().createQueryBuilder("header",'h')
-                .select(["h.number_order", "h.id", "m.unit_price"])
+                .select(["h.number_order", "h.id"])
                 .innerJoin(Person, "p","h.person_id = p.id ")
                 .innerJoin(Movements, "m","m.header_id = h.id")
                 .where("p.id = :person_id", { person_id })
+                .groupBy("h.id")
+                .addGroupBy("h.number_order")
                 .getRawMany()
                 
     }

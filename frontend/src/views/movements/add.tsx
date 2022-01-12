@@ -279,7 +279,7 @@ export function AddMovements({ kindmov, handleClose, setRefresh, refresh }: any)
                                         formik.setFieldValue("idproduct", "")
                                         formik.handleChange(evt)
 
-                                        MovementRequest.findByHeader(evt.target.value).then(e => setproducts(e))
+                                        //MovementRequest.findByHeader(evt.target.value).then(e => setproducts(e))
                                     }}
                                     error={formik.errors.orderReturned}
                                     label="Orden a devolver"
@@ -391,10 +391,11 @@ export function AddMovements({ kindmov, handleClose, setRefresh, refresh }: any)
                         onChange={formik.handleChange}
                         type="number"
                         value={
-                            numbers_orders.length > 0 && formik.values.orderReturned !== "" ?
+                            product_selected && formik.values.orderReturned !== "" ? formik.values.totalPrice = product_selected .m_unit_price * formik.values.quantity : formik.values.totalPrice
+                            /*numbers_orders.length > 0 && formik.values.orderReturned !== "" ?
                             formik.values.totalPrice = numbers_orders.find((e:any) => e.h_id === formik.values.orderReturned ).m_unit_price * formik.values.quantity
                             :
-                            formik.values.totalPrice}
+                        formik.values.totalPrice*/}
                     />
                 </Grid>
 

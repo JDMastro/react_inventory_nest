@@ -12,10 +12,11 @@ import { ProductsRequest } from "../../services/productsService";
 
 import { AddProduction } from "./AddProduction";
 import { KindMovementsRequest } from "../../services/kindmovementsService";
-import SettingsIcon from '@mui/icons-material/Settings';
+//import SettingsIcon from '@mui/icons-material/Settings';
 //import { blue, yellow } from '@mui/material/colors';
 import ReplayIcon from '@mui/icons-material/Replay';
 import { ProductionRejected } from "./ProductionRejected";
+import EmojiObjectsIcon from '@mui/icons-material/EmojiObjects';
 
 
 
@@ -85,7 +86,7 @@ const Production: React.FC = () => {
                             alignItems="center"
                             spacing={2}
                         >
-                            <IconButton disabled={isEnable} aria-label="update" onClick={() => handleClickOpenModalAdd(productDerivate[value])}><SettingsIcon style={{ color: productDerivate[value] ? productDerivate[value].amount_used > 0 ? "#FBFF18" : "#0378B2" : "#0378B2" }} color="primary" fontSize="small" /></IconButton>
+                            <IconButton disabled={isEnable} aria-label="update" onClick={() => handleClickOpenModalAdd(productDerivate[value])}><EmojiObjectsIcon  color={productDerivate[value] ? productDerivate[value].amount_used > 0 ? "warning" : "success" : "success"} fontSize="small" /></IconButton>
                             <IconButton disabled={productDerivate[value] ? productDerivate[value].amount_used > 0 ? false: true : false} aria-label="update" onClick={() =>{handleClickOpenModalRejected(productDerivate[value]); }}><ReplayIcon  /></IconButton>
                     </Stack>
 
@@ -96,6 +97,7 @@ const Production: React.FC = () => {
     ];
 
     {/* 
+        style={{ color: productDerivate[value] ? productDerivate[value].amount_used > 0 ? "#FBFF18" : "#0378B2" : "#0378B2" }}
 
         productDerivate[value].m_amount_used > 0 ?  "#FBFF18"  :  "#0378B2"
     <IconButton disabled={isEnable} aria-label="update" onClick={() => handleClickOpenModalAdd(JSON.parse(JSON.stringify(productDerivate[value])))}><SettingsIcon color="primary" fontSize="small" /></IconButton>
