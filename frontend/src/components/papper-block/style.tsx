@@ -19,9 +19,9 @@ const styles = makeStyles((theme: Theme) => ({
   upperLeftBlock: {
     display: 'flex',
     alignItems: 'center',
-    marginBottom: theme.spacing(5),
+    // marginBottom: theme.spacing(5),
     [theme.breakpoints.down('sm')]: {
-      marginBottom: theme.spacing(3),
+      // marginBottom: theme.spacing(3),
     },
   },
   upperRightBlock: {},
