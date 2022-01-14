@@ -11,7 +11,7 @@ import Divider from '@mui/material/Divider';
 
 
 
-export function UpdateProductDad({ handleClose, units, setRefresh, refresh, data }: any) {
+export function UpdateProductDad({ handleClose, units, data, onSubmit : on }: any) {
     const [severity, setSeverity] = React.useState("success");
     const [msg, setMsg] = React.useState("success");
     const [openn, setOpenn] = React.useState(false);
@@ -47,8 +47,8 @@ export function UpdateProductDad({ handleClose, units, setRefresh, refresh, data
             if (res.success) {
                 setMsg("Guardado exitosamente")
                 handleClick()
-                setRefresh(!refresh)
                 handleClose()
+                on(res.data);
                 setdisablebtn(false)
             } else {
                 formikHelpers.setFieldError(res.errors.field, res.errors.msg)

@@ -13,11 +13,11 @@ const Requests = {
 
 export const ProductsRequest =
 {
-    getNotDerivate : async (isderivate : boolean) => await Requests.getNotDerivate(`products/parents/${isderivate}`),
+    getNotDerivate : async ({ isDerivate }: any) => await Requests.getNotDerivate(`products/parents/${isDerivate}`),
     create : async (body: any) => await Requests.create('products',body),
     update : async (id : number, body : any) => await Requests.update(`products/${id}`,body),
     delete : async (id: number) => await Requests.delete(`products/${id}`),
-    getDerivate : async (parent_id : number) => await Requests.getDerivate(`products/derivate/${parent_id}`),
+    getDerivate : async ({ parentId }: any) => await Requests.getDerivate(`products/derivate/${parentId}`),
     findProductByDerivate : async (is_derivate : boolean) => await Requests.findProductByDerivate(`products/parents/${is_derivate}`),
     getByStatusSuggest : async (product_parent_id : number) => await Requests.getByStatusSuggest(`products/suggest/${product_parent_id}`),
     findProductParentProducction : async ()=> await Requests.findProductParentProducction('products/parent/producction')

@@ -5,6 +5,7 @@ import App from "../App";
 import { Users } from "../views/users";
 import { Units } from "../views/units";
 import { Products } from "../views/products";
+import ProductV2 from "../views/products/v2";
 import { Status } from "../views/status";
 import { KindIdentity } from "../views/kindidentity";
 import { Person } from "../views/person";
@@ -60,6 +61,7 @@ export const DashboardRoute = () => {
             <ProtectedRoute exact path="/dashboard/" component={()=> <div>Dashboard</div> } />
             <ProtectedRoute exact path="/dashboard/maestro/units" component={Units} />
             <ProtectedRoute exact path="/dashboard/maestro/product" component={Products} />
+            <ProtectedRoute exact path="/dashboard/maestro/products/v2" component={ProductV2} />
             <ProtectedRoute exact path="/dashboard/maestro/person" component={Person} />
             <ProtectedRoute exact path="/dashboard/maestro/kindid" component={KindIdentity} />
             <ProtectedRoute exact path="/dashboard/maestro/status" component={Status} />

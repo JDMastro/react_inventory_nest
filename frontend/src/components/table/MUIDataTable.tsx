@@ -147,7 +147,7 @@ const MUIDataTable: any = React.forwardRef<React.ReactNode, any>(
         const metadata = { ...resource };
         delete metadata.data;
 
-        const data = resource.data.map((item) => ({
+        const data = resource.map((item) => ({
           ...item,
           ...additionalDataByRow,
         }));
