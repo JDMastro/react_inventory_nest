@@ -6,7 +6,8 @@ import { ButtonUi, Snackbars } from "../../components";
 import Divider from '@mui/material/Divider';
 
 
-export function DeleteProduct({ handleClose, setRefresh, refresh, data, open, setOpen }: any) {
+export const DeleteProduct = ({ onClose, data, onSubmit : on } : any) =>
+{
     const [severity, setSeverity] = React.useState("success");
     const [msg, setMsg] = React.useState("success");
     const [openn, setOpenn] = React.useState(false);
@@ -24,15 +25,13 @@ export function DeleteProduct({ handleClose, setRefresh, refresh, data, open, se
 
         setdisablebtn(true)
         try {
-            const res = await ProductsRequest.delete(data.p_id)
+            const res = await ProductsRequest.delete(data.id)
             if (res.success) {
                 setMsg("Eliminado exitosamente")
                 handleClick()
-                setRefresh(!refresh)
-                handleClose()
                 setdisablebtn(false)
-
-                setOpen(!open)
+                on("DELETED", res.data)
+                onClose()
             } else {
                 setSeverity("error")
                 setMsg(res.error)
@@ -62,7 +61,7 @@ export function DeleteProduct({ handleClose, setRefresh, refresh, data, open, se
                     alignItems="flex-start"
                     spacing={2}
                 >
-                    <ButtonUi disabled={disablebtn} text="Cancelar" type="button" onClick={handleClose} />
+                    <ButtonUi disabled={disablebtn} text="Cancelar" type="button" onClick={onClose} />
                     <ButtonUi disabled={disablebtn} text="Enviar" type="button" onClick={() => deleteProduct()} />
 
                 </Stack>
@@ -77,4 +76,5 @@ export function DeleteProduct({ handleClose, setRefresh, refresh, data, open, se
             </Box>
         </div>
     )
+
 }

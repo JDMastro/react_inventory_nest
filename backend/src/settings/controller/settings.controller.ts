@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Body, Controller, Get, Param, Put } from '@nestjs/common';
 import { SettingsService } from "../service/settings.service";
 import { kindmovementsService } from "../../kindmovements/service/kindmovements.service";
 
@@ -24,6 +24,19 @@ export class SettingsController {
            return { success: false, data: null, error: `No se encontró movimiento: ${setting.value}` }
 
       return { success : true, data : kind_mov, error : null  }
+    }
+
+    @Get()
+    async findAll()
+    {
+        return await this._settingsService.findAll()
+    }
+
+    @Put(':id')
+    async update(@Param('id') id: number, @Body() body: any)
+    {
+        const { value, description } = body
+        return { success : true, data : await this._settingsService.update(id, { value, description }), error : null }
     }
 
 

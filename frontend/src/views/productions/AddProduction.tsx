@@ -119,7 +119,9 @@ export function AddProduction({ setproductDerivate, reserved_quantity, existence
         to_discount: productchild.p_to_discount,
         amount_to_take: !productchild.amount_used ? "" : productchild.amount_used ,
         units_generated: "",
-        total_amount_used: "",
+
+        total_amount_used: "" ,
+
         waste_quantity: "",
         suggested_amount: "",
         number_order: number_order,
@@ -185,7 +187,7 @@ export function AddProduction({ setproductDerivate, reserved_quantity, existence
                             error={formik.errors.amount_to_take}
                             label="Cantidad a usar *"
                             name="amount_to_take"
-                            disabled={!productchild.m_amount_used ? false : true}
+                            disabled={!productchild.m_amount_used ? productchild.amount_used > 0 ? true : false : true}
                             onChange={formik.handleChange}
                             type="text"
                             value={formik.values.amount_to_take}
@@ -226,23 +228,6 @@ export function AddProduction({ setproductDerivate, reserved_quantity, existence
                     <Grid item xs={6}>
                         <TextFieldUi
                             autofocus={false}
-                            error={formik.errors.total_amount_used}
-                            label="Cantidad total usado"
-                            disabled={productchild.amount_used > 0 ? false : true}
-                            name="total_amount_used"
-                            onChange={formik.handleChange}
-                            type="text"
-                            value={formik.values.total_amount_used}
-                            inputInside={
-                                productparent.sale_unit
-                            }
-
-                        />
-                    </Grid>
-
-                    <Grid item xs={12}>
-                        <TextFieldUi
-                            autofocus={false}
                             error={formik.errors.waste_quantity}
                             disabled={productchild.amount_used > 0 ? false : true}
                             label="Merma"
@@ -256,6 +241,30 @@ export function AddProduction({ setproductDerivate, reserved_quantity, existence
 
                         />
                     </Grid>
+
+                    <Grid item xs={12}>
+                        <TextFieldUi
+                            autofocus={false}
+                            error={formik.errors.total_amount_used}
+                            label="Cantidad total usado"
+                            disabled={true}
+                            name="total_amount_used"
+                            onChange={formik.handleChange}
+                            type="text"
+                            value={
+                                formik.values.units_generated !== "" || formik.values.units_generated > 0 ?
+                                formik.values.total_amount_used = ""+formik.values.units_generated * formik.values.to_discount : 
+                                formik.values.total_amount_used = "0"
+                            }
+                            inputInside={
+                                productparent.sale_unit
+                            }
+
+                        />
+                    </Grid>
+                    {/* formik.values.total_amount_used */}
+
+                   
 
                    {/* <Grid item xs={12}>
                         <SelectWrapperUi

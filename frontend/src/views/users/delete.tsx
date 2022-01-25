@@ -3,7 +3,7 @@ import { Snackbars, ButtonUi } from "../../components";
 import { Stack, Box, Divider, Typography } from '@mui/material/';
 import { UsersRequest } from "../../services/usersService";
 
-export function DeleteUsers({ handleClose, setRefresh, refresh, data }: any) {
+export function DeleteUsers({ onClose, data, onSubmit : on }: any) {
     const [severity, setSeverity] = React.useState("success");
     const [msg, setMsg] = React.useState("success");
     const [openn, setOpenn] = React.useState(false);
@@ -21,14 +21,14 @@ export function DeleteUsers({ handleClose, setRefresh, refresh, data }: any) {
     {
         setdisablebtn(true)
         try {
-            const res = await UsersRequest.delete(data.u_id, data.u_person_id)
+            const res = await UsersRequest.delete(data.id, data.u_person_id)
             console.log(res)
             if (res.success) {
                 setMsg("Eliminado exitosamente")
                 handleClick()
-                setRefresh(!refresh)
-                handleClose()
                 setdisablebtn(false)
+                on("DELETED",{ id : data.id })
+                onClose()
             } else {
                 setSeverity("error")
                 setMsg(res.error)
@@ -58,7 +58,7 @@ export function DeleteUsers({ handleClose, setRefresh, refresh, data }: any) {
                     alignItems="flex-start"
                     spacing={2}
                 >
-                    <ButtonUi disabled={disablebtn} text="Cancelar" type="button" onClick={handleClose} />
+                    <ButtonUi disabled={disablebtn} text="Cancelar" type="button" onClick={onClose} />
                     <ButtonUi disabled={disablebtn} text="Enviar" type="button" onClick={()=> deleteProduct() } />
 
                 </Stack>

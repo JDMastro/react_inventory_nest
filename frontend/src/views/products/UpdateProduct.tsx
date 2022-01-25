@@ -1,17 +1,15 @@
 import * as React from 'react';
 import { Stack, Box, Grid } from '@mui/material/';
 import { ProductsRequest } from "../../services/productsService";
-import { ProductsChildSchema } from "../../schemas/productsSchema";
-import { UseForm, TextFieldUi, ButtonUi, Snackbars, SelectWrapperUi } from "../../components";
+import { ProductsDadSchema } from "../../schemas/productsSchema";
+import { UseForm, TextFieldUi, ButtonUi, Snackbars, SelectWrapperUi, CheckboxUi } from "../../components";
 import { initialFValuesTypes } from "../../types/initialFValues";
 
 import MenuItem from '@mui/material/MenuItem';
 import { FormikHelpers } from "formik";
 import Divider from '@mui/material/Divider';
 
-
-
-export function UpdateProductChild({open, setOpen, derivate, handleClose, units, setRefresh, refresh, data }: any)
+export const UpdateProduct = ({ onClose, data, units, onSubmit : on } : any) =>
 {
     const [severity, setSeverity] = React.useState("success");
     const [msg, setMsg] = React.useState("success");
@@ -33,7 +31,7 @@ export function UpdateProductChild({open, setOpen, derivate, handleClose, units,
     const onSubmit = async (values: initialFValuesTypes, formikHelpers: FormikHelpers<any>) => {
         setdisablebtn(true)
         try {
-            const res = await ProductsRequest.update(derivate.p_id,{
+            const res = await ProductsRequest.update(data.id, {
                 code_bar: values.code_bar === "" ? null : values.code_bar,
                 description: values.description,
                 isderivate: values.isderivate,
@@ -43,17 +41,18 @@ export function UpdateProductChild({open, setOpen, derivate, handleClose, units,
                 sale_unit_id: values.sale_unit_id,
                 sku: values.sku,
                 user_id: values.user_id,
-                to_discount: values.to_discount
+                to_discount: values.to_discount,
+                sale_price : values.sale_price,
+                actived : values.actived
             })
             if (res.success) {
                 setMsg("Guardado exitosamente")
                 handleClick()
-                setRefresh(!refresh)
-                handleClose()
+                on("UPDATED",res.data);
                 setdisablebtn(false)
-                setOpen(!open)
+                onClose()
             } else {
-                res.errors.map((e: any) => formikHelpers.setFieldError(e.field, e.msg))
+                formikHelpers.setFieldError(res.errors.field, res.errors.msg)
                 setSeverity("error")
                 setMsg("¡Hubo un error :( !")
                 handleClick()
@@ -66,22 +65,19 @@ export function UpdateProductChild({open, setOpen, derivate, handleClose, units,
     }
 
     const formik = UseForm({
-        code_bar: derivate.p_code_bar,
-        description: derivate.p_description,
-        name: derivate.p_name,
-        isderivate: true,
-        product_parent_id: data.p_id,
-        purchase_unit_id: derivate.purchase_id,
-        sale_unit_id: derivate.sale_id,
-        sku: derivate.p_sku,
-        user_id: 0,
-        to_discount: derivate.p_to_discount
-    }, ProductsChildSchema, onSubmit)
+        code_bar: data.p_code_bar ? data.p_code_bar : "",
+        description: data.p_description,
+        name: data.p_name,
+        purchase_unit_id: data.purchase_id,
+        sale_unit_id: data.sale_id,
+        sku: data.p_sku,
+        sale_price : data.p_sale_price,
+        actived : data.p_actived
+    }, ProductsDadSchema, onSubmit)
 
     return (
         <Box component="form" onSubmit={formik.handleSubmit}>
             <Grid container spacing={2}>
-
 
                 <Grid item xs={6}>
                     <TextFieldUi
@@ -89,11 +85,15 @@ export function UpdateProductChild({open, setOpen, derivate, handleClose, units,
                         error={formik.errors.name}
                         label="Nombre *"
                         name="name"
-                        onChange={formik.handleChange}
+                        onChange={(evt : any) =>{
+                            //formik.handleChange
+                            formik.setFieldValue("name", evt.target.value.toUpperCase())
+                        }}
                         type="text"
                         value={formik.values.name}
                     />
                 </Grid>
+
 
                 <Grid item xs={6}>
                     <TextFieldUi
@@ -101,7 +101,10 @@ export function UpdateProductChild({open, setOpen, derivate, handleClose, units,
                         error={formik.errors.description}
                         label="Description *"
                         name="description"
-                        onChange={formik.handleChange}
+                        onChange={(evt : any) =>{
+                            //formik.handleChange
+                            formik.setFieldValue("description", evt.target.value.toUpperCase())
+                        }}
                         type="text"
                         value={formik.values.description}
                     />
@@ -113,7 +116,10 @@ export function UpdateProductChild({open, setOpen, derivate, handleClose, units,
                         error={formik.errors.code_bar}
                         label="Código de barra *"
                         name="code_bar"
-                        onChange={formik.handleChange}
+                        onChange={(evt : any) =>{
+                            //formik.handleChange
+                            formik.setFieldValue("code_bar", evt.target.value.toUpperCase())
+                        }}
                         type="text"
                         value={formik.values.code_bar}
                     />
@@ -125,9 +131,26 @@ export function UpdateProductChild({open, setOpen, derivate, handleClose, units,
                         error={formik.errors.sku}
                         label="Sku *"
                         name="sku"
-                        onChange={formik.handleChange}
+                        onChange={(evt : any) =>{
+                            //formik.handleChange
+                            formik.setFieldValue("sku", evt.target.value.toUpperCase())
+                        }}
                         type="text"
                         value={formik.values.sku}
+                    />
+                </Grid>
+
+
+                <Grid item xs={6}>
+                    <SelectWrapperUi
+                        label='Unidad de compra'
+                        name="purchase_unit_id"
+                        value={formik.values.purchase_unit_id}
+                        onChange={formik.handleChange}
+                        error={formik.errors.purchase_unit_id}
+                        defaultValue={formik.values.purchase_unit_id}
+                        menuItems={units.map((data: any, i: any) => <MenuItem value={data.id} key={i}>{`${data.description}`}</MenuItem>)}
+
                     />
                 </Grid>
 
@@ -138,46 +161,44 @@ export function UpdateProductChild({open, setOpen, derivate, handleClose, units,
                         value={formik.values.sale_unit_id}
                         onChange={formik.handleChange}
                         error={formik.errors.sale_unit_id}
+                        defaultValue={formik.values.sale_unit_id}
                         menuItems={units.map((data: any, i: any) => <MenuItem value={data.id} key={i}>{`${data.description}`}</MenuItem>)}
 
                     />
                 </Grid>
 
-                <Grid item xs={6}>
+                <Grid item xs={12}>
                     <TextFieldUi
                         autofocus={false}
-                        error={formik.errors.to_discount}
-                        label="Descontar *"
-                        name="to_discount"
+                        error={formik.errors.sale_price}
+                        label="Precio de venta *"
+                        name="sale_price"
                         onChange={formik.handleChange}
                         type="text"
-                        value={formik.values.to_discount}
-                        inputInside={
-                            data.sale_unit
-                        }
+                        value={formik.values.sale_price}
                     />
                 </Grid>
+
+                {
+                    data.p_actived ? (<span></span>) : (
+                        <Grid item xs={12}>
+                       <CheckboxUi
+                         checked={formik.values.actived}
+                         label="Habilitar"
+                         name="actived"
+                         onChange={formik.handleChange}
+                       />
+                    </Grid>
+                    )
+                }
+
+                
 
                 <Grid item xs={12}>
                     <Divider style={{ marginTop: '15px' }} />
                 </Grid>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             </Grid>
-
             <Snackbars
                 msg={msg}
                 open={openn}
@@ -191,7 +212,7 @@ export function UpdateProductChild({open, setOpen, derivate, handleClose, units,
                 alignItems="flex-start"
                 spacing={2}
             >
-                <ButtonUi disabled={disablebtn} text="Cancelar" type="button" onClick={handleClose} />
+                <ButtonUi disabled={disablebtn} text="Cancelar" type="button" onClick={onClose} />
                 <ButtonUi disabled={disablebtn} text="Enviar" type="submit" />
 
             </Stack>

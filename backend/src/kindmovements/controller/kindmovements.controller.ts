@@ -9,6 +9,12 @@ export class kindmovementsController {
         private _kindmovementsService: kindmovementsService
     ) { }
 
+    @Get('findKindMovClientOrProvider')
+    async findKindMovClientOrProvider()
+    {
+        return await this._kindmovementsService.findKindMovClientOrProvider()
+    }
+
     @Get()
     async findAll() {
         return await this._kindmovementsService.findAll()

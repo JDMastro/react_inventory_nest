@@ -11,4 +11,10 @@ export class RolesController {
     async findAll() {
         return await this._rolesService.findAll()
     }
+
+    @Get('getRoleProviderOrClient')
+    async getRoleProviderOrClient()
+    {
+        return await this._rolesService.getRoleProviderOrClient()
+    }
 }

@@ -7,6 +7,7 @@ const Requests = {
     update : async (url: string, body : any) => await instance.put(url,body).then(responseBody),
     findAllWithoutProduction : async (url : string) => await instance.get(url).then(responseBody),
     findWithOnlyProduction : async (url : string) => await instance.get(url).then(responseBody),
+    findKindMovClientOrProvider : async (url : string) => await instance.get(url).then(responseBody),
 }
 
 export const KindMovementsRequest =
@@ -17,4 +18,5 @@ export const KindMovementsRequest =
     update : async (id : number, body : any) => await Requests.update(`kindmovements/${id}`,body),
     findAllWithoutProduction : async () => await Requests.findAllWithoutProduction(`kindmovements/findAllWithoutProduction`),
     findWithOnlyProduction : async () => await Requests.findAllWithoutProduction(`kindmovements/findWithOnlyProduction`),
+    findKindMovClientOrProvider : async () => await Requests.findKindMovClientOrProvider(`kindmovements/findKindMovClientOrProvider`),
 }

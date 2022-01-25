@@ -3,7 +3,7 @@ import { Stack, Box, Divider, Typography } from '@mui/material/';
 import { Snackbars, ButtonUi } from "../../components";
 import { PersonRequest } from "../../services/personService";
 
-export function DeletePerson({ handleClose, setRefresh, refresh, data }: any)
+export function DeletePerson({ onClose, data, onSubmit : on }: any)
 {
     const [severity, setSeverity] = React.useState("success");
     const [msg, setMsg] = useState("success");
@@ -23,13 +23,13 @@ export function DeletePerson({ handleClose, setRefresh, refresh, data }: any)
 
         setdisablebtn(true)
         try {
-            const res = await PersonRequest.delete(data.p_id)
+            const res = await PersonRequest.delete(data.id)
             if (res.success) {
                 setMsg("Eliminado exitosamente")
                 handleClick()
-                setRefresh(!refresh)
-                handleClose()
                 setdisablebtn(false)
+                on("DELETED", { id : data.id })
+                onClose()
             } else {
                 setSeverity("error")
                 setMsg(res.error)
@@ -59,7 +59,7 @@ export function DeletePerson({ handleClose, setRefresh, refresh, data }: any)
                     alignItems="flex-start"
                     spacing={2}
                 >
-                    <ButtonUi disabled={disablebtn} text="Cancelar" type="button" onClick={handleClose} />
+                    <ButtonUi disabled={disablebtn} text="Cancelar" type="button" onClick={onClose} />
                     <ButtonUi disabled={disablebtn} text="Enviar" type="button" onClick={() => deleteProduct()} />
 
                 </Stack>

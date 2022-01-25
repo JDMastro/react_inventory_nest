@@ -17,7 +17,7 @@ export class PersonService {
     async findAll() {
         return await getManager().createQueryBuilder("person", "p")
         .select([
-            "p.id", "p.kind_id", "k.code as kind_code", "p.idnumber", "p.fullname", "p.address",
+            "p.id as id", "p.kind_id", "k.code as kind_code", "p.idnumber", "p.fullname", "p.address",
             "p.phone", "p.contact", "p.name", "p.second_name", "p.first_surname", "p.second_surname", "r.name" , "r.id as role_id"
         ])
         .innerJoin(Kindidentity, "k", "k.id = p.kind_id ")
@@ -31,13 +31,26 @@ export class PersonService {
         return this._personRepo.find({ where : { roles_id : role_id} })
     }
 
-    async findByIdNumber(idnumber : number)
+    async findByIdNumber(idnumber : string)
     {
         return await this._personRepo.findOne({ where : { idnumber } })
     }
-    async findByPhone(phone : number)
+    async findByPhone(phone : string)
     {
         return await this._personRepo.findOne({ where : { phone } })
+    }
+
+    async getLastInserted(id : number)
+    {
+        return await getManager().createQueryBuilder("person", "p")
+        .select([
+            "p.id as id", "p.kind_id", "k.code as kind_code", "p.idnumber", "p.fullname", "p.address",
+            "p.phone", "p.contact", "p.name", "p.second_name", "p.first_surname", "p.second_surname", "r.name" , "r.id as role_id"
+        ])
+        .innerJoin(Kindidentity, "k", "k.id = p.kind_id ")
+        .innerJoin(Roles, "r", "r.id = p.roles_id ")
+        .where("p.id = :id", { id })
+        .getRawOne()
     }
 
     async create(body : personDto){
@@ -45,10 +58,12 @@ export class PersonService {
             idnumber, kind_id, name, phone, roles_id, 
             second_name, user_id, second_surname  } = body
 
-        return await this._personRepo.save({ 
+        const personSaved = await this._personRepo.save({ 
             address, contact, first_surname, fullname, 
             idnumber, kind_id, name, phone, roles_id, 
             second_name, user_id, second_surname })
+
+            return await this.getLastInserted(personSaved.id)
     }
 
     async update(id: number, body: personDto)
@@ -65,7 +80,9 @@ export class PersonService {
             second_name, user_id, second_surname
         })
 
-        return await this._personRepo.save(person)
+        const saved = await this._personRepo.save(person)
+
+        return this.getLastInserted(id)
     }
 
     async delete(id : number)

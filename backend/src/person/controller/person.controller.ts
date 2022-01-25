@@ -53,7 +53,7 @@ export class PersonController {
 
         return errors.length > 0 ?
             { success: false, data: null, errors } :
-            { success: await this._personService.create(person), data: null, errors: null }
+            { success: true, data: await this._personService.create(person), errors: null }
     }
 
     @Put(':id')

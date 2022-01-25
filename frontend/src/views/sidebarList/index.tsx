@@ -128,15 +128,6 @@ export function SideBarList() {
                             <ListItemText primary="Productos" />
                         </ListItemButton>
 
-                        <ListItemButton sx={{ pl: 5 }}
-                                        selected={selectedIndex === 1}
-                                        onClick={(event: any) => handleListItemClick(event, 1)}
-                                        component={Link}
-                                        to={`/dashboard/maestro/products/v2`}>
-
-                            <ListItemText primary="Productos V2" />
-                        </ListItemButton>
-
 
                         <ListItemButton sx={{ pl: 5 }}
                             selected={selectedIndex === 3}

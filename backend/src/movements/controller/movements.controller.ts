@@ -35,7 +35,11 @@ export class MovementsController {
 
         const product = await this._productsService.findById(product_id)
 
+        let movementSaved;
+
         let new_number_order = ""
+
+        //const operation = await this._conversionService.getOperation()
 
         //SI ES ENTRADA
         if (classification_kindmovement_id === 1) {
@@ -67,7 +71,7 @@ export class MovementsController {
                     person_id
                 })
                 /*  SE CREA EL MOVIMIENTO */
-                await this._movementsService.create({
+                movementSaved = await this._movementsService.create({
                     header_id: header_res.id,
                     product_id,
                     quantity,
@@ -96,7 +100,9 @@ export class MovementsController {
                     user_id: product.user_id,
                     code_bar: product.code_bar,
                     to_discount: product.to_discount,
-                    waste_quantity: product.waste_quantity
+                    waste_quantity: product.waste_quantity,
+                    sale_price : product.sale_price,
+                    actived : product.actived
                 })
 
 
@@ -119,7 +125,7 @@ export class MovementsController {
                     })
 
                     /*  SE CREA EL MOVIMIENTO */
-                    await this._movementsService.create({
+                    movementSaved = await this._movementsService.create({
                         header_id: header_res.id,
                         product_id,
                         quantity,
@@ -148,11 +154,13 @@ export class MovementsController {
                         user_id: product.user_id,
                         code_bar: product.code_bar,
                         to_discount: product.to_discount,
-                        waste_quantity: product.waste_quantity
+                        waste_quantity: product.waste_quantity,
+                        sale_price : product.sale_price,
+                        actived : product.actived
                     })
                 } else {
                     /*  SE CREA EL MOVIMIENTO */
-                    await this._movementsService.create({
+                    movementSaved = await this._movementsService.create({
                         header_id: check_order_number.id,
                         product_id,
                         quantity,
@@ -181,7 +189,9 @@ export class MovementsController {
                         user_id: product.user_id,
                         code_bar: product.code_bar,
                         to_discount: product.to_discount,
-                        waste_quantity: product.waste_quantity
+                        waste_quantity: product.waste_quantity,
+                        sale_price : product.sale_price,
+                        actived : product.actived
                     })
                 }
             }
@@ -192,6 +202,8 @@ export class MovementsController {
         if (classification_kindmovement_id === 2) {
             const mov_header = await this._movementsService.findByheaderId(orderReturned)
             if (mov_header.quantity < body.quantity) {
+                console.log(mov_header.quantity)
+                console.log(body.quantity)
                 return { success: false, data: null, error: { quantity: "La cantidad no puede ser mayor cantidad comprada en la orden" } }
             } else {
                 if (require_consecutive && consecutive_id && number_order === "") {
@@ -218,7 +230,7 @@ export class MovementsController {
                         person_id
                     })
                     /*  SE CREA EL MOVIMIENTO */
-                    await this._movementsService.create({
+                    movementSaved = await this._movementsService.create({
                         header_id: header_res.id,
                         product_id,
                         quantity,
@@ -247,7 +259,9 @@ export class MovementsController {
                         user_id: product.user_id,
                         code_bar: product.code_bar,
                         to_discount: product.to_discount,
-                        waste_quantity: product.waste_quantity
+                        waste_quantity: product.waste_quantity,
+                        sale_price: product.sale_price,
+                        actived : product.actived
                     })
 
 
@@ -270,7 +284,7 @@ export class MovementsController {
                         })
 
                         /*  SE CREA EL MOVIMIENTO */
-                        await this._movementsService.create({
+                        movementSaved = await this._movementsService.create({
                             header_id: header_res.id,
                             product_id,
                             quantity,
@@ -299,11 +313,13 @@ export class MovementsController {
                             user_id: product.user_id,
                             code_bar: product.code_bar,
                             to_discount: product.to_discount,
-                            waste_quantity: product.waste_quantity
+                            waste_quantity: product.waste_quantity,
+                            sale_price : product.sale_price,
+                            actived : product.actived
                         })
                     } else {
                         /*  SE CREA EL MOVIMIENTO */
-                        await this._movementsService.create({
+                        movementSaved = await this._movementsService.create({
                             header_id: check_order_number.id,
                             product_id,
                             quantity,
@@ -332,7 +348,9 @@ export class MovementsController {
                             user_id: product.user_id,
                             code_bar: product.code_bar,
                             to_discount: product.to_discount,
-                            waste_quantity: product.waste_quantity
+                            waste_quantity: product.waste_quantity,
+                            sale_price: product.sale_price,
+                            actived : product.actived
                         })
                     }
                 }
@@ -346,7 +364,7 @@ export class MovementsController {
 
 
 
-        return { success: true, movement: await this._movementsService.findMovementByNumberOrder(new_number_order), new_number_order }
+        return { success: true, lastmovement : movementSaved, movement: await this._movementsService.findMovementByNumberOrder(new_number_order), new_number_order }
     }
 
 
@@ -358,6 +376,8 @@ export class MovementsController {
 
         const product = await this._productsService.findById(product_id)
         let new_number_order = ""
+
+        let movementSaved;
         //SI ES SALIDA
         if (classification_kindmovement_id === 2) {
             /*  
@@ -392,7 +412,7 @@ export class MovementsController {
                         person_id
                     })
                     /*  SE CREA EL MOVIMIENTO */
-                    await this._movementsService.create({
+                    movementSaved = await this._movementsService.create({
                         header_id: header_res.id,
                         product_id,
                         quantity,
@@ -421,7 +441,9 @@ export class MovementsController {
                         user_id: product.user_id,
                         code_bar: product.code_bar,
                         to_discount: product.to_discount,
-                        waste_quantity: product.waste_quantity
+                        waste_quantity: product.waste_quantity,
+                        sale_price : product.sale_price,
+                        actived : product.actived
                     })
     
     
@@ -444,7 +466,7 @@ export class MovementsController {
                         })
     
                         /*  SE CREA EL MOVIMIENTO */
-                        await this._movementsService.create({
+                        movementSaved = await this._movementsService.create({
                             header_id: header_res.id,
                             product_id,
                             quantity,
@@ -473,11 +495,13 @@ export class MovementsController {
                             user_id: product.user_id,
                             code_bar: product.code_bar,
                             to_discount: product.to_discount,
-                            waste_quantity: product.waste_quantity
+                            waste_quantity: product.waste_quantity,
+                            sale_price : product.sale_price,
+                            actived : product.actived
                         })
                     } else {
                         /*  SE CREA EL MOVIMIENTO */
-                        await this._movementsService.create({
+                        movementSaved = await this._movementsService.create({
                             header_id: check_order_number.id,
                             product_id,
                             quantity,
@@ -506,7 +530,9 @@ export class MovementsController {
                             user_id: product.user_id,
                             code_bar: product.code_bar,
                             to_discount: product.to_discount,
-                            waste_quantity: product.waste_quantity
+                            waste_quantity: product.waste_quantity,
+                            sale_price : product.sale_price,
+                            actived : product.actived
                         })
                     }
                 }
@@ -548,7 +574,7 @@ export class MovementsController {
                         person_id
                     })
                     /*  SE CREA EL MOVIMIENTO */
-                    await this._movementsService.create({
+                    movementSaved = await this._movementsService.create({
                         header_id: header_res.id,
                         product_id,
                         quantity,
@@ -577,7 +603,9 @@ export class MovementsController {
                         user_id: product.user_id,
                         code_bar: product.code_bar,
                         to_discount: product.to_discount,
-                        waste_quantity: product.waste_quantity
+                        waste_quantity: product.waste_quantity,
+                        sale_price : product.sale_price,
+                        actived : product.actived
                     })
 
 
@@ -600,7 +628,7 @@ export class MovementsController {
                         })
 
                         /*  SE CREA EL MOVIMIENTO */
-                        await this._movementsService.create({
+                        movementSaved = await this._movementsService.create({
                             header_id: header_res.id,
                             product_id,
                             quantity,
@@ -629,11 +657,13 @@ export class MovementsController {
                             user_id: product.user_id,
                             code_bar: product.code_bar,
                             to_discount: product.to_discount,
-                            waste_quantity: product.waste_quantity
+                            waste_quantity: product.waste_quantity,
+                            sale_price : product.sale_price,
+                            actived : product.actived
                         })
                     } else {
                         /*  SE CREA EL MOVIMIENTO */
-                        await this._movementsService.create({
+                        movementSaved = await this._movementsService.create({
                             header_id: check_order_number.id,
                             product_id,
                             quantity,
@@ -662,7 +692,9 @@ export class MovementsController {
                             user_id: product.user_id,
                             code_bar: product.code_bar,
                             to_discount: product.to_discount,
-                            waste_quantity: product.waste_quantity
+                            waste_quantity: product.waste_quantity,
+                            sale_price : product.sale_price,
+                            actived : product.actived
                         })
                     }
                 }
@@ -676,7 +708,7 @@ export class MovementsController {
 
 
 
-        return { success: true, movement: await this._movementsService.findMovementByNumberOrder(new_number_order), new_number_order }
+        return { success: true, lastmovement : movementSaved, movement: await this._movementsService.findMovementByNumberOrder(new_number_order), new_number_order }
     }
 
     @Post('productions')
@@ -689,6 +721,7 @@ export class MovementsController {
                throw new UnauthorizedException()
 
                const check_settings = await this._settingsService.findByKey("ESTADO_PRODUCIDO_ACEPTADO")
+               const check_settings_kind = await this._settingsService.findByKey("TIPO_MOV_SAL_PROD")
 
         
                const check_product_parent = await this._productsService.findById(body.product_parent_id)
@@ -747,10 +780,12 @@ export class MovementsController {
                        })
 
                        if(body.movement_id){
+                           console.log("------------------->")
                            await this._movementsService.updateMovement(body.movement_id,{
                             header_id: header_res.id,
                             product_id : body.product_child_id,
-                            quantity : body.amount_to_take,
+                           // quantity : body.amount_to_take,
+                            quantity : parseFloat(body.units_generated),
                             quantity_returned: 0,
                             total_purchasePrice : 0,
                             unit_price : 0,
@@ -762,6 +797,37 @@ export class MovementsController {
                             person_id : data['id'],
                             observation: null
                            })
+
+                           //----->
+
+                           const header_res_update = await this._headerService.create({
+                            kind_movements_id : parseInt(check_settings_kind.value),
+                            number_order : new_number_order,
+                            observation : body.observation,
+                            person_id : data['id'],
+                        })
+
+                           await this._movementsService.create({
+                            header_id: header_res_update.id,
+                            product_id : body.product_parent_id,
+                            //quantity : body.amount_to_take ,
+                            quantity : body.amount_to_take - parseFloat(body.waste_quantity) ,
+                            quantity_returned: 0,
+                            total_purchasePrice : 0,
+                            unit_price : 0,
+                            status_id : body.total_amount_used > 0 ? parseInt(check_settings.value) : body.status_id,
+                            amount_used : parseFloat(body.amount_to_take),
+                            suggest_generated : parseFloat(body.units_generated),
+                            suggest_units : parseFloat(body.suggested_amount),
+                            waste_quantity : parseFloat(body.waste_quantity),
+                            person_id : data['id'],
+                            observation: null
+                        
+                        })
+
+
+
+
                        }else{
                         await this._movementsService.create({
                             header_id: header_res.id,
@@ -797,7 +863,9 @@ export class MovementsController {
                            user_id : check_product_parent.user_id,
                            code_bar : check_product_parent.code_bar,
                            to_discount : check_product_parent.to_discount,
-                           waste_quantity : check_product_parent.waste_quantity
+                           waste_quantity : check_product_parent.waste_quantity,
+                           sale_price : check_product_parent.sale_price,
+                           actived : check_product_parent.actived
                        })
                        
        
@@ -814,7 +882,9 @@ export class MovementsController {
                            user_id : check_product_child.user_id,
                            code_bar : check_product_child.code_bar,
                            to_discount : check_product_child.to_discount,
-                           waste_quantity : check_product_child.waste_quantity
+                           waste_quantity : check_product_child.waste_quantity,
+                           sale_price : check_product_child.sale_price,
+                           actived : check_product_child.actived
                        })
                    }else{
                        const check_order_number = await this._headerService.findByOrderNumber(body.number_order)
@@ -832,7 +902,7 @@ export class MovementsController {
                             await this._movementsService.updateMovement(body.movement_id,{
                              header_id: header_res.id,
                              product_id : body.product_child_id,
-                             quantity : body.amount_to_take,
+                             quantity : parseFloat(body.units_generated),
                              quantity_returned: 0,
                              total_purchasePrice : 0,
                              unit_price : 0,
@@ -844,6 +914,34 @@ export class MovementsController {
                              person_id : data['id'],
                              observation: null
                             })
+                            //--------------------------------------
+                               //----->
+
+                           const header_res_update = await this._headerService.create({
+                            kind_movements_id : parseInt(check_settings_kind.value),
+                            number_order : new_number_order,
+                            observation : body.observation,
+                            person_id : data['id'],
+                        })
+
+                           await this._movementsService.create({
+                            header_id: header_res_update.id,
+                            product_id : body.product_parent_id,
+                            //quantity : body.amount_to_take ,
+                            quantity : body.amount_to_take - parseFloat(body.waste_quantity) ,
+                            quantity_returned: 0,
+                            total_purchasePrice : 0,
+                            unit_price : 0,
+                            status_id : body.total_amount_used > 0 ? parseInt(check_settings.value) : body.status_id,
+                            amount_used : parseFloat(body.amount_to_take),
+                            suggest_generated : parseFloat(body.units_generated),
+                            suggest_units : parseFloat(body.suggested_amount),
+                            waste_quantity : parseFloat(body.waste_quantity),
+                            person_id : data['id'],
+                            observation: null
+                        
+                        })
+
                         }else{
                          await this._movementsService.create({
                              header_id: header_res.id,
@@ -891,7 +989,9 @@ export class MovementsController {
                                user_id : check_product_parent.user_id,
                                code_bar : check_product_parent.code_bar,
                                to_discount : check_product_parent.to_discount,
-                               waste_quantity : check_product_parent.waste_quantity
+                               waste_quantity : check_product_parent.waste_quantity,
+                               sale_price : check_product_parent.sale_price,
+                               actived : check_product_parent.actived
                            })
        
                            await this._productsService.update(check_product_child.id,{
@@ -908,7 +1008,9 @@ export class MovementsController {
                                user_id : check_product_child.user_id,
                                code_bar : check_product_child.code_bar,
                                to_discount : check_product_child.to_discount,
-                               waste_quantity : check_product_child.waste_quantity
+                               waste_quantity : check_product_child.waste_quantity,
+                               sale_price : check_product_child.sale_price,
+                               actived : check_product_child.actived
                            })
        
        
@@ -940,7 +1042,7 @@ export class MovementsController {
                             await this._movementsService.updateMovement(body.movement_id,{
                              header_id: check_order_number.id,
                              product_id : body.product_child_id,
-                             quantity : body.amount_to_take,
+                             quantity : parseFloat(body.units_generated),
                              quantity_returned: 0,
                              total_purchasePrice : 0,
                              unit_price : 0,
@@ -952,6 +1054,34 @@ export class MovementsController {
                              person_id : data['id'],
                              observation: null
                             })
+                               //--------------------------------------
+                               //----->
+
+                           const header_res_update = await this._headerService.create({
+                            kind_movements_id : parseInt(check_settings_kind.value),
+                            number_order : new_number_order,
+                            observation : body.observation,
+                            person_id : data['id'],
+                        })
+
+                           await this._movementsService.create({
+                            header_id: header_res_update.id,
+                            product_id : body.product_parent_id,
+                            //quantity : body.amount_to_take ,
+                            quantity : body.amount_to_take - parseFloat(body.waste_quantity) ,
+                            quantity_returned: 0,
+                            total_purchasePrice : 0,
+                            unit_price : 0,
+                            status_id : body.total_amount_used > 0 ? parseInt(check_settings.value) : body.status_id,
+                            amount_used : parseFloat(body.amount_to_take),
+                            suggest_generated : parseFloat(body.units_generated),
+                            suggest_units : parseFloat(body.suggested_amount),
+                            waste_quantity : parseFloat(body.waste_quantity),
+                            person_id : data['id'],
+                            observation: null
+                        
+                        })
+
                         }else{
                          await this._movementsService.create({
                              header_id: check_order_number.id,
@@ -983,7 +1113,9 @@ export class MovementsController {
                                user_id : check_product_parent.user_id,
                                code_bar : check_product_parent.code_bar,
                                to_discount : check_product_parent.to_discount,
-                               waste_quantity : check_product_parent.waste_quantity
+                               waste_quantity : check_product_parent.waste_quantity,
+                               sale_price : check_product_parent.sale_price,
+                               actived : check_product_parent.actived
                            })
        
                            await this._productsService.update(check_product_child.id,{
@@ -1000,7 +1132,9 @@ export class MovementsController {
                                user_id : check_product_child.user_id,
                                code_bar : check_product_child.code_bar,
                                to_discount : check_product_child.to_discount,
-                               waste_quantity : check_product_child.waste_quantity
+                               waste_quantity : check_product_child.waste_quantity,
+                               sale_price : check_product_child.sale_price,
+                               actived : check_product_child.actived
                            })
        
                        }
@@ -1058,7 +1192,9 @@ export class MovementsController {
                     user_id : product.user_id,
                     code_bar : product.code_bar,
                     to_discount : product.to_discount,
-                    waste_quantity : product.waste_quantity
+                    waste_quantity : product.waste_quantity,
+                    sale_price : product.sale_price,
+                    actived : product.actived
                 })
             
                 //console.log(converted)
@@ -1094,7 +1230,9 @@ export class MovementsController {
                     user_id : product.user_id,
                     code_bar : product.code_bar,
                     to_discount : product.to_discount,
-                    waste_quantity : product.waste_quantity
+                    waste_quantity : product.waste_quantity,
+                    sale_price : product.sale_price,
+                    actived : product.actived
                 })
 
                 await this._productsService.update(product.product_parent_id,{
@@ -1110,7 +1248,9 @@ export class MovementsController {
                     user_id : check_product.user_id,
                     code_bar : check_product.code_bar,
                     to_discount : check_product.to_discount,
-                    waste_quantity : check_product.waste_quantity
+                    waste_quantity : check_product.waste_quantity,
+                    sale_price : check_product.sale_price,
+                    actived : check_product.actived
                 })
             }
             //console.log(movement)
@@ -1134,8 +1274,15 @@ export class MovementsController {
         return await this._headerService.findByPersonId(person_id)
     }
 
+    @Get('header/findByPersonOutPuts/:person_id')
+    async findByPersonOutPuts(@Param('person_id') person_id: number)
+    {
+        return await this._headerService.findByPersonOutPuts(person_id)
+    }
+
     @Get('header/product/:header_id')
     async findByHeader(@Param('header_id') header_id: number) {
+        console.log(header_id)
         return await this._productsService.findByHeader(header_id)
     }
 

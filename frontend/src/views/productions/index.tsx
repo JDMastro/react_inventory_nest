@@ -14,7 +14,8 @@ import { AddProduction } from "./AddProduction";
 import { KindMovementsRequest } from "../../services/kindmovementsService";
 //import SettingsIcon from '@mui/icons-material/Settings';
 //import { blue, yellow } from '@mui/material/colors';
-import ReplayIcon from '@mui/icons-material/Replay';
+//import ReplayIcon from '@mui/icons-material/Replay';
+import DeleteIcon from "@mui/icons-material/Delete";
 import { ProductionRejected } from "./ProductionRejected";
 import EmojiObjectsIcon from '@mui/icons-material/EmojiObjects';
 
@@ -87,7 +88,7 @@ const Production: React.FC = () => {
                             spacing={2}
                         >
                             <IconButton disabled={isEnable} aria-label="update" onClick={() => handleClickOpenModalAdd(productDerivate[value])}><EmojiObjectsIcon  color={productDerivate[value] ? productDerivate[value].amount_used > 0 ? "warning" : "success" : "success"} fontSize="small" /></IconButton>
-                            <IconButton disabled={productDerivate[value] ? productDerivate[value].amount_used > 0 ? false: true : false} aria-label="update" onClick={() =>{handleClickOpenModalRejected(productDerivate[value]); }}><ReplayIcon  /></IconButton>
+                            <IconButton disabled={productDerivate[value] ? productDerivate[value].amount_used > 0 ? false: true : false} aria-label="update" onClick={() =>{handleClickOpenModalRejected(productDerivate[value]); }}><DeleteIcon  /></IconButton>
                     </Stack>
 
                     );

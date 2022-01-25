@@ -7,7 +7,7 @@ import { initialFValuesTypes } from "../../types/initialFValues";
 import { ConversionRequest } from "../../services/conversionService";
 import { FormikHelpers } from "formik";
 
-export function AddConversion({ units, signs, handleClose, setRefresh, refresh }: any)
+export function AddConversion({ units, signs, onClose, onSubmit : on }: any)
 {
     const [severity] = useState("success");
     const [msg, setMsg] = useState("success");
@@ -31,7 +31,7 @@ export function AddConversion({ units, signs, handleClose, setRefresh, refresh }
 
         setdisablebtn(true)
         try {
-            await ConversionRequest.create({ 
+            const res = await ConversionRequest.create({ 
                 conversion_from: values.conversion_from,
                 conversion_to: values.conversion_to,
                 conversion_quatity: values.conversion_quatity,
@@ -40,8 +40,8 @@ export function AddConversion({ units, signs, handleClose, setRefresh, refresh }
            
                 setMsg("Guardado exitosamente")
                 handleClick()
-                setRefresh(!refresh)
-                handleClose()
+                on("CREATED", res.data)
+                onClose()
                 setdisablebtn(false)
            
         } catch (error) {
@@ -126,7 +126,7 @@ export function AddConversion({ units, signs, handleClose, setRefresh, refresh }
                     alignItems="flex-start"
                     spacing={2}
                 >
-                    <ButtonUi disabled={disablebtn} text="Cancelar" type="button" onClick={handleClose} />
+                    <ButtonUi disabled={disablebtn} text="Cancelar" type="button" onClick={onClose} />
                     <ButtonUi disabled={disablebtn} text="Enviar" type="submit" />
 
                 </Stack>

@@ -22,7 +22,7 @@ export class MovementsService {
     async create(body : MovementsDto)
     {
         const { observation, person_id, product_id, quantity, total_purchasePrice, unit_price, header_id, quantity_returned, status_id, amount_used, suggest_units, waste_quantity, suggest_generated  } = body
-        return await this._movementsRepo.save({ 
+        const movement = await this._movementsRepo.save({ 
             product_id, 
             quantity, 
             total_purchasePrice, 
@@ -37,6 +37,20 @@ export class MovementsService {
             person_id,
             observation
          })
+
+         return await this.getLastCreated(movement.id)
+    }
+
+    async getLastCreated(id : number)
+    {
+        return await getManager().createQueryBuilder("movements","m")
+            .select(["h.number_order","m.id", "ckm.name", "p.name", "m.quantity", "m.total_purchasePrice", "m.unit_price"])
+            .innerJoin(Header, "h","h.id = m.header_id")
+            .innerJoin(KindMovements, "km","km.id = h.kind_movements_id")
+            .innerJoin(ClassificationKindMovement, "ckm", "ckm.id = km.classification_kindmovement_id")
+            .innerJoin(Products, "p","p.id = m.product_id")
+            .where('m.id = :id', { id })
+            .getRawOne()
     }
 
     async findById(id:number){
@@ -57,7 +71,7 @@ export class MovementsService {
             .innerJoin(KindMovements, "km","km.id = h.kind_movements_id")
             .innerJoin(ClassificationKindMovement, "ckm", "ckm.id = km.classification_kindmovement_id")
             .innerJoin(Products, "p","p.id = m.product_id")
-            .orderBy("p.name", 'ASC')
+            .orderBy("m.id", 'DESC')
             .getRawMany()
     }
 

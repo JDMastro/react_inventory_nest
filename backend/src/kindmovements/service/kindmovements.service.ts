@@ -11,6 +11,11 @@ export class kindmovementsService {
         @InjectRepository(KindMovements) private _kindMovementsRepo: Repository<KindMovements>,
     ) { }
 
+    async findKindMovClientOrProvider()
+    {
+        return await this._kindMovementsRepo.find({ where : { roles_id : Not(3) } })
+    }
+
     async findById(id:number)
     {
         return await this._kindMovementsRepo.findOne(id)

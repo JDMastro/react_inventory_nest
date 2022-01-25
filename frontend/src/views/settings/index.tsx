@@ -1,8 +1,2 @@
-
-
-export function Settings()
-{
-    return (
-        <div>Settings</div>
-    )
-}
+import { Settings } from "./Settings";
+export { Settings }

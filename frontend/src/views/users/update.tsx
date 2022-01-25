@@ -8,7 +8,7 @@ import { UsersRequest } from "../../services/usersService";
 import { FormikHelpers } from "formik";
 import React from 'react';
 
-export function UpdateUser({ kindId, handleClose, setRefresh, refresh, data }: any) {
+export function UpdateUser({ kindId, onClose, data, onSubmit: on }: any) {
     const [severity, setSeverity] = React.useState("success");
     const [msg, setMsg] = React.useState("success");
     const [openn, setOpenn] = React.useState(false);
@@ -31,7 +31,7 @@ export function UpdateUser({ kindId, handleClose, setRefresh, refresh, data }: a
     const onSubmit = async (values: initialFValuesTypes, formikHelpers: FormikHelpers<any>) => {
         setdisablebtn(true)
         try {
-            const res = await UsersRequest.update(data.u_id, {
+            const res = await UsersRequest.update(data.id, {
                 code: values.code,
                 email: values.email,
                 password: values.password,
@@ -46,7 +46,7 @@ export function UpdateUser({ kindId, handleClose, setRefresh, refresh, data }: a
                 phone: values.phone,
                 contact: values.contact,
                 user_id: 0,
-                person_id : data.u_person_id
+                person_id: data.u_person_id
             })
 
             console.log(res)
@@ -54,9 +54,9 @@ export function UpdateUser({ kindId, handleClose, setRefresh, refresh, data }: a
             if (res.success) {
                 setMsg("Actualizado exitosamente")
                 handleClick()
-                handleClose()
                 setdisablebtn(false)
-                setRefresh(!refresh)
+                on("UPDATED", res.data)
+                onClose()
             }
             else {
                 res.errors.map((e: any) => formikHelpers.setFieldError(e.field, e.msg))
@@ -83,7 +83,7 @@ export function UpdateUser({ kindId, handleClose, setRefresh, refresh, data }: a
         name: data.p_name,/* */
         second_name: data.p_second_name ? data.p_second_name : "",/* */
         first_surname: data.p_first_surname,/* */
-        second_surname: data.p_second_surname,/* */
+        second_surname: data.p_second_surname ? data.p_second_surname : "",/* */
         address: data.address,/* */
         phone: data.phone,/* */
         contact: data.p_contact,/* */
@@ -96,7 +96,9 @@ export function UpdateUser({ kindId, handleClose, setRefresh, refresh, data }: a
 
                 <Grid container spacing={2}>
 
-                <Grid item xs={6}>
+
+
+                    <Grid item xs={6}>
                         <SelectWrapperUi
                             label='Tipo id'
                             name="kind_id"
@@ -108,19 +110,20 @@ export function UpdateUser({ kindId, handleClose, setRefresh, refresh, data }: a
                         />
                     </Grid>
 
-                <Grid item xs={6}>
+                    <Grid item xs={6}>
                         <TextFieldUi
                             autofocus={true}
                             error={formik.errors.idnumber}
                             label="Número de id *"
                             name="idnumber"
-                            onChange={formik.handleChange}
+                            onChange={(evt: any) => {
+                                //formik.handleChange
+                                formik.setFieldValue("idnumber", evt.target.value.toUpperCase())
+                            }}
                             type="text"
                             value={formik.values.idnumber}
                         />
                     </Grid>
-
-                    
 
                     <Grid item xs={6}>
                         <TextFieldUi
@@ -128,7 +131,10 @@ export function UpdateUser({ kindId, handleClose, setRefresh, refresh, data }: a
                             error={formik.errors.name}
                             label="Primer nombre *"
                             name="name"
-                            onChange={formik.handleChange}
+                            onChange={(evt: any) => {
+                                //formik.handleChange
+                                formik.setFieldValue("name", evt.target.value.toUpperCase())
+                            }}
                             type="text"
                             value={formik.values.name}
                         />
@@ -140,7 +146,10 @@ export function UpdateUser({ kindId, handleClose, setRefresh, refresh, data }: a
                             error={formik.errors.second_name}
                             label="Segundo nombre *"
                             name="second_name"
-                            onChange={formik.handleChange}
+                            onChange={(evt: any) => {
+                                //formik.handleChange
+                                formik.setFieldValue("second_name", evt.target.value.toUpperCase())
+                            }}
                             type="text"
                             value={formik.values.second_name}
                         />
@@ -152,7 +161,10 @@ export function UpdateUser({ kindId, handleClose, setRefresh, refresh, data }: a
                             error={formik.errors.first_surname}
                             label="Primer apellido *"
                             name="first_surname"
-                            onChange={formik.handleChange}
+                            onChange={(evt: any) => {
+                                //formik.handleChange
+                                formik.setFieldValue("first_surname", evt.target.value.toUpperCase())
+                            }}
                             type="text"
                             value={formik.values.first_surname}
                         />
@@ -164,7 +176,10 @@ export function UpdateUser({ kindId, handleClose, setRefresh, refresh, data }: a
                             error={formik.errors.second_surname}
                             label="Segundo apellido *"
                             name="second_surname"
-                            onChange={formik.handleChange}
+                            onChange={(evt: any) => {
+                                //formik.handleChange
+                                formik.setFieldValue("second_surname", evt.target.value.toUpperCase())
+                            }}
                             type="text"
                             value={formik.values.second_surname}
                         />
@@ -176,7 +191,10 @@ export function UpdateUser({ kindId, handleClose, setRefresh, refresh, data }: a
                             error={formik.errors.address}
                             label="Dirección *"
                             name="address"
-                            onChange={formik.handleChange}
+                            onChange={(evt: any) => {
+                                //formik.handleChange
+                                formik.setFieldValue("address", evt.target.value.toUpperCase())
+                            }}
                             type="text"
                             value={formik.values.address}
                         />
@@ -194,7 +212,7 @@ export function UpdateUser({ kindId, handleClose, setRefresh, refresh, data }: a
                         />
                     </Grid>
 
-                  
+
 
                     <Grid item xs={6}>
                         <TextFieldUi
@@ -202,7 +220,10 @@ export function UpdateUser({ kindId, handleClose, setRefresh, refresh, data }: a
                             error={formik.errors.code}
                             label="código *"
                             name="code"
-                            onChange={formik.handleChange}
+                            onChange={(evt: any) => {
+                                //formik.handleChange
+                                formik.setFieldValue("code", evt.target.value.toUpperCase())
+                            }}
                             type="text"
                             value={formik.values.code}
                         />
@@ -250,7 +271,10 @@ export function UpdateUser({ kindId, handleClose, setRefresh, refresh, data }: a
                             error={formik.errors.contact}
                             label="Contacto *"
                             name="contact"
-                            onChange={formik.handleChange}
+                            onChange={(evt: any) => {
+                                //formik.handleChange
+                                formik.setFieldValue("contact", evt.target.value.toUpperCase())
+                            }}
                             type="text"
                             value={formik.values.contact}
                         />
@@ -273,7 +297,7 @@ export function UpdateUser({ kindId, handleClose, setRefresh, refresh, data }: a
                     alignItems="flex-start"
                     spacing={2}
                 >
-                    <ButtonUi disabled={disablebtn} text="Cancelar" type="button" onClick={handleClose} />
+                    <ButtonUi disabled={disablebtn} text="Cancelar" type="button" onClick={onClose} />
                     <ButtonUi disabled={disablebtn} text="Enviar" type="submit" />
 
                 </Stack>

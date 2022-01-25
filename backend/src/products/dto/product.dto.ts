@@ -16,4 +16,6 @@ export class ProductsDto {
     user_id: number
     to_discount? : number
     waste_quantity? : number
+    sale_price : number
+    actived : boolean
 }

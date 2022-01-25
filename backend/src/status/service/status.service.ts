@@ -56,7 +56,7 @@ export class StatusService {
     async getAllNumberOrdersbyStatus(status_id : number, person_id : number)
     {
       return await getManager().createQueryBuilder("movements","m")
-      .select(["h.number_order","ps.fullname","sum(m.quantity) as mquantity","h.creation_at"])
+    .select(["h.number_order","ps.fullname","sum(m.quantity) as mquantity"/*,"h.creation_at"*/])
           .innerJoin(Header, "h","h.id = m.header_id")
           .innerJoin(Person, "ps","ps.id = h.person_id")
           .innerJoin(Status, "sta","sta.id = m.status_id")
@@ -64,7 +64,7 @@ export class StatusService {
           .andWhere("ps.id = :person_id",{ person_id :  person_id})
           .groupBy("h.number_order")
           .addGroupBy("ps.fullname")
-          .addGroupBy("h.creation_at")
+          //.addGroupBy("h.creation_at")
           .orderBy("ps.fullname", "ASC")
           .getRawMany()
     }

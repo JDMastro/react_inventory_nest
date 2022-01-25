@@ -7,7 +7,7 @@ const Requests = {
     delete : async (url : string) => await instance.delete(url).then(responseBody),
     getAllNumberOrdersbyStatus : async (url: string) => await instance.get(url).then(responseBody),
     getAllnumberOrders : async (url: string) => await instance.get(url).then(responseBody),
-    findStatusEmplyee : async (url: string) => await instance.get(url).then(responseBody),
+    findStatusEmployee : async (url: string) => await instance.get(url).then(responseBody),
 }
 
 export const StatusRequest =
@@ -16,7 +16,7 @@ export const StatusRequest =
     create : async (body: any) => await Requests.create('status',body),
     update : async (id : number, body : any) => await Requests.update(`status/${id}`,body),
     delete : async (id: number) => await Requests.delete(`status/${id}`),
-    getAllNumberOrdersbyStatus : async (status_id : number, person_id : number) => await Requests.getAllNumberOrdersbyStatus(`status/getAllNumberOrdersbyStatus/${status_id}/${person_id}`),
-    getAllnumberOrders : async (number_order : string) => await Requests.getAllnumberOrders(`status/getAllnumberOrders/${number_order}`),
-    findStatusEmplyee : async () => await Requests.findStatusEmplyee('status/findStatusEmplyee') 
+    getAllNumberOrdersbyStatus : async (status_id : number) => await Requests.getAllNumberOrdersbyStatus(`status/getAllNumberOrdersbyStatus/${status_id}`),
+    getAllnumberOrders : async ({ number_order } : any) => await Requests.getAllnumberOrders(`status/getAllnumberOrders/${number_order}`),
+    findStatusEmployee : async () => await Requests.findStatusEmployee('status/findStatusEmplyee') 
 }

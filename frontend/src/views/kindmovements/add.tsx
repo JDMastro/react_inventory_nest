@@ -7,7 +7,7 @@ import { initialFValuesTypes } from "../../types/initialFValues";
 import { KindMovementsRequest } from "../../services/kindmovementsService";
 import { FormikHelpers } from "formik";
 
-export function Addkindmovements({ consecutives, Classificationkindmovement, roles, handleClose, setRefresh, refresh, status}: any) {
+export function Addkindmovements({ consecutives, Classificationkindmovement, roles, onClose, status, onSubmit : on}: any) {
     const [severity, setSeverity] = React.useState("success");
     const [msg, setMsg] = React.useState("success");
     const [openn, setOpenn] = React.useState(false);
@@ -39,7 +39,7 @@ export function Addkindmovements({ consecutives, Classificationkindmovement, rol
             setdisablebtn(false)
         }else{
             try {
-                await KindMovementsRequest.save({
+                const res = await KindMovementsRequest.save({
                     name: values.name,
                     description: values.description,
                     role_id : values.roles_id,
@@ -49,14 +49,15 @@ export function Addkindmovements({ consecutives, Classificationkindmovement, rol
                     consecutive_id :values.consecutive_id === "" ? null : values.consecutive_id,
                     require_consecutive : values.require_consecutive
                 })
+
+                
     
                 setMsg("Guardado exitosamente")
                 handleClick()
-    
-                setRefresh(!refresh)
-                handleClose()
                 setdisablebtn(false)
                 setdisablebtn(false)
+                on("CREATED", res.data)
+                onClose()
                 
             } catch (error) {
                 console.log(error)
@@ -84,7 +85,10 @@ export function Addkindmovements({ consecutives, Classificationkindmovement, rol
                             error={formik.errors.name}
                             label="Nombre *"
                             name="name"
-                            onChange={formik.handleChange}
+                            onChange={(evt : any) =>{
+                                //formik.handleChange
+                                formik.setFieldValue("name", evt.target.value.toUpperCase())
+                            }}
                             type="text"
                             value={formik.values.name}
                         />
@@ -96,7 +100,10 @@ export function Addkindmovements({ consecutives, Classificationkindmovement, rol
                             error={formik.errors.description}
                             label="Descripción *"
                             name="description"
-                            onChange={formik.handleChange}
+                            onChange={(evt : any) =>{
+                                //formik.handleChange
+                                formik.setFieldValue("description", evt.target.value.toUpperCase())
+                            }}
                             type="text"
                             value={formik.values.description}
                         />
@@ -190,7 +197,7 @@ export function Addkindmovements({ consecutives, Classificationkindmovement, rol
                     alignItems="flex-start"
                     spacing={2}
                 >
-                    <ButtonUi disabled={disablebtn} text="Cancelar" type="button" onClick={handleClose} />
+                    <ButtonUi disabled={disablebtn} text="Cancelar" type="button" onClick={onClose} />
                     <ButtonUi disabled={disablebtn} text="Enviar" type="submit" />
 
                 </Stack>

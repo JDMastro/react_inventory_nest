@@ -18,7 +18,7 @@ export class UsersService {
     async findAll() {
         return await getManager().createQueryBuilder("users", "u")
         .select([
-            "u.id" ,"u.code", "u.email", "u.person_id", "k.id as kind_id", 
+            "u.id as id" ,"u.code", "u.email", "u.person_id", "k.id as kind_id", 
             "k.code as kind_code", "p.fullname", "p.idnumber"," p.address"," p.phone",
             "p.contact", "p.name", "p.second_name", "p.first_surname", "p.second_surname"
         ])
@@ -50,10 +50,26 @@ export class UsersService {
         return await this.UsersRepo.findOne({ where: { code } })
     }
 
+    async getLastInserted(id : number)
+    {
+        return await getManager().createQueryBuilder("users", "u")
+        .select([
+            "u.id as id" ,"u.code", "u.email", "u.person_id", "k.id as kind_id", 
+            "k.code as kind_code", "p.fullname", "p.idnumber"," p.address"," p.phone",
+            "p.contact", "p.name", "p.second_name", "p.first_surname", "p.second_surname"
+        ])
+        .innerJoin(Person, "p", "p.id = u.person_id")
+        .innerJoin(Kindidentity, "k", "k.id = p.kind_id")
+        .innerJoin(Roles,"r","r.id = p.roles_id")
+        .where("u.id = :id", { id })
+        .getRawOne()
+    }
+
     async create(body : UsersDto)
     {
         const { email, code, password, person_id } = body
-        return delete (await this.UsersRepo.save({  email, code, password, person_id })).password
+        const user = await this.UsersRepo.save({  email, code, password, person_id })
+        return this.getLastInserted(user.id)
     }
 
     async update (id: number, body: UsersDto)
@@ -65,7 +81,9 @@ export class UsersService {
             email : body.email,
             password : body.password
         })
-        return await this.UsersRepo.save(user)
+        const res = await this.UsersRepo.save(user)
+
+        return await this.getLastInserted(id)
     }
 
     async delete(id : number)

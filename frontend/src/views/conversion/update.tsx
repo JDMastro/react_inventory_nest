@@ -7,7 +7,7 @@ import { ConversionRequest } from "../../services/conversionService";
 import { FormikHelpers } from "formik";
 
 
-export function UpdateConversion({ data, units, signs, handleClose, setRefresh, refresh }: any) {
+export function UpdateConversion({ data, units, signs, onClose, onSubmit : on }: any) {
     const [severity] = useState("success");
     const [msg, setMsg] = useState("success");
     const [openn, setOpenn] = useState(false);
@@ -30,17 +30,19 @@ export function UpdateConversion({ data, units, signs, handleClose, setRefresh, 
         //setloading(true)
         setdisablebtn(true)
         try {
-             await ConversionRequest.update(data.c_id, {
+             const res = await ConversionRequest.update(data.id, {
                 conversion_from: values.conversion_from,
                 conversion_to: values.conversion_to,
                 conversion_quatity: values.conversion_quatity,
                 signs_id: values.signs_id
             })
 
+            console.log(res.data)
+
             setMsg("Actualzado corrrectamente")
             handleClick()
-            setRefresh(!refresh)
-            handleClose()
+            on("UPDATED", res.data)
+            onClose()
             setdisablebtn(false)
 
         } catch (error) {
@@ -132,7 +134,7 @@ export function UpdateConversion({ data, units, signs, handleClose, setRefresh, 
                     alignItems="flex-start"
                     spacing={2}
                 >
-                    <ButtonUi disabled={disablebtn} text="Cancelar" type="button" onClick={handleClose} />
+                    <ButtonUi disabled={disablebtn} text="Cancelar" type="button" onClick={onClose} />
                     <ButtonUi disabled={disablebtn} text="Enviar" type="submit" />
 
                 </Stack>

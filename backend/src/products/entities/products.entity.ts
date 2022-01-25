@@ -94,4 +94,11 @@ export class Products {
     movements: Movements[];
 
 
+    @Column({ default: 0 })
+    sale_price : number
+
+    @Column({ default: true })
+    actived : boolean
+
+
 }

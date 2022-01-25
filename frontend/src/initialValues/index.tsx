@@ -29,7 +29,7 @@ export const initialValuesUnits: initialFValuesTypes = {
   description: ""
 }
 
-export const initialValuesProductDad: initialFValuesTypes = {
+export const initialValuesProduct: initialFValuesTypes = {
   code_bar: "",
   description: "",
   isderivate: false,
@@ -39,7 +39,8 @@ export const initialValuesProductDad: initialFValuesTypes = {
   sale_unit_id: "",
   sku: "",
   user_id: 0,
-  to_discount: null
+  to_discount: null,
+  sale_price : ""
 }
 
 export const initialValuesStatus: initialFValuesTypes = {

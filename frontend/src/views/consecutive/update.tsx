@@ -7,7 +7,7 @@ import { ConsecutiveRequest } from "../../services/consecutiveService";
 import { FormikHelpers } from "formik";
 
 
-export function UpdateConsecutive({ handleClose, setRefresh, refresh, data }: any)
+export function UpdateConsecutive({ onClose, data, onSubmit : on }: any)
 {
     const [severity, setSeverity] = useState("success");
     const [msg, setMsg] = useState("success");
@@ -35,12 +35,13 @@ export function UpdateConsecutive({ handleClose, setRefresh, refresh, data }: an
                 name : values.name,
                 description : values.description,
                 prefix : values.prefix })
+
             if (res.success) {
                 setMsg("Actualzado corrrectamente")
                 handleClick()
-                setRefresh(!refresh)
-                handleClose()
                 setdisablebtn(false)
+                on("UPDATED", res.data)
+                onClose()
             } else {
                 formikHelpers.setFieldError(res.errors.field, res.errors.msg)
                 setSeverity("error")
@@ -75,7 +76,10 @@ export function UpdateConsecutive({ handleClose, setRefresh, refresh, data }: an
                             error={formik.errors.name}
                             label="Nombre *"
                             name="name"
-                            onChange={formik.handleChange}
+                            onChange={(evt : any) =>{
+                                //formik.handleChange
+                                formik.setFieldValue("name", evt.target.value.toUpperCase())
+                            }}
                             type="text"
                             value={formik.values.name}
                         />
@@ -87,7 +91,10 @@ export function UpdateConsecutive({ handleClose, setRefresh, refresh, data }: an
                             error={formik.errors.prefix}
                             label="Prefijo *"
                             name="prefix"
-                            onChange={formik.handleChange}
+                            onChange={(evt : any) =>{
+                                //formik.handleChange
+                                formik.setFieldValue("prefix", evt.target.value.toUpperCase())
+                            }}
                             type="text"
                             value={formik.values.prefix}
                         />
@@ -99,7 +106,10 @@ export function UpdateConsecutive({ handleClose, setRefresh, refresh, data }: an
                             error={formik.errors.description}
                             label="Descripción *"
                             name="description"
-                            onChange={formik.handleChange}
+                            onChange={(evt : any) =>{
+                                //formik.handleChange
+                                formik.setFieldValue("description", evt.target.value.toUpperCase())
+                            }}
                             type="text"
                             value={formik.values.description}
                         />
@@ -121,7 +131,7 @@ export function UpdateConsecutive({ handleClose, setRefresh, refresh, data }: an
                     alignItems="flex-start"
                     spacing={2}
                 >
-                    <ButtonUi disabled={disablebtn} text="Cancelar" type="button" onClick={handleClose} />
+                    <ButtonUi disabled={disablebtn} text="Cancelar" type="button" onClick={onClose} />
                     <ButtonUi disabled={disablebtn} text="Enviar" type="submit" />
 
                 </Stack>

@@ -7,7 +7,7 @@ import { PersonRequest } from "../../services/personService";
 import { FormikHelpers } from "formik";
 
 
-export function UpdatePerson({roles, kindId, refresh, setRefresh, handleClose, data }: any) {
+export function UpdatePerson({roles, kindId, onClose, data, onSubmit : on }: any) {
     const [severity, setSeverity] = useState("success");
     const [msg, setMsg] = useState("success");
     const [openn, setOpenn] = useState(false);
@@ -30,7 +30,7 @@ export function UpdatePerson({roles, kindId, refresh, setRefresh, handleClose, d
 
         setdisablebtn(true)
         try {
-            const res = await PersonRequest.update(data.p_id, {
+            const res = await PersonRequest.update(data.id, {
                 address: values.address,
                 contact: values.contact,
                 fullname: `${values.name} ${values.second_name} ${values.first_surname} ${values.second_surname}`,
@@ -47,9 +47,10 @@ export function UpdatePerson({roles, kindId, refresh, setRefresh, handleClose, d
             if (res.success) {
                 setMsg("Guardado exitosamente")
                 handleClick()
-                setRefresh(!refresh)
-                handleClose()
                 setdisablebtn(false)
+                console.log(res)
+                on("UPDATED", res.data)
+                onClose()
             } else {
                 res.errors.map((e: any) => formikHelpers.setFieldError(e.field, e.msg))
                 setSeverity("error")
@@ -99,7 +100,10 @@ export function UpdatePerson({roles, kindId, refresh, setRefresh, handleClose, d
                         error={formik.errors.idnumber}
                         label="Número de id *"
                         name="idnumber"
-                        onChange={formik.handleChange}
+                        onChange={(evt : any) =>{
+                            //formik.handleChange
+                            formik.setFieldValue("idnumber", evt.target.value.toUpperCase())
+                        }}
                         type="text"
                         value={formik.values.idnumber}
                     />
@@ -113,7 +117,10 @@ export function UpdatePerson({roles, kindId, refresh, setRefresh, handleClose, d
                         error={formik.errors.name}
                         label="Primer nombre *"
                         name="name"
-                        onChange={formik.handleChange}
+                        onChange={(evt : any) =>{
+                            //formik.handleChange
+                            formik.setFieldValue("name", evt.target.value.toUpperCase())
+                        }}
                         type="text"
                         value={formik.values.name}
                     />
@@ -126,7 +133,10 @@ export function UpdatePerson({roles, kindId, refresh, setRefresh, handleClose, d
                         error={formik.errors.second_name}
                         label="Segundo nombre *"
                         name="second_name"
-                        onChange={formik.handleChange}
+                        onChange={(evt : any) =>{
+                            //formik.handleChange
+                            formik.setFieldValue("second_name", evt.target.value.toUpperCase())
+                        }}
                         type="text"
                         value={formik.values.second_name}
                     />
@@ -139,7 +149,10 @@ export function UpdatePerson({roles, kindId, refresh, setRefresh, handleClose, d
                         error={formik.errors.first_surname}
                         label="Primer apellido *"
                         name="first_surname"
-                        onChange={formik.handleChange}
+                        onChange={(evt : any) =>{
+                            //formik.handleChange
+                            formik.setFieldValue("first_surname", evt.target.value.toUpperCase())
+                        }}
                         type="text"
                         value={formik.values.first_surname}
                     />
@@ -151,7 +164,10 @@ export function UpdatePerson({roles, kindId, refresh, setRefresh, handleClose, d
                         error={formik.errors.second_surname}
                         label="Segundo apellido *"
                         name="second_surname"
-                        onChange={formik.handleChange}
+                        onChange={(evt : any) =>{
+                            //formik.handleChange
+                            formik.setFieldValue("second_surname", evt.target.value.toUpperCase())
+                        }}
                         type="text"
                         value={formik.values.second_surname}
                     />
@@ -164,7 +180,10 @@ export function UpdatePerson({roles, kindId, refresh, setRefresh, handleClose, d
                         error={formik.errors.address}
                         label="Dirección *"
                         name="address"
-                        onChange={formik.handleChange}
+                        onChange={(evt : any) =>{
+                            //formik.handleChange
+                            formik.setFieldValue("address", evt.target.value.toUpperCase())
+                        }}
                         type="text"
                         value={formik.values.address}
                     />
@@ -190,7 +209,10 @@ export function UpdatePerson({roles, kindId, refresh, setRefresh, handleClose, d
                         error={formik.errors.contact}
                         label="Contacto *"
                         name="contact"
-                        onChange={formik.handleChange}
+                        onChange={(evt : any) =>{
+                            //formik.handleChange
+                            formik.setFieldValue("contact", evt.target.value.toUpperCase())
+                        }}
                         type="text"
                         value={formik.values.contact}
                     />
@@ -226,7 +248,7 @@ export function UpdatePerson({roles, kindId, refresh, setRefresh, handleClose, d
                 alignItems="flex-start"
                 spacing={2}
             >
-                <ButtonUi disabled={disablebtn} text="Cancelar" type="button" onClick={handleClose} />
+                <ButtonUi disabled={disablebtn} text="Cancelar" type="button" onClick={onClose} />
                 <ButtonUi disabled={disablebtn} text="Enviar" type="submit" />
 
             </Stack>

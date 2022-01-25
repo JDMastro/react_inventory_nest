@@ -19,7 +19,7 @@ export class Person {
   kind_id: number
 
   @Column()
-  idnumber: number
+  idnumber: string
 
   @Column()
   name: string
@@ -39,8 +39,8 @@ export class Person {
   @Column()
   address: string
 
-  @Column({ width: 10, type: "numeric" })
-  phone: number
+  @Column()
+  phone: string
 
   @Column()
   contact: string

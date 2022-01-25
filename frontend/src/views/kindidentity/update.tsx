@@ -6,7 +6,7 @@ import { initialFValuesTypes } from "../../types/initialFValues";
 import { KindIdRequest } from "../../services/kindIdentityService";
 import { FormikHelpers } from "formik";
 
-export function UpdateKindId({ handleClose, setRefresh, refresh, data }: any)
+export function UpdateKindId({ onClose, data, onSubmit : on }: any)
 {
     const [severity, setSeverity] = useState("success");
     const [msg, setMsg] = useState("success");
@@ -34,9 +34,9 @@ export function UpdateKindId({ handleClose, setRefresh, refresh, data }: any)
             if (res.success) {
                 setMsg("Actualzado corrrectamente")
                 handleClick()
-                setRefresh(!refresh)
-                handleClose()
                 setdisablebtn(false)
+                on("UPDATED", res.data)
+                onClose()
             } else {
                 formikHelpers.setFieldError(res.errors.field, res.errors.msg)
                 setSeverity("error")
@@ -70,7 +70,10 @@ export function UpdateKindId({ handleClose, setRefresh, refresh, data }: any)
                             error={formik.errors.code}
                             label="Sigla *"
                             name="code"
-                            onChange={formik.handleChange}
+                            onChange={(evt : any) =>{
+                                //formik.handleChange
+                                formik.setFieldValue("code", evt.target.value.toUpperCase())
+                            }}
                             type="text"
                             value={formik.values.code}
                         />
@@ -83,7 +86,10 @@ export function UpdateKindId({ handleClose, setRefresh, refresh, data }: any)
                             error={formik.errors.description}
                             label="Descripción *"
                             name="description"
-                            onChange={formik.handleChange}
+                            onChange={(evt : any) =>{
+                                //formik.handleChange
+                                formik.setFieldValue("description", evt.target.value.toUpperCase())
+                            }}
                             type="text"
                             value={formik.values.description}
                         />
@@ -105,7 +111,7 @@ export function UpdateKindId({ handleClose, setRefresh, refresh, data }: any)
                     alignItems="flex-start"
                     spacing={2}
                 >
-                    <ButtonUi disabled={disablebtn} text="Cancelar" type="button" onClick={handleClose} />
+                    <ButtonUi disabled={disablebtn} text="Cancelar" type="button" onClick={onClose} />
                     <ButtonUi disabled={disablebtn} text="Enviar" type="submit" />
 
                 </Stack>

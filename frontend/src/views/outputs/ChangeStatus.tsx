@@ -41,8 +41,8 @@ export function Status({ status_id, person_id, setNumber_orders, setExpanded, da
         handleClose()
         setdisablebtn(false)
 
-        StatusRequest.getAllNumberOrdersbyStatus(status_id, person_id)
-        .then(e => setNumber_orders(e))
+        /*StatusRequest.getAllNumberOrdersbyStatus(status_id, person_id)
+        .then(e => setNumber_orders(e))*/
     }
 
     const formik = UseForm(initialValuesStatusChange, StatusChangeSchema, onSubmit)

@@ -57,6 +57,8 @@ export class UsersController {
         const check_idnumber = await this._personService.findByIdNumber(idnumber)
         const check_phone = await this._personService.findByPhone(phone)
 
+        let res : any
+
 
         if (check_email)
             errors.push({ field: "email", msg: "Este correo esta registrado" })
@@ -91,7 +93,7 @@ export class UsersController {
 
 
             const per = await this._personService.create(person)
-            console.log(per.id)
+            console.log("-------------------->",per)
 
 
             users.code = code
@@ -99,7 +101,7 @@ export class UsersController {
             users.password = await encrypt(password)
             users.person_id = per.id
 
-            await this.UsersService.create(users)
+            res = await this.UsersService.create(users)
 
         }
 
@@ -109,7 +111,7 @@ export class UsersController {
 
         return errors.length > 0 ?
             { success: false, data: null, errors } :
-            { success: true, data: null, errors: null }
+            { success: true, data: res, errors: null }
     }
 
     @Put(':id')
@@ -146,8 +148,8 @@ export class UsersController {
             users.email = email
             users.password = await encrypt(password)
 
-            await this.UsersService.update(id, users)
-            return { success: true, data: null, error: null }
+            const res = await this.UsersService.update(id, users)
+            return { success: true, data: res, error: null }
         } catch (err) {
             var regExp = /\(([^)]+)\)/;
 

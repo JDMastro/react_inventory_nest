@@ -15,7 +15,7 @@ import { MovementRequest } from "../../services/movementService";
 
 import DeleteIcon from '@mui/icons-material/Delete';
 
-export function AddMovements({ kindmov, handleClose, setRefresh, refresh }: any) {
+export function AddMovements({ kindOfMovement, onClose, onSubmit: on }: any) {
 
     const [severity, setSeverity] = useState("success");
     const [msg, setMsg] = useState("success");
@@ -29,7 +29,7 @@ export function AddMovements({ kindmov, handleClose, setRefresh, refresh }: any)
 
     const [disable, setdisable] = useState(false)
     const [disablebtns, setdisablebtns] = useState(false)
-    
+
 
     const handleCloses = (event?: React.SyntheticEvent, reason?: string) => {
         if (reason === 'clickaway') {
@@ -44,7 +44,7 @@ export function AddMovements({ kindmov, handleClose, setRefresh, refresh }: any)
     };
 
     const onSubmit = async (values: initialFValuesTypes, formikHelpers: FormikHelpers<any>) => {
-      
+
         setdisablebtns(true)
 
         if (kindmov_selected.roles_id === 1) {
@@ -65,24 +65,25 @@ export function AddMovements({ kindmov, handleClose, setRefresh, refresh }: any)
                 orderReturned: values.orderReturned
             })
 
-            
 
-            if(res.success){
+
+            if (res.success) {
                 formikHelpers.setFieldValue("number_order", res.new_number_order)
-            setmovements(res.movement)
-            setRefresh(!refresh)
+                on("CREATED", res.lastmovement)
+                setmovements(res.movement)
 
-            
-            setSeverity("success")
-            setMsg("Guardado exitosamente")
-            handleClick()
 
-            
-        formikHelpers.setFieldValue("quantity", "")
-        formikHelpers.setFieldValue("totalPrice", "")
-        formikHelpers.setFieldValue("unitprice", "")
 
-            }else{
+                setSeverity("success")
+                setMsg("Guardado exitosamente")
+                handleClick()
+
+
+                formikHelpers.setFieldValue("quantity", "")
+                formikHelpers.setFieldValue("totalPrice", "")
+                formikHelpers.setFieldValue("unitprice", "")
+
+            } else {
                 formikHelpers.setFieldError("quantity", res.error.quantity)
                 setSeverity("error")
                 setMsg("¡Hubo un error :( !")
@@ -90,7 +91,8 @@ export function AddMovements({ kindmov, handleClose, setRefresh, refresh }: any)
             }
         }
 
-        if(kindmov_selected.roles_id === 2){
+        if (kindmov_selected.roles_id === 2) {
+
             const res = await MovementRequest.createClient({
                 classification_kindmovement_id: kindmov_selected.classification_kindmovement_id,
                 require_consecutive: kindmov_selected.require_consecutive,
@@ -111,25 +113,26 @@ export function AddMovements({ kindmov, handleClose, setRefresh, refresh }: any)
 
             console.log(res)
 
-            
 
-            if(res.success){
+
+            if (res.success) {
                 formikHelpers.setFieldValue("number_order", res.new_number_order)
-            setmovements(res.movement)
-            setRefresh(!refresh)
+                on("CREATED", res.lastmovement)
+                setmovements(res.movement)
 
 
-            
 
-            formikHelpers.setFieldValue("quantity", "")
-            formikHelpers.setFieldValue("totalPrice", "")
-            formikHelpers.setFieldValue("unitprice", "")
-            
-            setSeverity("success")
-            setMsg("Guardado exitosamente")
-            handleClick()
 
-            }else{
+
+                formikHelpers.setFieldValue("quantity", "")
+                formikHelpers.setFieldValue("totalPrice", "")
+                formikHelpers.setFieldValue("unitprice", "")
+
+                setSeverity("success")
+                setMsg("Guardado exitosamente")
+                handleClick()
+
+            } else {
                 formikHelpers.setFieldError("quantity", res.error.quantity)
                 setSeverity("error")
                 setMsg("¡Hubo un error :( !")
@@ -164,7 +167,7 @@ export function AddMovements({ kindmov, handleClose, setRefresh, refresh }: any)
                             /*SE BUSCA EL TIPO DE MOVIMIENTO POR EL ID Y SE LE ASIGNA EL VALOR
                               A KINDMOV_SELECTED
                             */
-                            const kind = kindmov.find((e: any) => e.id === evt.target.value)
+                            const kind = kindOfMovement.find((e: any) => e.id === evt.target.value)
                             formik.setFieldValue("idproduct", "")
                             formik.setFieldValue("idperson", "")
                             formik.setFieldValue("orderReturned", "")
@@ -173,7 +176,7 @@ export function AddMovements({ kindmov, handleClose, setRefresh, refresh }: any)
                         }}
                         error={formik.errors.kindmovements}
                         label="Tipo de movimientos"
-                        menuItems={kindmov.map((data: any, i: any) => <MenuItem value={data.id} key={i}>{`${data.name}`}</MenuItem>)}
+                        menuItems={kindOfMovement.map((data: any, i: any) => <MenuItem value={data.id} key={i}>{`${data.name}`}</MenuItem>)}
 
                     />
                 </Grid>
@@ -192,7 +195,7 @@ export function AddMovements({ kindmov, handleClose, setRefresh, refresh }: any)
                               PRODUCTOS QUE NO SEAN DERIVADOS
                             */
                             if (kindmov_selected && kindmov_selected.roles_id === 1)
-                                ProductsRequest.findProductByDerivate(false).then(e => setproducts(e))
+                                ProductsRequest.findProductByDerivate(false).then(e =>{ console.log(e); setproducts(e)})
 
                             /*
                           EN CASO DE QUE SE HAYA SELECCIONADO EL TIPO DE MOVIMEINO Y
@@ -200,7 +203,7 @@ export function AddMovements({ kindmov, handleClose, setRefresh, refresh }: any)
                           PRODUCTOS QUE SEAN DERIVADOS
                         */
                             if (kindmov_selected && kindmov_selected.roles_id === 2)
-                                ProductsRequest.findProductByDerivate(true).then(e => setproducts(e))
+                                ProductsRequest.findProductByDerivate(true).then(e =>{ console.log(e); setproducts(e)})
 
 
                             /*
@@ -208,9 +211,12 @@ export function AddMovements({ kindmov, handleClose, setRefresh, refresh }: any)
                             SE VA A BUSCAR LAS ORDENES
                             */
 
-                            //if (kindmov_selected.classification_kindmovement_id === 2)
-                                MovementRequest.findByPersonId(evt.target.value).then(e =>{ setnumbers_orders(e); console.log(e)})
+                            if (kindmov_selected.classification_kindmovement_id === 2)
+                                MovementRequest.findByPersonId(evt.target.value).then(e => { setnumbers_orders(e); console.log(e) })
 
+
+                            if (kindmov_selected.classification_kindmovement_id === 1)
+                                MovementRequest.findByPersonOutPuts(evt.target.value).then(e => { setnumbers_orders(e); console.log(e) })
 
                         }}
                         error={formik.errors.idperson}
@@ -230,7 +236,10 @@ export function AddMovements({ kindmov, handleClose, setRefresh, refresh }: any)
                         error={formik.errors.number_order}
                         label="No Orden *"
                         name="number_order"
-                        onChange={formik.handleChange}
+                        onChange={(evt : any) =>{
+                            //formik.handleChange
+                            formik.setFieldValue("number_order", evt.target.value.toUpperCase())
+                        }}
                         type="text"
                         value={formik.values.number_order}
                         disabled={kindmov_selected && kindmov_selected.require_consecutive ? true : false}
@@ -247,48 +256,47 @@ export function AddMovements({ kindmov, handleClose, setRefresh, refresh }: any)
                     kindmov_selected && kindmov_selected.classification_kindmovement_id === 1 && kindmov_selected.roles_id === 2 ?
                     
                     */
-                   
-                       !kindmov_selected ? (<span></span>) :
-                       kindmov_selected.classification_kindmovement_id === 2 && kindmov_selected.roles_id === 1 ?
-                       (
-<Grid item xs={6}>
-                                <SelectWrapperUi
-                                    name="orderReturned"
-                                    value={formik.values.orderReturned}
-                                    onChange={(evt: any) => {
-                                        formik.setFieldValue("idproduct", "")
-                                        formik.handleChange(evt)
 
-                                        MovementRequest.findByHeader(evt.target.value).then(e => setproducts(e))
-                                    }}
-                                    error={formik.errors.orderReturned}
-                                    label="Orden a devolver"
-                                    menuItems={
-                                        numbers_orders.map((data: any, i: any) => <MenuItem value={data.h_id} key={i}>{`${data.h_number_order}`}</MenuItem>)
-                                    }
+                    !kindmov_selected ? (<span></span>) :
+                        kindmov_selected.classification_kindmovement_id === 2 && kindmov_selected.roles_id === 1 ?
+                            (
+                                <Grid item xs={6}>
+                                    <SelectWrapperUi
+                                        name="orderReturned"
+                                        value={formik.values.orderReturned}
+                                        onChange={(evt: any) => {
+                                            formik.setFieldValue("idproduct", "")
+                                            formik.handleChange(evt)
+                                            MovementRequest.findByHeader(evt.target.value).then(e =>{console.log(e); setproducts(e)})
+                                        }}
+                                        error={formik.errors.orderReturned}
+                                        label="Orden a devolver"
+                                        menuItems={
+                                            numbers_orders.map((data: any, i: any) => <MenuItem value={data.h_id} key={i}>{`${data.h_number_order}`}</MenuItem>)
+                                        }
 
-                                />
-                            </Grid>) :
-                       kindmov_selected.classification_kindmovement_id === 1 && kindmov_selected.roles_id === 2 ?
-                       (
-<Grid item xs={6}>
-                                <SelectWrapperUi
-                                    name="orderReturned"
-                                    value={formik.values.orderReturned}
-                                    onChange={(evt: any) => {
-                                        formik.setFieldValue("idproduct", "")
-                                        formik.handleChange(evt)
+                                    />
+                                </Grid>) :
+                            kindmov_selected.classification_kindmovement_id === 1 && kindmov_selected.roles_id === 2 ?
+                                (
+                                    <Grid item xs={6}>
+                                        <SelectWrapperUi
+                                            name="orderReturned"
+                                            value={formik.values.orderReturned}
+                                            onChange={(evt: any) => {
+                                                formik.setFieldValue("idproduct", "")
+                                                formik.handleChange(evt)
 
-                                        //MovementRequest.findByHeader(evt.target.value).then(e => setproducts(e))
-                                    }}
-                                    error={formik.errors.orderReturned}
-                                    label="Orden a devolver"
-                                    menuItems={
-                                        numbers_orders.map((data: any, i: any) => <MenuItem value={data.h_id} key={i}>{`${data.h_number_order}`}</MenuItem>)
-                                    }
+                                               MovementRequest.findByHeader(evt.target.value).then(e =>{console.log(e); setproducts(e)})
+                                            }}
+                                            error={formik.errors.orderReturned}
+                                            label="Orden a devolver"
+                                            menuItems={
+                                                numbers_orders.map((data: any, i: any) => <MenuItem value={data.h_id} key={i}>{`${data.h_number_order}`}</MenuItem>)
+                                            }
 
-                                />
-                            </Grid>) : (<span></span>)
+                                        />
+                                    </Grid>) : (<span></span>)
                 }
 
                 <Grid item xs={12}>
@@ -297,7 +305,10 @@ export function AddMovements({ kindmov, handleClose, setRefresh, refresh }: any)
                         error={formik.errors.observation}
                         label="Observaciones *"
                         name="observation"
-                        onChange={formik.handleChange}
+                        onChange={(evt : any) =>{
+                            //formik.handleChange
+                            formik.setFieldValue("observation", evt.target.value.toUpperCase())
+                        }}
                         type="text"
                         disabled={false}
                         value={formik.values.observation}
@@ -316,12 +327,12 @@ export function AddMovements({ kindmov, handleClose, setRefresh, refresh }: any)
                               SE BUSCA EL PRODUCTO POR EL ID Y SE LE ASIGNA EL VALOR
                               A PRODUCT_SELECTED
                             */
-                            const product = products.find((e: any) => e.p_id === evt.target.value)
+                            const product = products.find((e: any) => e.id === evt.target.value)
                             setproduct_selected(product)
                         }}
                         error={formik.errors.idproduct}
                         label="Producto"
-                        menuItems={products.map((data: any, i: any) => <MenuItem value={data.p_id} key={i}>{`${data.p_name}`}</MenuItem>)}
+                        menuItems={products.map((data: any, i: any) => <MenuItem value={data.id} key={i}>{`${data.p_name}`}</MenuItem>)}
                     />
                 </Grid>
 
@@ -338,8 +349,8 @@ export function AddMovements({ kindmov, handleClose, setRefresh, refresh }: any)
                             /*
                              ESTE CAMPO ES PARA MOSTRAR LA EXISTENCIA ACTUAL QUE TIENE UN PRODUCTO
                             */
-                            formik.values.idproduct !== "" && products.find((e: any) => e.p_id === formik.values.idproduct) ?
-                                formik.values.current_existence = products.find((e: any) => e.p_id === formik.values.idproduct).p_current_existence : "0"}
+                            formik.values.idproduct !== "" && products.find((e: any) => e.id === formik.values.idproduct) ?
+                                formik.values.current_existence = products.find((e: any) => e.id === formik.values.idproduct).p_current_existence : "0"}
                     />
                 </Grid>
 
@@ -375,29 +386,33 @@ export function AddMovements({ kindmov, handleClose, setRefresh, refresh }: any)
                     <TextFieldUi
                         autofocus={false}
                         error={formik.errors.totalPrice}
-                        label="Precio total de compra *"
+                        label={"Precio total *"}
                         name="totalPrice"
                         disabled={
                             /*
                                ESTE CAMPO DE DESHABILITARA SI LA CLASIFICACION DEL TIPO MOVIMIENTO ES DIFERENTE
                                 A ENTRADA(1)
                             */
-                                !kindmov_selected ? true :
+                            !kindmov_selected ? true :
                                 kindmov_selected.classification_kindmovement_id === 1 && kindmov_selected.roles_id === 1 ?
-                               false :
-                                kindmov_selected.classification_kindmovement_id === 2 && kindmov_selected.roles_id === 2 ?
-                             false : true
+                                    false :
+                                    kindmov_selected.classification_kindmovement_id === 2 && kindmov_selected.roles_id === 2 ?
+                                        false : true
                         }
                         onChange={formik.handleChange}
                         type="number"
                         value={
-                            product_selected && formik.values.orderReturned !== "" ? formik.values.totalPrice = product_selected .m_unit_price * formik.values.quantity : formik.values.totalPrice
-                            /*numbers_orders.length > 0 && formik.values.orderReturned !== "" ?
-                            formik.values.totalPrice = numbers_orders.find((e:any) => e.h_id === formik.values.orderReturned ).m_unit_price * formik.values.quantity
-                            :
-                        formik.values.totalPrice*/}
+                            !kindmov_selected ? formik.values.totalPrice :
+                            kindmov_selected.classification_kindmovement_id === 2 && kindmov_selected.roles_id === 2 ?
+                            !product_selected ? formik.values.totalPrice : formik.values.totalPrice= product_selected.p_sale_price * formik.values.quantity :
+                            formik.values.totalPrice
+                            /*product_selected && formik.values.orderReturned !== "" ?
+                                formik.values.totalPrice = product_selected.m_unit_price * formik.values.quantity : formik.values.totalPrice*/
+                            }
                     />
                 </Grid>
+
+
 
                 <Grid item xs={3}>
                     <TextFieldUi
@@ -429,7 +444,7 @@ export function AddMovements({ kindmov, handleClose, setRefresh, refresh }: any)
 
 
                 <Grid item xs={2} style={{ marginTop: "2px" }}>
-                    <ButtonUi variant="contained" disabled={false} text="Save" type="submit" Icon={<SaveIcon fontSize="small" />} />
+                    <ButtonUi variant="contained" disabled={false} text="Guardar" type="submit" Icon={<SaveIcon fontSize="small" />} />
 
                 </Grid>
 
@@ -502,14 +517,14 @@ export function AddMovements({ kindmov, handleClose, setRefresh, refresh }: any)
             />
 
 
-<Stack
+            <Stack
                 direction="row"
                 justifyContent="space-between"
                 alignItems="flex-start"
                 spacing={2}
             >
-                <ButtonUi disabled={disablebtns} text="cancel" type="button" onClick={handleClose} />
-                
+                <ButtonUi disabled={disablebtns} text="cancel" type="button" onClick={onClose} />
+
 
             </Stack>
 

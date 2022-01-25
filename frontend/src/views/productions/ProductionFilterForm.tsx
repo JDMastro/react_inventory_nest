@@ -64,7 +64,7 @@ const ProductionFilterForm = ({ reserved_quantity, setreserved_quantity, handleS
 
     return (
         <Box component="form" m={2}>
-            <Grid container spacing={2}>
+            <Grid container spacing={2} item xs={12}>
                 <Grid item xs={6}>
                     <Can
                         perform="users:create"
@@ -265,7 +265,7 @@ const ProductionFilterForm = ({ reserved_quantity, setreserved_quantity, handleS
                                 error={""}
                                 label="Observación"
                                 name="observation"
-                                onChange={(evt: any) => setobsertvation(evt.target.value)}
+                                onChange={(evt: any) => setobsertvation(evt.target.value.toUpperCase())}
                                 type="text"
                                 value={obsertvation}
 

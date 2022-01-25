@@ -1,90 +1,108 @@
-import React from 'react';
-import { makeStyles } from '@mui/styles';
 
-import MUIDataTable from '../../../components/table';
-import Can from '../../../components/can';
+import React from 'react';
+import { AlertDialogUi, FabUi } from '../../components';
+import MUIDataTable from '../../components/table';
+import { ConversionRequest } from "../../services/conversionService";
+import { SignsRequest } from '../../services/signsService';
+import { UnitsRequest } from '../../services/unitsService';
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { ProductsRequest } from '../../../services/productsService';
-import { IconButton, TableRow, TableCell } from "@mui/material";
-import { red } from "@mui/material/colors";
-import { UnitsRequest } from "../../../services/unitsService";
-import {AlertDialogUi, FabUi} from "../../../components";
-import { UpdateProductDad } from "../updateProductDad";
 
-import ProductSubTable from './ProductSubTable';
-import {DeleteProduct} from "../delete";
+import { DeleteConversion } from "./delete";
+import { UpdateConversion } from "./update";
+import { AddConversion } from "./add";
 import AddIcon from "@mui/icons-material/Add";
-import {AddProductDad} from "../addProducDad";
+import Can from '../../components/can';
+import { IconButton } from '@mui/material';
+import { red } from "@mui/material/colors";
+
+import { makeStyles } from '@mui/styles';
+import { formatWeight } from "../../utils/FormatNumbers";
 
 
-const useStyles = makeStyles((theme: any) => ({}));
 
-const ProductTable: React.FC = () => {
+const useStyles = makeStyles((theme: any) => ({
+   
+    tableHeadCellRight: {
+        paddingRight: 0,
+        '& > span': {
+          justifyContent: 'flex-end',
+        },
+      },
+
+      tableHeadCellCenter: {
+        paddingRight: 0,
+        '& > span': {
+          justifyContent: 'center',
+        },
+      },
+}));
+
+
+
+
+export function ConversionTable() {
     const classes = useStyles();
     const refDatatable: any = React.useRef();
-
-    const [product, setProduct] = React.useState<any>({});
+    const [conversion, setConversion] = React.useState<any>({});
     const [openAddDialogForm, setOpenAddDialogForm] = React.useState<boolean>(false);
     const [openEditDialogForm, setOpenEditDialogForm] = React.useState<boolean>(false);
     const [openDeleteDialogForm, setOpenDeleteDialogForm] = React.useState<boolean>(false);
+
     const [weightUnits, setWeightUnits] = React.useState([]);
+    const [mathSigns, setMathSigns] = React.useState([])
 
     React.useEffect(() => {
         UnitsRequest.getAll()
             .then(elements => setWeightUnits(elements))
     }, [])
 
+    React.useEffect(() => {
+        SignsRequest.getAll()
+            .then(e => setMathSigns(e))
+    }, [])
+
+
     const columns = [
         {
-            name: 'p_id',
+            name: 'id',
             label: 'Id',
             options: {
                 filter: true,
             },
         },
         {
-            name: 'p_name',
-            label: 'Nombre',
+            name: 'code_from',
+            label: 'De',
             options: {
                 filter: true,
             },
         },
         {
-            name: 'p_description',
-            label: 'Descripción',
+            name: 'code_to',
+            label: 'A',
             options: {
                 filter: true,
             },
         },
         {
-            name: 'purchase_unit',
-            label: 'Und.Compra',
+            name: 's_sign',
+            label: 'Signo',
             options: {
                 filter: true,
             },
         },
         {
-            name: 'sale_unit',
-            label: 'Und.Venta',
+            name: 'c_conversion_quatity',
+            label: 'Cantidad',
             options: {
                 filter: true,
+                customBodyRender: (value: any) => {
+                    return formatWeight(value);
+                  },
             },
         },
         {
-            name: 'p_current_existence',
-            label: 'Existencia',
-            options: {
-                filter: true,
-            },
-        },
-        {
-            name: 'p_reserved_quantity',
-            label: 'Reservados',
-            options: {
-                filter: true,
-            },
-        },    {
             name: 'actions',
             label: 'Acciones',
             options: {
@@ -92,16 +110,17 @@ const ProductTable: React.FC = () => {
                 sort: false,
                 empty: true,
                 customBodyRenderLite: (dataIndex: number) => {
-                    const productSelected = refDatatable.current.findData(dataIndex);
+                    const conversionSelected = refDatatable.current.findData(dataIndex);
                     return (
                         <>
-                            <Can
+                          <Can
                                 perform="users:create"
                                 yes={() => (
                                     <IconButton
                                         aria-label="update"
                                         onClick={() => {
-                                            setProduct(productSelected);
+                                            //setProduct(productSelected);
+                                            setConversion(conversionSelected)
                                             setOpenEditDialogForm(true);
                                         }}
                                     >
@@ -115,82 +134,72 @@ const ProductTable: React.FC = () => {
                                     <IconButton
                                         aria-label="delete"
                                         onClick={() => {
-                                            setProduct(productSelected);
+                                            setConversion(conversionSelected)
                                             setOpenDeleteDialogForm(true);
                                         }}
                                     >
                                         <DeleteIcon fontSize="small" sx={{ color: red[700] }} />
                                     </IconButton>
                                 )}
-                            />
+                                    />
                         </>
                     )
-                },
+                }
             }
         }
-    ];
+    ]
 
     const options = {
         serverSide: true,
         print: true,
         download: true,
-        expandableRows: true,
-        expandableRowsHeader: false,
-        expandableRowsOnClick: true,
-        renderExpandableRow: (rowData: any, rowMeta: any) => {
-            const currentProduct = refDatatable.current.findData(
-                rowMeta.rowIndex
-            );
-            const colSpan = rowData.length + 1;
-            return (
-                <TableRow>
-                    <TableCell
-                        style={{
-                            paddingBottom: 0,
-                            paddingTop: 0,
-                            borderBottom: 'none',
-                            paddingLeft: '120px',
-                        }}
-                        colSpan={colSpan}
-                    >
-                        <ProductSubTable parentProduct={currentProduct} />
-                    </TableCell>
-                </TableRow>
-            );
+    };
+
+    const handleProductSaveClick = (oper : string, updatedConversion: any) => {
+        switch(oper)
+        {
+            case "CREATED" :
+                refDatatable.current.createRecord(updatedConversion)
+                break;
+            case "UPDATED" :
+                refDatatable.current.updateRecord(updatedConversion.id, updatedConversion)
+                break;
+            case "DELETED" :
+                refDatatable.current.deleteRecord(updatedConversion.id);
+                break;
+            default : break;
         }
+        //refDatatable.current.updateRecord(updatedProduct.id, updatedProduct);
     };
 
-    const handleProductSaveClick = (updatedProduct: any) => {
-        refDatatable.current.updateRecord(updatedProduct.id, updatedProduct);
-    };
-
-    const handleOpenAddDialogForm = () => {
-        setProduct({});
-        setOpenEditDialogForm(true);
-    };
 
     return (
         <>
             <MUIDataTable
                 ref={refDatatable}
-                fetchData={ProductsRequest.getNotDerivate}
-                params={{ isDerivate: false }}
+                fetchData={ConversionRequest.getAll}
+                title={"Lista de conversion"}
                 // filterForm={<UserTableFilterForm handleSubmit={() => (console.log(''))}/>}
                 columns={columns}
                 options={options}
             />
+
             <FabUi
                 size="small"
-                color="primary" onClick={handleOpenAddDialogForm}
+                color="primary" 
+                onClick={() => setOpenAddDialogForm(true)}
                 ariaLabel="add"
                 icon={<AddIcon />}
             />
+
             <AlertDialogUi
                 handleClose={() => setOpenAddDialogForm(false)}
                 content={
-                    <AddProductDad
+                    <AddConversion
                         units={weightUnits}
-                        handleClose={() => setOpenAddDialogForm(false)}
+                        onClose={() => setOpenAddDialogForm(false)}
+                        signs={mathSigns}
+                        onSubmit={handleProductSaveClick}
                     />
                 }
                 open={openAddDialogForm}
@@ -199,30 +208,27 @@ const ProductTable: React.FC = () => {
             <AlertDialogUi
                 handleClose={() => setOpenEditDialogForm(false)}
                 content={
-                    <UpdateProductDad
-                        handleClose={() => setOpenEditDialogForm(false)}
-                        units={weightUnits}
-                        data={product}
-                        onSubmit={handleProductSaveClick}
+                    <UpdateConversion
+                      units={weightUnits}
+                      onClose={() => setOpenEditDialogForm(false)}
+                      signs={mathSigns}
+                      onSubmit={handleProductSaveClick}
+                      data={conversion}
                     />}
                 open={openEditDialogForm}
                 title=""
             />
-            <AlertDialogUi
+             <AlertDialogUi
                 handleClose={() => setOpenDeleteDialogForm(false)}
                 content={
-                    <DeleteProduct
-                        open={openDeleteDialogForm}
-                        setOpen={setOpenDeleteDialogForm}
-                        handleClose={() => setOpenDeleteDialogForm(false)}
-                        data={product}
-                    />
-                }
+                    <DeleteConversion
+                      onClose={() => setOpenDeleteDialogForm(false)}
+                      onSubmit={handleProductSaveClick}
+                      data={conversion}
+                    />}
                 open={openDeleteDialogForm}
                 title=""
             />
         </>
-    );
-};
-
-export default ProductTable;
+    )
+}

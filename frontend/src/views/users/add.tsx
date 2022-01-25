@@ -16,7 +16,7 @@ import React, { useState } from 'react';
 
 
 
-export function AddUsers({ handleClose, setRefresh, refresh, kindId }: any) {
+export function AddUsers({ onClose, kindId, onSubmit : on }: any) {
     const [severity, setSeverity] = useState("success");
     const [msg, setMsg] = useState("success");
     const [openn, setOpenn] = useState(false);
@@ -51,7 +51,7 @@ export function AddUsers({ handleClose, setRefresh, refresh, kindId }: any) {
                 second_name: values.second_name,
                 first_surname: values.first_surname,
                 second_surname: values.second_surname,
-                fullname: `${values.name} ${values.second_name} ${values.first_surname} ${values.second_name}`,
+                fullname: `${values.name} ${values.second_name} ${values.first_surname} ${values.second_surname}`,
                 address: values.address,
                 phone: values.phone,
                 contact: values.contact,
@@ -62,9 +62,12 @@ export function AddUsers({ handleClose, setRefresh, refresh, kindId }: any) {
                 setMsg("Guardado exitosamente")
                 handleClick()
 
-                setRefresh(!refresh)
-                handleClose()
+                
                 setdisablebtn(false)
+                console.log(res.data)
+                on("CREATED", res.data)
+                onClose()
+
             } else {
                 res.errors.map((e: any) => formikHelpers.setFieldError(e.field, e.msg))
                 setSeverity("error")
@@ -107,7 +110,10 @@ export function AddUsers({ handleClose, setRefresh, refresh, kindId }: any) {
                             error={formik.errors.idnumber}
                             label="Número de id *"
                             name="idnumber"
-                            onChange={formik.handleChange}
+                            onChange={(evt : any) =>{
+                                //formik.handleChange
+                                formik.setFieldValue("idnumber", evt.target.value.toUpperCase())
+                            }}
                             type="text"
                             value={formik.values.idnumber}
                         />
@@ -119,7 +125,10 @@ export function AddUsers({ handleClose, setRefresh, refresh, kindId }: any) {
                             error={formik.errors.name}
                             label="Primer nombre *"
                             name="name"
-                            onChange={formik.handleChange}
+                            onChange={(evt : any) =>{
+                                //formik.handleChange
+                                formik.setFieldValue("name", evt.target.value.toUpperCase())
+                            }}
                             type="text"
                             value={formik.values.name}
                         />
@@ -131,7 +140,10 @@ export function AddUsers({ handleClose, setRefresh, refresh, kindId }: any) {
                             error={formik.errors.second_name}
                             label="Segundo nombre *"
                             name="second_name"
-                            onChange={formik.handleChange}
+                            onChange={(evt : any) =>{
+                                //formik.handleChange
+                                formik.setFieldValue("second_name", evt.target.value.toUpperCase())
+                            }}
                             type="text"
                             value={formik.values.second_name}
                         />
@@ -143,7 +155,10 @@ export function AddUsers({ handleClose, setRefresh, refresh, kindId }: any) {
                             error={formik.errors.first_surname}
                             label="Primer apellido *"
                             name="first_surname"
-                            onChange={formik.handleChange}
+                            onChange={(evt : any) =>{
+                                //formik.handleChange
+                                formik.setFieldValue("first_surname", evt.target.value.toUpperCase())
+                            }}
                             type="text"
                             value={formik.values.first_surname}
                         />
@@ -155,7 +170,10 @@ export function AddUsers({ handleClose, setRefresh, refresh, kindId }: any) {
                             error={formik.errors.second_surname}
                             label="Segundo apellido *"
                             name="second_surname"
-                            onChange={formik.handleChange}
+                            onChange={(evt : any) =>{
+                                //formik.handleChange
+                                formik.setFieldValue("second_surname", evt.target.value.toUpperCase())
+                            }}
                             type="text"
                             value={formik.values.second_surname}
                         />
@@ -167,7 +185,10 @@ export function AddUsers({ handleClose, setRefresh, refresh, kindId }: any) {
                             error={formik.errors.address}
                             label="Dirección *"
                             name="address"
-                            onChange={formik.handleChange}
+                            onChange={(evt : any) =>{
+                                //formik.handleChange
+                                formik.setFieldValue("address", evt.target.value.toUpperCase())
+                            }}
                             type="text"
                             value={formik.values.address}
                         />
@@ -193,7 +214,10 @@ export function AddUsers({ handleClose, setRefresh, refresh, kindId }: any) {
                             error={formik.errors.code}
                             label="código *"
                             name="code"
-                            onChange={formik.handleChange}
+                            onChange={(evt : any) =>{
+                                //formik.handleChange
+                                formik.setFieldValue("code", evt.target.value.toUpperCase())
+                            }}
                             type="text"
                             value={formik.values.code}
                         />
@@ -241,7 +265,10 @@ export function AddUsers({ handleClose, setRefresh, refresh, kindId }: any) {
                             error={formik.errors.contact}
                             label="Contacto *"
                             name="contact"
-                            onChange={formik.handleChange}
+                            onChange={(evt : any) =>{
+                                //formik.handleChange
+                                formik.setFieldValue("contact", evt.target.value.toUpperCase())
+                            }}
                             type="text"
                             value={formik.values.contact}
                         />
@@ -264,7 +291,7 @@ export function AddUsers({ handleClose, setRefresh, refresh, kindId }: any) {
                     alignItems="flex-start"
                     spacing={2}
                 >
-                    <ButtonUi disabled={disablebtn} text="Cancelar" type="button" onClick={handleClose} />
+                    <ButtonUi disabled={disablebtn} text="Cancelar" type="button" onClick={onClose} />
                     <ButtonUi disabled={disablebtn} text="Enviar" type="submit" />
 
                 </Stack>

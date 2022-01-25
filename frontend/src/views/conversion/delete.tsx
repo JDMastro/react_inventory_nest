@@ -4,7 +4,7 @@ import { Snackbars, ButtonUi } from "../../components";
 import { ConversionRequest } from "../../services/conversionService";
 
 
-export function DeleteConversion({ handleClose, setRefresh, refresh, data }: any)
+export function DeleteConversion({ onClose, data, onSubmit : on }: any)
 {
     const [severity] = React.useState("success");
     const [msg, setMsg] = useState("success");
@@ -24,13 +24,14 @@ export function DeleteConversion({ handleClose, setRefresh, refresh, data }: any
 
         setdisablebtn(true)
         try {
-            await ConversionRequest.delete(data.c_id)
+            await ConversionRequest.delete(data.id)
            
                 setMsg("Eliminado exitosamente")
                 handleClick()
-                setRefresh(!refresh)
-                handleClose()
                 setdisablebtn(false)
+                on("DELETED", { id : data.id })
+                onClose()
+                
            
         } catch (error) {
             console.log(error)
@@ -55,7 +56,7 @@ export function DeleteConversion({ handleClose, setRefresh, refresh, data }: any
                     alignItems="flex-start"
                     spacing={2}
                 >
-                    <ButtonUi disabled={disablebtn} text="Cancelar" type="button" onClick={handleClose} />
+                    <ButtonUi disabled={disablebtn} text="Cancelar" type="button" onClick={onClose} />
                     <ButtonUi disabled={disablebtn} text="Enviar" type="button" onClick={() => deleteProduct()} />
 
                 </Stack>

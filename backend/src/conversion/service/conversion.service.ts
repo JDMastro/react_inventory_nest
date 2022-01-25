@@ -14,7 +14,7 @@ export class ConversionService {
 
     async findAll() {
         return  await getManager().createQueryBuilder("conversion","c")
-        .select(["c.id", "c.conversion_from", "u.code as code_from", "c.conversion_to", "u2.code as code_to", "c.conversion_quatity", "c.signs_id", "s.sign"])
+        .select(["c.id as id", "c.conversion_from", "u.code as code_from", "c.conversion_to", "u2.code as code_to", "c.conversion_quatity", "c.signs_id", "s.sign"])
           .innerJoin(Signs, "s", "s.id = c.signs_id")
           .innerJoin(Units, "u", "c.conversion_from = u.id")
           .innerJoin(Units, "u2", "c.conversion_to = u2.id")
@@ -31,7 +31,20 @@ export class ConversionService {
 
     async create(body : ConversionDto){
         const { conversion_from, conversion_quatity, conversion_to, signs_id } = body
-        return await this._conversionRepo.save({ conversion_from, conversion_quatity, conversion_to, signs_id })
+       const conversion = await this._conversionRepo.save({ conversion_from, conversion_quatity, conversion_to, signs_id })
+       const lastSaved = await this.getLastSaved(conversion.id)
+        return lastSaved
+    }
+
+    async getLastSaved(id: number)
+    {
+        return  await getManager().createQueryBuilder("conversion","c")
+        .select(["c.id as id", "c.conversion_from", "u.code as code_from", "c.conversion_to", "u2.code as code_to", "c.conversion_quatity", "c.signs_id", "s.sign"])
+          .innerJoin(Signs, "s", "s.id = c.signs_id")
+          .innerJoin(Units, "u", "c.conversion_from = u.id")
+          .innerJoin(Units, "u2", "c.conversion_to = u2.id")
+          .where("c.id = :id", { id })
+          .getRawOne()
     }
 
     async update(id: number, body: ConversionDto)
@@ -46,7 +59,9 @@ export class ConversionService {
             signs_id
         })
 
-        return await this._conversionRepo.save(conversion)
+        await this._conversionRepo.save(conversion)
+
+        return await this.getLastSaved(id)
     }
 
     async delete(id : number)

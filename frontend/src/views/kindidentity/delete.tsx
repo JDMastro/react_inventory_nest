@@ -3,7 +3,7 @@ import { Stack, Box, Divider, Typography } from '@mui/material/';
 import { Snackbars, ButtonUi } from "../../components";
 import { KindIdRequest } from "../../services/kindIdentityService";
 
-export function DeleteKindId({ handleClose, setRefresh, refresh, data }: any)
+export function DeleteKindId({ onClose, data, onSubmit : on }: any)
 {
     const [severity, setSeverity] = React.useState("success");
     const [msg, setMsg] = useState("success");
@@ -27,9 +27,9 @@ export function DeleteKindId({ handleClose, setRefresh, refresh, data }: any)
             if (res.success) {
                 setMsg("Eliminado exitosamente")
                 handleClick()
-                setRefresh(!refresh)
-                handleClose()
                 setdisablebtn(false)
+                on("DELETED", { id : data.id })
+                onClose()
             } else {
                 setSeverity("error")
                 setMsg(res.error)
@@ -59,7 +59,7 @@ export function DeleteKindId({ handleClose, setRefresh, refresh, data }: any)
                     alignItems="flex-start"
                     spacing={2}
                 >
-                    <ButtonUi disabled={disablebtn} text="Cancelar" type="button" onClick={handleClose} />
+                    <ButtonUi disabled={disablebtn} text="Cancelar" type="button" onClick={onClose} />
                     <ButtonUi disabled={disablebtn} text="Enviar" type="button" onClick={() => deleteProduct()} />
 
                 </Stack>

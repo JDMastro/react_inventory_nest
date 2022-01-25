@@ -1,11 +1,14 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Req, UnauthorizedException } from '@nestjs/common';
 import { StatusDto } from "../dto/status.dto";
 import { StatusService } from "../service/status.service";
+import { Request } from "express";
+import { UsersService } from "../../users/service/users.service";
 
 @Controller('api/status')
 export class StatusController {
     constructor(
-        private _statusService: StatusService
+        private _statusService: StatusService,
+        private _usersService : UsersService
     ) { }
 
     @Get()
@@ -13,10 +16,23 @@ export class StatusController {
         return await this._statusService.findAll()
     }
 
-    @Get('getAllNumberOrdersbyStatus/:status_id/:person_id')
-      async getAllNumberOrdersbyStatus(@Param('status_id') status_id : number,@Param('person_id')  person_id : number)
+    @Get('getAllNumberOrdersbyStatus/:status_id')
+      async getAllNumberOrdersbyStatus(@Req() request :Request ,@Param('status_id') status_id : number)
       {
-        return await this._statusService.getAllNumberOrdersbyStatus(status_id, person_id)
+        try {
+            const cookie = request.cookies['jwt']
+
+            const data = await this._usersService.verifyToken(cookie)
+            if(!data){
+               throw new UnauthorizedException()
+            }
+
+              return await this._statusService.getAllNumberOrdersbyStatus(status_id, data.id)
+            //return 
+        } catch (e) {
+            throw new UnauthorizedException()
+        }
+        //return await this._statusService.getAllNumberOrdersbyStatus(status_id, person_id)
       }
 
     @Post()

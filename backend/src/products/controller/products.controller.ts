@@ -18,7 +18,7 @@ export class ProductsController {
         const { code_bar, current_existence,
             description, isderivate, name,
             product_parent_id, purchase_unit_id, reserved_quantity,
-            sale_unit_id, sku, user_id, to_discount } = body
+            sale_unit_id, sku, user_id, to_discount, sale_price } = body
         const errors: any = []
         const product = new ProductsDto()
 
@@ -44,6 +44,7 @@ export class ProductsController {
         product.isderivate = isderivate
         product.user_id = user_id
         product.to_discount = to_discount
+        product.sale_price = sale_price
 
         return errors.length > 0 ?
             { success: false, data: null, errors } :
@@ -96,7 +97,7 @@ export class ProductsController {
         const { code_bar, current_existence,
             description, isderivate, name,
             product_parent_id, purchase_unit_id, reserved_quantity,
-            sale_unit_id, sku, user_id, to_discount, waste_quantity } = body
+            sale_unit_id, sku, user_id, to_discount, waste_quantity, sale_price, actived } = body
         try {
             // await this._unitsService.update(id, body)
             return {
@@ -105,7 +106,7 @@ export class ProductsController {
                     description, isderivate, name,
                     product_parent_id, purchase_unit_id, reserved_quantity,
                     sale_unit_id, sku, user_id, to_discount,
-                    waste_quantity
+                    waste_quantity, sale_price, actived
                 }), errors: null
             }
         } catch (err) {
@@ -124,7 +125,7 @@ export class ProductsController {
     async remove(@Param('id') id: number) {
         try {
             
-        return { success: await this._productsService.delete(id), data: null, error : null }
+        return { success: true, data: await this._productsService.delete(id), error : null }
         } catch (error) {
             return { success: false, data: null, error : "Debe eliminar todos los productos que deveriven de este" }
         }

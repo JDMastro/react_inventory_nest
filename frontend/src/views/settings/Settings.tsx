@@ -1,10 +1,8 @@
-import React from 'react';
-
 import { Grid } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import PeopleIcon from '@mui/icons-material/People';
-import PapperBlock from '../../../components/papper-block';
-import ProductTable from './ProductTable';
+import PapperBlock from '../../components/papper-block';
+import { SettingsTable } from './SettingsTable';
 
 const useStyles = makeStyles((theme: any) => ({
     paper: {
@@ -15,20 +13,19 @@ const useStyles = makeStyles((theme: any) => ({
     },
 }));
 
-const Product: React.FC = () => {
+export function Settings()
+{
     const classes = useStyles();
     return (
         <Grid item xs={12}>
             <PapperBlock
                 className={classes.paper}
-                title="Productos"
+                title="Configuración"
                 desc="...."
                 icon={<PeopleIcon />}
             >
-                <ProductTable />
+                <SettingsTable />
             </PapperBlock>
         </Grid>
     );
-};
-
-export default Product;
+}
