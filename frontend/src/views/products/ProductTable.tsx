@@ -7,7 +7,6 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { ProductsRequest } from '../../services/productsService';
 import { IconButton, TableRow, TableCell } from "@mui/material";
-import { red } from "@mui/material/colors";
 import { UnitsRequest } from "../../services/unitsService";
 import { AlertDialogUi, FabUi } from '../../components';
 import AddIcon from "@mui/icons-material/Add";
@@ -179,7 +178,7 @@ export function ProductTable() {
 
                                         >
                                             {/*  disabled={productSelected.p_actived ? false : true} */}
-                                            <DeleteIcon fontSize="small" sx={{ color: red[700] }} />
+                                            <DeleteIcon fontSize="small" color="error" />
                                         </IconButton>
                                     ) : (<span></span>)
 
@@ -254,8 +253,7 @@ export function ProductTable() {
         <>
             <MUIDataTable
                 ref={refDatatable}
-                fetchData={ProductsRequest.getNotDerivate}
-                params={{ isDerivate: false }}
+                fetchData={ProductsRequest.findAllWithPagination}
                 // filterForm={<UserTableFilterForm handleSubmit={() => (console.log(''))}/>}
                 columns={columns}
                 options={options}

@@ -1,8 +1,12 @@
-import { lighten } from '@material-ui/core/styles/colorManipulator';
-import { makeStyles, Theme } from '@material-ui/core/styles';
+//import { lighten } from '@material-ui/core/styles/colorManipulator';
+//import { makeStyles, Theme } from '@material-ui/core/styles';
 
-const styles = makeStyles((theme: Theme) => ({
-  root: theme.mixins.gutters({
+import { lighten, Theme } from '@mui/material';
+import { makeStyles } from '@mui/styles';
+
+
+const styles = makeStyles((theme: any) => ({
+  root: {
     paddingTop: theme.spacing(3),
     paddingBottom: theme.spacing(3),
     marginBottom: theme.spacing(3),
@@ -11,7 +15,7 @@ const styles = makeStyles((theme: Theme) => ({
     '&$noMargin': {
       margin: 0,
     },
-  }),
+  },
   block: {
     display: 'flex',
     justifyContent: 'space-between',
@@ -51,6 +55,7 @@ const styles = makeStyles((theme: Theme) => ({
     },
   },
   content: {
+position : 'static',
     marginTop: theme.spacing(2),
     padding: theme.spacing(1),
     // @ts-ignore

@@ -130,12 +130,14 @@ const MUIDataTable: any = React.forwardRef<React.ReactNode, any>(
 
       // Pagination...
       if(props.options?.pagination !== false){
+        
         _args = {
           ..._args,
           _limit: args.rowsPerPage || +state.rowsPerPage,
           _page: +page + 1 || 1,
         }
       }
+      
 
       if (q) {
         _args.q = q;
@@ -146,11 +148,15 @@ const MUIDataTable: any = React.forwardRef<React.ReactNode, any>(
         const resource = await fetchData(_args);
         const metadata = { ...resource };
         delete metadata.data;
-
-        const data = resource.map((item) => ({
+        //console.log("metadata",metadata)
+        /*const data = resource.map((item) => ({
           ...item,
           ...additionalDataByRow,
-        }));
+        }));*/
+        const data = resource.data.map((item) => ({
+          ...item,
+          ...additionalDataByRow,
+        }))
 
         setState({
           ...state,
@@ -159,8 +165,8 @@ const MUIDataTable: any = React.forwardRef<React.ReactNode, any>(
           loading: false,
           error: null,
           serverSide: true,
-          count: metadata?.headers?.['pagination-total-count']
-            ? parseInt(metadata?.headers?.['pagination-total-count'])
+          count: metadata?.total
+            ? parseInt(metadata?.total)
             : 0,
           rowsPerPage: args.rowsPerPage || +state.rowsPerPage,
         });
@@ -405,8 +411,8 @@ const MUIDataTable: any = React.forwardRef<React.ReactNode, any>(
       options: {
         filter: false,
         customBodyRender: (value: any, meta) => {
-          const pageCount = state.metadata?.headers?.['pagination-page-count'] ;
-          const currentPage = state.metadata?.headers?.['pagination-current-page'];
+          const pageCount = state.metadata?.page_count ;
+          const currentPage = state.metadata?.current_page;
           return currentPage <= 1  ? meta.rowIndex + 1 : ((pageCount * (currentPage - 1)) + (meta.rowIndex + 1));
         }
       }

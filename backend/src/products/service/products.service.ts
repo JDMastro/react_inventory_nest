@@ -64,9 +64,31 @@ export class ProductsService {
           .getRawMany()
     }
 
-    async findProductByDerivate(isderivate: boolean) {
+   async findAllWithPagination(page : number, perPage : number) {
         //return await this._productsRepo.find({ isderivate })
-        return await getManager().createQueryBuilder("products", "p")
+        const data = await getManager().createQueryBuilder("products", "p")
+            .select(["u.id as purchase_id", "u2.id as sale_id", "p.id as id", "p.name", "p.description", "p.sku", "p.code_bar", "p.current_existence", "p.reserved_quantity",
+                "u.code as purchase_unit", "u2.code as sale_unit", "p.to_discount", "p.sale_price", "p.actived"])
+            .innerJoin(Units, "u", "u.id = p.purchase_unit_id ")
+            .innerJoin(Units, "u2", "u2.id = p.sale_unit_id")
+            .where("p.isderivate = :isderivate", { isderivate : false })
+            .orderBy("p.name", 'ASC')
+            .offset((page - 1) * perPage)
+            .limit(perPage)
+
+            const total = await data.getCount()
+            return {
+                data : await data.getRawMany(),
+                total,
+                page_count : perPage,
+                current_page : page,
+                last_page : Math.ceil(total/perPage)
+              }
+    }
+
+    async findProductByDerivate(isderivate : boolean) {
+        //return await this._productsRepo.find({ isderivate })
+         return  await getManager().createQueryBuilder("products", "p")
             .select(["u.id as purchase_id", "u2.id as sale_id", "p.id as id", "p.name", "p.description", "p.sku", "p.code_bar", "p.current_existence", "p.reserved_quantity",
                 "u.code as purchase_unit", "u2.code as sale_unit", "p.to_discount", "p.sale_price", "p.actived"])
             .innerJoin(Units, "u", "u.id = p.purchase_unit_id ")
@@ -75,7 +97,7 @@ export class ProductsService {
             .orderBy("p.name", 'ASC')
             .getRawMany()
     }
-
+    
     async findProductParentProducction()
     {
         const status_id = await this._settingsService.findByKey("ESTADO_SUGERIDO")
@@ -102,21 +124,30 @@ export class ProductsService {
 
     async findProductByParent(parent_id : number)
     {
-        return await getManager().createQueryBuilder("products", "p")
+        return { data : await getManager().createQueryBuilder("products", "p")
         .select(["u.id as purchase_id", "u2.id as sale_id", "p.id as id", "p.name", "p.description", "p.sku", "p.code_bar", "p.current_existence", "p.reserved_quantity",
             "u.code as purchase_unit", "u2.code as sale_unit", "p.to_discount", "p.sale_price", "p.actived"])
         .innerJoin(Units, "u", "u.id = p.purchase_unit_id ")
         .innerJoin(Units, "u2", "u2.id = p.sale_unit_id")
         .where("p.product_parent_id = :parent_id", { parent_id })
         .orderBy("p.name", 'ASC')
-        .getRawMany()
+        .getRawMany() }
     }
 
     async findByHeader(header_id : number)
     {
         return getManager().createQueryBuilder("movements","m")
-        .select(["m.unit_price","u.id as purchase_id", "u2.id as sale_id", "p.id as id", "p.name", "p.description", "p.sku", "p.code_bar", "p.current_existence", "p.reserved_quantity",
-                "u.code as purchase_unit", "u2.code as sale_unit", "p.to_discount", "m.unit_price"])
+        .select(["m.unit_price",
+                 "u.id as purchase_id", 
+                 "u2.id as sale_id", 
+                 "p.id as id", "p.name", 
+                 "p.description", "p.sku", 
+                 "p.code_bar", "p.current_existence", 
+                 "p.reserved_quantity",
+                "u.code as purchase_unit", 
+                "u2.code as sale_unit",
+                 "p.to_discount", 
+                 "m.unit_price", "p.sale_price"])
                    .innerJoin(Products, "p", "m.product_id = p.id")
                    .innerJoin(Header, "h", "h.id = m.header_id")
                    .innerJoin(Units, "u", "p.purchase_unit_id = u.id ")

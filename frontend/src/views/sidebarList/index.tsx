@@ -10,6 +10,8 @@ import Collapse from '@mui/material/Collapse';
 //import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 //import AssignmentIcon from '@mui/icons-material/Assignment';
 //import PersonIcon from '@mui/icons-material/Person';
+import SettingsIcon from '@mui/icons-material/Settings';
+import { Profile } from "../profile";
 
 
 
@@ -45,6 +47,9 @@ export function SideBarList() {
         <div>
             <Toolbar />
             <Divider />
+            <List component="nav" aria-label="main mailbox folders">
+                <Profile />
+            </List>
             <List component="nav" aria-label="main mailbox folders" >
                 <ListItemButton
                     selected={selectedIndex === 0}
@@ -69,15 +74,7 @@ export function SideBarList() {
                 <Collapse in={open} timeout="auto" unmountOnExit>
                     <List component="div" disablePadding>
 
-                    <ListItemButton sx={{ pl: 5 }}
-                            selected={selectedIndex === 15}
-                            onClick={(event: any) => handleListItemClick(event, 15)}
-                            component={Link}
-                            to={`/dashboard/maestro/settings`}
-                        >
-
-                            <ListItemText primary="Configuración" />
-                        </ListItemButton>
+                   
 
                     <ListItemButton sx={{ pl: 5 }}
                                         selected={selectedIndex === 12}
@@ -262,6 +259,19 @@ export function SideBarList() {
                     </ListItemIcon>
                     <ListItemText primary="Usuarios" />
                 </ListItemButton>
+
+
+                <ListItemButton
+                            selected={selectedIndex === 15}
+                            onClick={(event: any) => handleListItemClick(event, 15)}
+                            component={Link}
+                            to={`/dashboard/maestro/settings`}
+                        >
+                            <ListItemIcon style={{ marginRight: '-25px' }} >
+                        <SettingsIcon fontSize="small" />
+                    </ListItemIcon>
+                            <ListItemText primary="Configuración" />
+                        </ListItemButton>
 
 
 

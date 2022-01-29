@@ -14,17 +14,28 @@ export class PersonService {
         @InjectRepository(Person) private _personRepo: Repository<Person>,
     ) { }
 
-    async findAll() {
-        return await getManager().createQueryBuilder("person", "p")
+    async findAll(page : number, perPage : number) {
+        const data = await getManager().createQueryBuilder("person", "p")
         .select([
-            "p.id as id", "p.kind_id", "k.code as kind_code", "p.idnumber", "p.fullname", "p.address",
+            "p.id as id", "p.kind_id", "k.description as kind_description", "p.idnumber", "p.fullname", "p.address",
             "p.phone", "p.contact", "p.name", "p.second_name", "p.first_surname", "p.second_surname", "r.name" , "r.id as role_id"
         ])
         .innerJoin(Kindidentity, "k", "k.id = p.kind_id ")
         .innerJoin(Roles, "r", "r.id = p.roles_id ")
         .where("r.name != 'EMPLEADO'")
         .orderBy("p.fullname", 'ASC')
-        .getRawMany()
+        .offset((page - 1) * perPage)
+        .limit(perPage)
+
+        const total = await data.getCount()
+
+        return {
+            data : await data.getRawMany(),
+            total,
+            page_count : perPage,
+            current_page : page,
+            last_page : Math.ceil(total/perPage)
+          }
     }
 
     async findAllPersonByRole(role_id : number){
@@ -44,7 +55,7 @@ export class PersonService {
     {
         return await getManager().createQueryBuilder("person", "p")
         .select([
-            "p.id as id", "p.kind_id", "k.code as kind_code", "p.idnumber", "p.fullname", "p.address",
+            "p.id as id", "p.kind_id", "k.description as kind_description", "p.idnumber", "p.fullname", "p.address",
             "p.phone", "p.contact", "p.name", "p.second_name", "p.first_surname", "p.second_surname", "r.name" , "r.id as role_id"
         ])
         .innerJoin(Kindidentity, "k", "k.id = p.kind_id ")

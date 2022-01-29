@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Put, Param, Delete, Res, Req, UnauthorizedException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Put, Param, Delete, Res, Req, UnauthorizedException, Query } from '@nestjs/common';
 import { AuthDto } from '../dto/auth.dto';
 import { UsersDto, UsersEmployeeDto } from "../dto/users.dto";
 import { UsersService } from "../service/users.service";
@@ -20,8 +20,8 @@ export class UsersController {
     ) { }
 
     @Get()
-    async findAll() {
-        return await this.UsersService.findAll()
+    async findAll(@Query() req) {
+        return await this.UsersService.findAll(req._page, req._limit)
     }
 
     @Post('login')

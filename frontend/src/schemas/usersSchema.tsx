@@ -20,6 +20,6 @@ export const UsersSchema: initialFValuesTypes = yup.object({
     name: yup.string().required("Este campo es requerido"),
     first_surname: yup.string().required("Este campo es requerido"),
     address: yup.string().required("Este campo es requerido"),
-    phone: yup.number().required("Este campo es requerido"),
+    phone: yup.string().required("Este campo es requerido"),
     contact: yup.string().required("Este campo es requerido"),
 })

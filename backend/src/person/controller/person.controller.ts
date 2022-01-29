@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { personDto } from "../dto/person.dto";
 import { PersonService } from "../service/person.service";
 
@@ -9,8 +9,8 @@ export class PersonController {
     ) { }
 
     @Get()
-    async findAll() {
-        return await this._personService.findAll()
+    async findAll(@Query() req) {
+        return await this._personService.findAll(req._page, req._limit)
     }
 
     @Get('role/:roleid')

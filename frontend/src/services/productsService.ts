@@ -1,6 +1,8 @@
 import { instance, responseBody } from './axiosInstance'
+import { urlFormatRest } from "../utils/Url";
 
 const Requests = {
+    findAllWithPagination : async (url : string) => await instance.get(url).then(responseBody),
     getNotDerivate : async (url : string) => await instance.get(url).then(responseBody),
     create : async (url : string, body: any) => await instance.post(url, body).then(responseBody),
     update : async (url : string, body: any) => await instance.put(url, body).then(responseBody),
@@ -14,6 +16,9 @@ const Requests = {
 export const ProductsRequest =
 {
     getNotDerivate : async ({ isDerivate }: any) => await Requests.getNotDerivate(`products/parents/${isDerivate}`),
+    findAllWithPagination : async(queryParameters : any) => await Requests.findAllWithPagination(urlFormatRest('products/withpagination',queryParameters)),
+
+
     create : async (body: any) => await Requests.create('products',body),
     update : async (id : number, body : any) => await Requests.update(`products/${id}`,body),
     delete : async (id: number) => await Requests.delete(`products/${id}`),

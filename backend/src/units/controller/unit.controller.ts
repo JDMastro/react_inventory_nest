@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { UnitsDto } from "../dto/units.dto";
 import { UnitsService } from "../service/unit.service";
 
@@ -11,6 +11,12 @@ export class UnitsController {
     @Get()
     async findAll() {
         return await this._unitsService.findAll()
+    }
+
+    @Get('withpagination')
+    async findAllWithPagination(@Query() req)
+    {
+        return await this._unitsService.findAllWithPagination(req._page, req._limit)
     }
 
     @Post()

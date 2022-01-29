@@ -9,7 +9,7 @@ import { ProductsRequest } from "../../services/productsService";
 import { isEmpty } from 'lodash';
 
 
-export function AddProduction({ setproductDerivate, reserved_quantity, existence_converted, productparent, productchild, handleClose, setnumber_order, number_order, kind_mov, obsertvation }: any) {
+export function AddProduction({ setreserved_quantity, setexistence_converted, setcurrent_existence_parent, setconverted_current_existence_parent, setproductDerivate, reserved_quantity, existence_converted, productparent, productchild, handleClose, setnumber_order, number_order, kind_mov, obsertvation }: any) {
 
     const [disablebtn, setdisablebtn] = useState(false);
     const [movements, setmovements] = useState<any>([]);
@@ -70,7 +70,7 @@ export function AddProduction({ setproductDerivate, reserved_quantity, existence
                 waste_quantity : values.waste_quantity === "" ? 0 : values.waste_quantity,
                 total_amount_used : values.total_amount_used
             }).then((res: any) => {
-                console.log(res)
+                console.log("resssss",res)
                 if (res.success) {
                     //formikHelpers.setFieldValue("number_order", )
                     setnumber_order(res.new_number_order)
@@ -85,7 +85,20 @@ export function AddProduction({ setproductDerivate, reserved_quantity, existence
 
                     ProductsRequest.getByStatusSuggest(productparent.p_id).then(e => setproductDerivate(e))
 
-                
+                    console.log(res)
+                    setexistence_converted(res.coverted_quantity)
+                    setcurrent_existence_parent(res.current_quantity)
+                    setconverted_current_existence_parent(res.coverted_quantity)
+                    
+                     
+                    if(productchild.amount_used > 0)
+                    {
+                        setreserved_quantity(reserved_quantity - productchild.amount_used)
+                    }else{
+                        console.log(values.amount_to_take)
+                        console.log("---->",eval(`${reserved_quantity} + ${values.amount_to_take}`))
+                        setreserved_quantity(eval(`${reserved_quantity} + ${values.amount_to_take}`))
+                    }
                     
                     handleClose()
                     

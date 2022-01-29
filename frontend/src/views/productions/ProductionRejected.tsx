@@ -6,9 +6,10 @@ import { initialValuesProductionRejected } from "../../initialValues";
 import { ProductionRejectedsSchema } from "../../schemas/productionRejectedSchema";
 import { useState } from "react";
 import { MovementRequest } from "../../services/movementService";
+import { ProductsRequest } from "../../services/productsService";
 
 
-export function ProductionRejected({ productRejected, handleClose }: any) {
+export function ProductionRejected({ productparent, setproductDerivate, reserved_quantity, setreserved_quantity, productRejected, handleClose }: any) {
 
     const [severity, setSeverity] = useState("success");
     const [msg, setMsg] = useState("success");
@@ -30,10 +31,14 @@ export function ProductionRejected({ productRejected, handleClose }: any) {
 
     const onSubmit = async (values: initialFValuesTypes, formikHelpers: FormikHelpers<any>) => {
         setdisablebtn(true)
+        //console.log(reserved_quantity)
+        //console.log(productRejected)
         await MovementRequest.productionrejected(productRejected.id, {
             observation: values.observation
         }).then(e => {
             setMsg("Guardado exitosamente")
+            setreserved_quantity(reserved_quantity-productRejected.amount_used)
+            ProductsRequest.getByStatusSuggest(productparent.p_id).then(e => setproductDerivate(e))
             handleClick()
             handleClose()
             setdisablebtn(false)
@@ -43,7 +48,6 @@ export function ProductionRejected({ productRejected, handleClose }: any) {
 
     const formik = UseForm(initialValuesProductionRejected, ProductionRejectedsSchema, onSubmit)
 
-    console.log(productRejected)
     return (
         <Box sx={{ m: 1 }} component="form" onSubmit={formik.handleSubmit}>
             <Grid container spacing={2}>
@@ -53,7 +57,10 @@ export function ProductionRejected({ productRejected, handleClose }: any) {
                         error={formik.errors.observation}
                         label="Observacion *"
                         name="observation"
-                        onChange={formik.handleChange}
+                        onChange={(evt : any) =>{
+                            //formik.handleChange
+                            formik.setFieldValue("observation", evt.target.value.toUpperCase())
+                        }}
                         type="text"
                         value={formik.values.observation}
                     />

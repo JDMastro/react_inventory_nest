@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Put } from '@nestjs/common';
+import { Body, Controller, Get, Param, Put, Query } from '@nestjs/common';
 import { SettingsService } from "../service/settings.service";
 import { kindmovementsService } from "../../kindmovements/service/kindmovements.service";
 
@@ -27,9 +27,9 @@ export class SettingsController {
     }
 
     @Get()
-    async findAll()
+    async findAll(@Query() req)
     {
-        return await this._settingsService.findAll()
+        return await this._settingsService.findAll(req._page, req._limit)
     }
 
     @Put(':id')

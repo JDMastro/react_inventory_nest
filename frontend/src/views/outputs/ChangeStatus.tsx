@@ -7,10 +7,10 @@ import { SelectWrapperUi, UseForm, Snackbars, ButtonUi } from "../../components"
 import { Box, Grid, MenuItem, Stack } from "@mui/material";
 import { MovementRequest } from "../../services/movementService";
 
-import { StatusRequest } from "../../services/statusService";
+//import { StatusRequest } from "../../services/statusService";
 
 
-export function Status({ status_id, person_id, setNumber_orders, setExpanded, data, status, handleClose }:any)
+export function Status({ status, onClose, onSubmit : on, data }:any)
 {
     const [severity] = useState("success");
     const [msg, setMsg] = useState("success");
@@ -32,14 +32,14 @@ export function Status({ status_id, person_id, setNumber_orders, setExpanded, da
 
     const onSubmit = async (values: initialFValuesTypes, formikHelpers: FormikHelpers<any>) => {
         setdisablebtn(true)
-        console.log(values)
-        console.log(data)
-        const res = await MovementRequest.changeStatusMovement(data.m_id,{ status_id : values.status_id })
-        setExpanded(false)
+        const res = await MovementRequest.changeStatusMovement(data.id,{ status_id : values.status_id })
+
         setMsg("Guardado exitosamente")
         handleClick()
-        handleClose()
         setdisablebtn(false)
+        on("DELETED", { id : data.id })
+        onClose()
+
 
         /*StatusRequest.getAllNumberOrdersbyStatus(status_id, person_id)
         .then(e => setNumber_orders(e))*/
@@ -80,7 +80,7 @@ export function Status({ status_id, person_id, setNumber_orders, setExpanded, da
                     alignItems="flex-start"
                     spacing={2}
                 >
-                    <ButtonUi disabled={disablebtn} text="Cancelar" type="button" onClick={handleClose} />
+                    <ButtonUi disabled={disablebtn} text="Cancelar" type="button" onClick={onClose} />
                     <ButtonUi disabled={disablebtn} text="Enviar" type="submit" />
 
                 </Stack>

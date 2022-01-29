@@ -21,62 +21,66 @@ import { Settings } from "../views/settings";
 
 import { useSelector } from 'react-redux'
 
-const ProtectedRoute = ({ component: Component, ...rest } : any) => {
+import { BrowserRouter } from "react-router-dom";
 
-    const login = useSelector((state : any) => state.AuthReducer.auth)
+const ProtectedRoute = ({ component: Component, ...rest }: any) => {
+
+    const login = useSelector((state: any) => state.AuthReducer.auth)
 
     return (
         <Route
-          { ...rest }
-          render={
-              (props) => {
-                  return login ? <Component { ...props } /> : <Redirect to={
-                      {
-                          pathname : "/",
-                          state : {
-                              from : props.location
-                          }
-                      }
-                  }/>
-              }
-          }
-         />
+            {...rest}
+            render={
+                (props) => {
+                    return login ? <Component {...props} /> : <Redirect to={
+                        {
+                            pathname: "/",
+                            state: {
+                                from: props.location
+                            }
+                        }
+                    } />
+                }
+            }
+        />
     )
 }
 
 
 export const Routes = () => {
     return (
-        <Switch>
-            <Route exact path="/" component={App} />
-            <ProtectedRoute path="/dashboard" component={Main} />           
-            <Route path="*" component={()=>{ return(<div>Page 404</div>) }}/>
-        </Switch>
+        <BrowserRouter>
+            <Switch>
+                <Route exact path="/" component={App} />
+                <ProtectedRoute path="/dashboard" component={Main} />
+                <Route path="*" component={() => { return (<div>Page 404</div>) }} />
+            </Switch>
+        </BrowserRouter>
     )
 }
 
 export const DashboardRoute = () => {
     return (
         <Switch>
-            <ProtectedRoute exact path="/dashboard/" component={()=> <div>Dashboard</div> } />
-            <ProtectedRoute exact path="/dashboard/maestro/units" component={Units} />
-            <ProtectedRoute exact path="/dashboard/maestro/product" component={Products} />
+            <ProtectedRoute exact path="/dashboard/" component={() => <div>Dashboard</div>} />
+            <ProtectedRoute path="/dashboard/maestro/units" component={Units} />
+            <ProtectedRoute path="/dashboard/maestro/product" component={Products} />
             {/*<ProtectedRoute exact path="/dashboard/maestro/products/v2" component={ProductV2} />*/}
-            <ProtectedRoute exact path="/dashboard/maestro/person" component={Person} />
-            <ProtectedRoute exact path="/dashboard/maestro/kindid" component={KindIdentity} />
-            <ProtectedRoute exact path="/dashboard/maestro/status" component={Status} />
-            <ProtectedRoute exact path="/dashboard/maestro/kindmovements" component={KindMovements} />
-            <ProtectedRoute exact path="/dashboard/maestro/conversion" component={Conversion} />
-            <ProtectedRoute exact path="/dashboard/inventary/movements" component={Movements} />
-            <ProtectedRoute exact path="/dashboard/inventary/consecutive" component={Consecutive} />
-            <ProtectedRoute exact path="/dashboard/security/users" component={Users} />
-            <ProtectedRoute exact path="/dashboard/inventary/outputs" component={OutPuts} />
+            <ProtectedRoute path="/dashboard/maestro/person" component={Person} />
+            <ProtectedRoute path="/dashboard/maestro/kindid" component={KindIdentity} />
+            <ProtectedRoute path="/dashboard/maestro/status" component={Status} />
+            <ProtectedRoute path="/dashboard/maestro/kindmovements" component={KindMovements} />
+            <ProtectedRoute path="/dashboard/maestro/conversion" component={Conversion} />
+            <ProtectedRoute path="/dashboard/inventary/movements" component={Movements} />
+            <ProtectedRoute path="/dashboard/inventary/consecutive" component={Consecutive} />
+            <ProtectedRoute path="/dashboard/security/users" component={Users} />
+            <ProtectedRoute path="/dashboard/inventary/outputs" component={OutPuts} />
 
-            <ProtectedRoute exact path="/dashboard/maestro/productions" component={Production} />
+            <ProtectedRoute path="/dashboard/maestro/productions" component={Production} />
 
-            <ProtectedRoute exact path="/dashboard/maestro/settings" component={Settings} />
-            
-            <Route exact path="*" component={()=>{ return(<div>Page 404</div>) }}/>
+            <ProtectedRoute path="/dashboard/maestro/settings" component={Settings} />
+
+            <Route path="*" component={() => { return (<div>Page 404</div>) }} />
         </Switch>
     )
 }

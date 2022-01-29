@@ -12,7 +12,6 @@ import AddIcon from "@mui/icons-material/Add";
 import Can from "../../components/can";
 import { IconButton } from "@mui/material";
 
-import { red } from "@mui/material/colors";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 
@@ -106,7 +105,7 @@ export function KindMovementsTable() {
                                             setOpenDeleteDialogForm(true);
                                         }}
                                     >
-                                        <DeleteIcon fontSize="small" sx={{ color: red[700] }} />
+                                        <DeleteIcon fontSize="small" color="error" />
                                     </IconButton>
                                 )}
                                     />

@@ -14,6 +14,22 @@ export class kindidentityService {
         return await this._kindidentityRepo.find({ order : { code : 'ASC' } });
     }
 
+    async findAllWithPagination(page : number, perPage : number)
+    {
+        const data = await this._kindidentityRepo.find({ skip : (page - 1) * perPage, take : perPage })
+
+        const total = await this._kindidentityRepo.count()
+
+        return {
+            data : data,
+            total,
+            page_count : perPage,
+            current_page : page,
+            last_page : Math.ceil(total/perPage)
+          }
+                                        
+    }
+
     async findByCode(code : string)
     {
         return await this._kindidentityRepo.findOne({ where : { code } })

@@ -2,10 +2,12 @@
 /* eslint-disable */
 import React from 'react';
 import MuiBlockUi, { BlockUiProps } from 'react-block-ui';
-import CircularProgress, {
+import { CircularProgress, CircularProgressProps } from '@mui/material';
+import { makeStyles } from '@mui/styles';
+/*import CircularProgress, {
   CircularProgressProps,
 } from '@material-ui/core/CircularProgress';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';*/
 
 import 'react-block-ui/style.css';
 

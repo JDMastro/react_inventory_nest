@@ -8,7 +8,6 @@ import Can from '../../components/can';
 import { IconButton } from '@mui/material';
 import EditIcon from "@mui/icons-material/Edit";
 import { UpdateStatus } from "./update";
-import { red } from "@mui/material/colors"
 import DeleteIcon from "@mui/icons-material/Delete";
 import { DeleteStatus } from "./delete";
 
@@ -84,7 +83,7 @@ export function StatusTable()
                                             setOpenDeleteDialogForm(true);
                                         }}
                                     >
-                                        <DeleteIcon fontSize="small" sx={{ color: red[700] }} />
+                                        <DeleteIcon fontSize="small" color="error" />
                                     </IconButton>
                                 )}
                                     />
@@ -122,7 +121,7 @@ export function StatusTable()
         <>
            <MUIDataTable
                 ref={refDatatable}
-                fetchData={StatusRequest.getAll}
+                fetchData={StatusRequest.findAllWithPagination}
                 title={"Lista de estados"}
                 // filterForm={<UserTableFilterForm handleSubmit={() => (console.log(''))}/>}
                 columns={columns}

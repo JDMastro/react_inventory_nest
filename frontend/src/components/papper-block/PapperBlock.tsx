@@ -2,8 +2,9 @@
 /* eslint-disable */
 import React from 'react';
 import clsx from 'clsx';
-import Paper, { PaperProps } from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
+//import Paper, { PaperProps } from '@material-ui/core/Paper';
+import { Paper, PaperProps, Typography } from "@mui/material";
+//import Typography from '@material-ui/core/Typography';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import useStyles from './style';
 

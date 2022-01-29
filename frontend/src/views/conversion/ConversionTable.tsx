@@ -14,7 +14,6 @@ import { AddConversion } from "./add";
 import AddIcon from "@mui/icons-material/Add";
 import Can from '../../components/can';
 import { IconButton } from '@mui/material';
-import { red } from "@mui/material/colors";
 
 import { makeStyles } from '@mui/styles';
 import { formatWeight } from "../../utils/FormatNumbers";
@@ -138,7 +137,7 @@ export function ConversionTable() {
                                             setOpenDeleteDialogForm(true);
                                         }}
                                     >
-                                        <DeleteIcon fontSize="small" sx={{ color: red[700] }} />
+                                        <DeleteIcon fontSize="small" color="error" />
                                     </IconButton>
                                 )}
                                     />
@@ -184,7 +183,7 @@ export function ConversionTable() {
                 options={options}
             />
 
-            <FabUi
+           <FabUi
                 size="small"
                 color="primary" 
                 onClick={() => setOpenAddDialogForm(true)}

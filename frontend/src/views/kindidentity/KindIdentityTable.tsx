@@ -11,7 +11,6 @@ import EditIcon from "@mui/icons-material/Edit";
 import { UpdateKindId } from "./update";
 import DeleteIcon from '@mui/icons-material/Delete';
 
-import { red } from '@mui/material/colors';
 import { DeleteKindId } from "./delete";
 
 export function KindIdentityTable()
@@ -79,7 +78,7 @@ export function KindIdentityTable()
                                             setOpenDeleteDialogForm(true);
                                         }}
                                     >
-                                        <DeleteIcon fontSize="small" sx={{ color: red[700] }} />
+                                        <DeleteIcon fontSize="small" color="error" />
                                     </IconButton>
                                 )}
                             />
@@ -117,7 +116,7 @@ export function KindIdentityTable()
         <>
          <MUIDataTable
                 ref={refDatatable}
-                fetchData={KindIdRequest.getAll}
+                fetchData={KindIdRequest.findAllWithPagination}
                 title={"Lista de tipos de identificación"}
                 // filterForm={<UserTableFilterForm handleSubmit={() => (console.log(''))}/>}
                 columns={columns}

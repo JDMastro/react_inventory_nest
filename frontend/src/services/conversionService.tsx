@@ -1,4 +1,5 @@
 import { instance, responseBody } from './axiosInstance'
+import { urlFormatRest } from "../utils/Url";
 
 const Requests = {
     getAll : async (url : string) => await instance.get(url).then(responseBody),
@@ -10,7 +11,7 @@ const Requests = {
 
 export const ConversionRequest =
 {
-    getAll : async () => await Requests.getAll(`conversion`),
+    getAll : async (queryParameters : any) => await Requests.getAll(urlFormatRest(`conversion`, queryParameters)),
     create : async (body: any) => await Requests.create('conversion',body),
     update : async (id : number, body : any) => await Requests.update(`conversion/${id}`,body),
     delete : async (id: number) => await Requests.delete(`conversion/${id}`),

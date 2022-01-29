@@ -405,7 +405,10 @@ export function AddMovements({ kindOfMovement, onClose, onSubmit: on }: any) {
                             !kindmov_selected ? formik.values.totalPrice :
                             kindmov_selected.classification_kindmovement_id === 2 && kindmov_selected.roles_id === 2 ?
                             !product_selected ? formik.values.totalPrice : formik.values.totalPrice= product_selected.p_sale_price * formik.values.quantity :
+                            kindmov_selected.classification_kindmovement_id === 2 && kindmov_selected.roles_id === 1 || kindmov_selected.roles_id === 2 ?
+                            !product_selected ? formik.values.totalPrice : formik.values.totalPrice= product_selected.m_unit_price * formik.values.quantity :
                             formik.values.totalPrice
+
                             /*product_selected && formik.values.orderReturned !== "" ?
                                 formik.values.totalPrice = product_selected.m_unit_price * formik.values.quantity : formik.values.totalPrice*/
                             }

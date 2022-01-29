@@ -4,7 +4,6 @@ import Can from '../../components/can';
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { ProductsRequest } from '../../services/productsService';
-import { red } from "@mui/material/colors";
 import { AlertDialogUi } from "../../components";
 import { /*useRef,*/ useState } from 'react';
 import { IconButton } from '@mui/material';
@@ -181,7 +180,7 @@ export const ProductSubTable: React.FC<ProductSubTableProps> = (props: ProductSu
                                             }}
                                             disabled={productSelected.p_actived ? false : true}
                                         >
-                                            <DeleteIcon fontSize="small" sx={{ color: red[700] }} />
+                                            <DeleteIcon fontSize="small" color="error" />
                                         </IconButton>
                                     )}
                                 />

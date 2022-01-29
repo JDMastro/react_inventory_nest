@@ -2,13 +2,11 @@ import { Box, Grid, MenuItem } from "@mui/material";
 import { useEffect, useState } from "react";
 import Can from "../../components/can";
 import { SelectWrapperUi } from "../../components";
-import { StatusRequest } from "../../services/statusService";
 
-export function OutputsFilterForm({ handleFormFilterSubmit }: any) {
+export function OutputsFilterForm({ handleFormFilterSubmit, status }: any) {
     const [statu, setStatu] = useState("")
-    const [status, setStatus] = useState([])
 
-    useEffect(() => { StatusRequest.findStatusEmployee().then(elements => setStatus(elements)) }, [])
+   
 
     return (
         <Box component="form" m={2}>

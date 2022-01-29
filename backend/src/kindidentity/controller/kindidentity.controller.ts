@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { kindidentityDto } from "../dto/kindidentity.dto";
 import { kindidentityService } from "../service/kindidentity.service";
 
@@ -12,6 +12,12 @@ export class kindidentityController {
     @Get()
     async findAll() {
         return await this._kindidentityService.findAll()
+    }
+
+    @Get('withpagination')
+    async findAllWithPagination(@Query() req)
+    {
+        return await this._kindidentityService.findAllWithPagination(req._page, req._limit)
     }
 
     @Post()

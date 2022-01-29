@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Req, UnauthorizedException } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, Req, UnauthorizedException } from '@nestjs/common';
 import { StatusDto } from "../dto/status.dto";
 import { StatusService } from "../service/status.service";
 import { Request } from "express";
@@ -16,6 +16,12 @@ export class StatusController {
         return await this._statusService.findAll()
     }
 
+    @Get('withpagination')
+    async findAllWithPagination(@Query() req)
+    {
+        return await this._statusService.findAllWithPagination(req._page, req._limit)
+    }
+
     @Get('getAllNumberOrdersbyStatus/:status_id')
       async getAllNumberOrdersbyStatus(@Req() request :Request ,@Param('status_id') status_id : number)
       {
@@ -26,10 +32,12 @@ export class StatusController {
             if(!data){
                throw new UnauthorizedException()
             }
+            
 
               return await this._statusService.getAllNumberOrdersbyStatus(status_id, data.id)
             //return 
         } catch (e) {
+            console.log("error", e)
             throw new UnauthorizedException()
         }
         //return await this._statusService.getAllNumberOrdersbyStatus(status_id, person_id)
@@ -76,10 +84,10 @@ export class StatusController {
         }
     }
 
-    @Get('getAllnumberOrders/:number_orders')
-    async getAllnumberOrders(@Param('number_orders') number_orders : string)
+    @Get('getAllnumberOrders/:number_orders/:status_id')
+    async getAllnumberOrders(@Param('number_orders') number_orders : string, @Param('status_id') status_id : number)
     {
-      return await this._statusService.getAllnumberOrders(number_orders)
+      return await this._statusService.getAllnumberOrders(number_orders,status_id)
     }
 
     @Get('findStatusEmplyee')

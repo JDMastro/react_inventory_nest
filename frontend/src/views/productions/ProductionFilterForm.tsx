@@ -19,14 +19,14 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
     {id: 4, name: 'Pescado'},
 ]*/
 
-const ProductionFilterForm = ({ reserved_quantity, setreserved_quantity, handleSubmit, setisEnable, number_order, setnumber_order, kind_mov, setkind_mov, disable_number_order, setdisable_number_order, obsertvation, setobsertvation }: any) => {
+const ProductionFilterForm = ({ converted_current_existence_parent, setconverted_current_existence_parent, reserved_quantity, setreserved_quantity, handleSubmit, setisEnable, number_order, setnumber_order, kind_mov, setkind_mov, disable_number_order, setdisable_number_order, obsertvation, setobsertvation, current_existence_parent, setcurrent_existence_parent }: any) => {
 
     const [products, setproducts] = useState([])
     const [product, setproduct] = useState<any>("")
     const [purchase_unit_parent, setpurchase_unit_parent] = useState<any>("")
     const [sale_unit_parent, setsale_unit_parent] = useState<any>("")
-    const [current_existence_parent, setcurrent_existence_parent] = useState<any>("")
-    const [converted_current_existence_parent, setconverted_current_existence_parent] = useState<any>("")
+    
+    
     
 
     const [openModal, setOpenModal] = React.useState(false);

@@ -9,27 +9,29 @@ import { KindMovementsRequest } from "../../services/kindmovementsService";
 
 import { formatWeight } from "../../utils/FormatNumbers";
 import { makeStyles } from '@mui/styles';
+import { MovementsIcons } from "./MovementsIcons";
+import { DateTimeFormat } from "../../utils/DateTimeFormat";
 
 
 const useStyles = makeStyles((theme: any) => ({
-   
+
     tableHeadCellRight: {
         paddingRight: 0,
         '& > span': {
-          justifyContent: 'flex-end',
+            justifyContent: 'flex-end',
         },
-      },
+    },
 
 }));
 
 export function MovementsTable() {
     const classes = useStyles();
     const refDatatable: any = React.useRef();
-    
+
     const [openAddDialogForm, setOpenAddDialogForm] = React.useState<boolean>(false);
     const [kindOfMovement, setKindOfMovement] = React.useState([]);
 
-    useEffect(()=>{ KindMovementsRequest.findKindMovClientOrProvider().then(e => setKindOfMovement(e)) },[])
+    useEffect(() => { KindMovementsRequest.findKindMovClientOrProvider().then(e => setKindOfMovement(e)) }, [])
 
     const columns = [
         {
@@ -44,6 +46,16 @@ export function MovementsTable() {
             label: 'Número de orden',
             options: {
                 filter: true,
+            },
+        },
+        {
+            name: 'creation_at',
+            label: 'Fecha',
+            options: {
+                filter: true,
+                customBodyRender: (value: any) => {
+                    return DateTimeFormat(value);
+                },
             },
         },
         {
@@ -69,7 +81,7 @@ export function MovementsTable() {
                 setCellProps: () => ({ style: { textAlign: 'right' } }),
                 customBodyRender: (value: any) => {
                     return formatWeight(value);
-                  },
+                },
             },
         },
         {
@@ -81,7 +93,7 @@ export function MovementsTable() {
                 setCellProps: () => ({ style: { textAlign: 'right' } }),
                 customBodyRender: (value: any) => {
                     return formatWeight(value);
-                  },
+                },
             },
         },
         {
@@ -93,7 +105,36 @@ export function MovementsTable() {
                 setCellProps: () => ({ style: { textAlign: 'right' } }),
                 customBodyRender: (value: any) => {
                     return formatWeight(value);
-                  },
+                },
+            },
+        },
+        {
+            name: 'm_waste_quantity',
+            label: 'Merma',
+            options: {
+                filter: true,
+                setCellHeaderProps: () => ({ className: classes.tableHeadCellRight }),
+                setCellProps: () => ({ style: { textAlign: 'right' } }),
+                customBodyRender: (value: any) => {
+                    return formatWeight(value);
+                },
+            },
+        },
+        {
+            name: 'type_icon',
+            label: 'Estado',
+            options: {
+                filter: false,
+                sort: false,
+                empty: true,
+                customBodyRenderLite: (dataIndex: number) => {
+                    const movementsSelected = refDatatable.current.findData(dataIndex);
+                    return (
+                        <>
+                            <MovementsIcons type_icon={movementsSelected.type_icon} />
+                        </>
+                    )
+                }
             },
         },
     ]
@@ -104,13 +145,12 @@ export function MovementsTable() {
         download: true,
     };
 
-    const handleProductSaveClick = (oper : string, updatedConsecutive: any) => {
-        switch(oper)
-        {
-            case "CREATED" :
+    const handleProductSaveClick = (oper: string, updatedConsecutive: any) => {
+        switch (oper) {
+            case "CREATED":
                 refDatatable.current.createRecord(updatedConsecutive)
                 break;
-            default : break;
+            default: break;
         }
         //refDatatable.current.updateRecord(updatedProduct.id, updatedProduct);
     };
@@ -124,7 +164,7 @@ export function MovementsTable() {
                 columns={columns}
                 options={options}
             />
-              <FabUi
+            <FabUi
                 size="small"
                 color="primary" onClick={() => setOpenAddDialogForm(true)}
                 ariaLabel="add"

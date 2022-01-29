@@ -41,7 +41,11 @@ const Production: React.FC = () => {
 
     const [obsertvation, setobsertvation] = useState("")
 
-    const [reserved_quantity, setreserved_quantity] = useState<any>("")
+    const [reserved_quantity, setreserved_quantity] = useState<any>(0)
+
+    const [current_existence_parent, setcurrent_existence_parent] = useState<any>("")
+
+    const [converted_current_existence_parent, setconverted_current_existence_parent] = useState<any>("")
 
 
 
@@ -152,7 +156,7 @@ const Production: React.FC = () => {
                     }}
                     filterForm={
 
-                        <ProductionFilterForm reserved_quantity={reserved_quantity} setreserved_quantity={setreserved_quantity} obsertvation={obsertvation} setobsertvation={setobsertvation} disable_number_order={disable_number_order} setdisable_number_order={setdisable_number_order} kind_mov={kind_mov} setkind_mov={setkind_mov} number_order={number_order} setnumber_order={setnumber_order} setisEnable={setisEnable} handleSubmit={handleFormFilterSubmit} />
+                        <ProductionFilterForm converted_current_existence_parent={converted_current_existence_parent} setconverted_current_existence_parent={setconverted_current_existence_parent} current_existence_parent={current_existence_parent} setcurrent_existence_parent={setcurrent_existence_parent} reserved_quantity={reserved_quantity} setreserved_quantity={setreserved_quantity} obsertvation={obsertvation} setobsertvation={setobsertvation} disable_number_order={disable_number_order} setdisable_number_order={setdisable_number_order} kind_mov={kind_mov} setkind_mov={setkind_mov} number_order={number_order} setnumber_order={setnumber_order} setisEnable={setisEnable} handleSubmit={handleFormFilterSubmit} />
 
                     }
 
@@ -163,7 +167,7 @@ const Production: React.FC = () => {
             <AlertDialogUi
                 maxWidth="md"
                 handleClose={handleCloseModalAdd}
-                content={<AddProduction setproductDerivate={setproductDerivate} reserved_quantity={reserved_quantity} setnumber_order={setnumber_order} number_order={number_order} kind_mov={kind_mov} obsertvation={obsertvation} kind_movement={kind_movement} existence_converted={existence_converted} productparent={productParent} productchild={productChild} handleClose={handleCloseModalAdd} />}
+                content={<AddProduction setreserved_quantity={setreserved_quantity} setexistence_converted={setexistence_converted} setconverted_current_existence_parent={setconverted_current_existence_parent} setcurrent_existence_parent={setcurrent_existence_parent} setproductDerivate={setproductDerivate} reserved_quantity={reserved_quantity} setnumber_order={setnumber_order} number_order={number_order} kind_mov={kind_mov} obsertvation={obsertvation} kind_movement={kind_movement} existence_converted={existence_converted} productparent={productParent} productchild={productChild} handleClose={handleCloseModalAdd} />}
                 open={openModalAdd}
                 title=""
             />
@@ -171,7 +175,7 @@ const Production: React.FC = () => {
 <AlertDialogUi
                 maxWidth="md"
                 handleClose={handleCloseModalRejected}
-                content={<ProductionRejected handleClose={handleCloseModalRejected} productRejected={productRejected} />}
+                content={<ProductionRejected productparent={productParent} setproductDerivate={setproductDerivate} reserved_quantity={reserved_quantity} setreserved_quantity={setreserved_quantity} handleClose={handleCloseModalRejected} productRejected={productRejected} />}
                 open={openModalRejected}
                 title=""
             />

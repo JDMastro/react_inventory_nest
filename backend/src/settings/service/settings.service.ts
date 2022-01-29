@@ -14,9 +14,17 @@ export class SettingsService {
         return await this._settingsRepo.findOne({ key })
     }
 
-    async findAll()
+    async findAll(page : number, perPage : number)
     {
-        return await this._settingsRepo.find({ order : { key : "ASC" } })
+        const data = await this._settingsRepo.find({ skip : (page - 1) * perPage, take : perPage, order : { key : 'ASC' } })
+        const total = await this._settingsRepo.count()
+        return {
+            data : data,
+            total,
+            page_count : perPage,
+            current_page : page,
+            last_page : Math.ceil(total/perPage)
+          }
     }
 
     async update(id: number, body : any)

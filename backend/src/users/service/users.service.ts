@@ -15,11 +15,11 @@ export class UsersService {
         private jwtService: JwtService
     ) { }
 
-    async findAll() {
-        return await getManager().createQueryBuilder("users", "u")
+    async findAll(page : number, perPage : number) {
+        const data = await getManager().createQueryBuilder("users", "u")
         .select([
             "u.id as id" ,"u.code", "u.email", "u.person_id", "k.id as kind_id", 
-            "k.code as kind_code", "p.fullname", "p.idnumber"," p.address"," p.phone",
+            "k.description as kind_description", "p.fullname", "p.idnumber"," p.address"," p.phone",
             "p.contact", "p.name", "p.second_name", "p.first_surname", "p.second_surname"
         ])
         .innerJoin(Person, "p", "p.id = u.person_id")
@@ -27,7 +27,17 @@ export class UsersService {
         .innerJoin(Roles,"r","r.id = p.roles_id")
         .where("r.name = 'EMPLEADO'")
         .orderBy("p.fullname")
-        .getRawMany()
+        //.getRawMany()
+
+        const total = await data.getCount()
+
+        return {
+            data : await data.getRawMany(),
+            total,
+            page_count : perPage,
+            current_page : page,
+            last_page : Math.ceil(total/perPage)
+          }
     }
 
     async verifyToken(token : any)
@@ -55,7 +65,7 @@ export class UsersService {
         return await getManager().createQueryBuilder("users", "u")
         .select([
             "u.id as id" ,"u.code", "u.email", "u.person_id", "k.id as kind_id", 
-            "k.code as kind_code", "p.fullname", "p.idnumber"," p.address"," p.phone",
+            "k.description as kind_description", "p.fullname", "p.idnumber"," p.address"," p.phone",
             "p.contact", "p.name", "p.second_name", "p.first_surname", "p.second_surname"
         ])
         .innerJoin(Person, "p", "p.id = u.person_id")

@@ -12,7 +12,6 @@ import Can from "../../components/can";
 import { IconButton } from "@mui/material";
 
 import { UpdateUser } from "./update";
-import { red } from '@mui/material/colors';
 
 import { DeleteUsers } from "./delete";
 
@@ -67,7 +66,7 @@ export function UsersTable()
             },
         },
         {
-            name: 'kind_code',
+            name: 'kind_description',
             label: 'Tipo Id',
             options: {
                 filter: true,
@@ -122,7 +121,7 @@ export function UsersTable()
                                             setOpenDeleteDialogForm(true);
                                         }}
                                     >
-                                        <DeleteIcon fontSize="small" sx={{ color: red[700] }} />
+                                        <DeleteIcon fontSize="small" color="error" />
                                     </IconButton>
                                 )}
                             />

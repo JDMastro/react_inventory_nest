@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Put, Param, Delete, UnauthorizedException, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Put, Param, Delete, UnauthorizedException, Req, Query } from '@nestjs/common';
 import { ProductsDto } from "../dto/product.dto";
 import { ProductsService } from "../service/products.service";
 import { UsersService } from "../../users/service/users.service";
@@ -51,6 +51,11 @@ export class ProductsController {
             { success: true, data: await this._productsService.create(product), errors: null }
 
 
+    }
+
+    @Get('withpagination')
+    async findAllWithPagination(@Query() req) {
+        return await this._productsService.findAllWithPagination(req._page, req._limit)
     }
 
     @Get('parents/:isderivate')

@@ -1,4 +1,5 @@
 import { instance, responseBody } from './axiosInstance'
+import { urlFormatRest } from "../utils/Url";
 
 const Requests = {
     createProvider : async (url : string, body: any) => await instance.post(url, body).then(responseBody),
@@ -38,7 +39,8 @@ export const MovementRequest =
     
     findByHeader : async (header_id : number) => await Requests.findByHeader(`movements/header/product/${header_id}`),
     createClient : async (body: any) => await Requests.createClient('movements/client',body),
-    getall : async () => await Requests.getall('movements'),
+    
+    getall : async (queryParameters : any) => await Requests.getall(urlFormatRest('movements',queryParameters)),
 
 
     //reserveProduction : async (body: any) => await Requests.reserveProduction('movements/productions/reserved',body),

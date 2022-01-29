@@ -11,7 +11,6 @@ import EditIcon from "@mui/icons-material/Edit";
 import { UpdateUnits } from "./update";
 
 import DeleteIcon from "@mui/icons-material/Delete";
-import { red } from "@mui/material/colors";
 import { DeleteUnits } from "./delete";
 
 export function UnitsTable()
@@ -79,7 +78,7 @@ export function UnitsTable()
                                             setOpenDeleteDialogForm(true);
                                         }}
                                     >
-                                        <DeleteIcon fontSize="small" sx={{ color: red[700] }} />
+                                        <DeleteIcon fontSize="small" color="error" />
                                     </IconButton>
                                 )}
                                     />
@@ -117,7 +116,7 @@ export function UnitsTable()
         <>
           <MUIDataTable
                 ref={refDatatable}
-                fetchData={UnitsRequest.getAll}
+                fetchData={UnitsRequest.findAllWithPagination}
                 title={"Lista de unidades"}
                 // filterForm={<UserTableFilterForm handleSubmit={() => (console.log(''))}/>}
                 columns={columns}

@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { kindmovementsDto } from "../dto/kindmovements.dto";
 import { kindmovementsService } from "../service/kindmovements.service";
 
@@ -16,8 +16,8 @@ export class kindmovementsController {
     }
 
     @Get()
-    async findAll() {
-        return await this._kindmovementsService.findAll()
+    async findAll(@Query() req) {
+        return await this._kindmovementsService.findAll(req._page, req._limit)
     }
 
     @Get('findAllWithoutProduction')

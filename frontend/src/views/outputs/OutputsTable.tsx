@@ -1,5 +1,5 @@
 import { TableCell, TableRow } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import MUIDataTable from "../../components/table"
 import { StatusRequest } from "../../services/statusService";
 import { OutputsFilterForm } from "./OutputsFilterForm";
@@ -9,7 +9,14 @@ import { formatWeight } from "../../utils/FormatNumbers";
 
 export function OutPutsTable() {
     const refDatatable: any = React.useRef();
+    const refSubDatatable: any = React.useRef();
     const [status, setStatus] = useState([])
+    const [statu, setStatu] = useState([])
+    const [numberOrdersbyStatus, setNumberOrdersbyStatus] = useState([])
+    //NumberOrdersbyStatus
+
+
+    useEffect(() => { StatusRequest.findStatusEmployee().then(elements => setStatus(elements)) }, [])
 
     const columns = [
         {
@@ -62,7 +69,7 @@ export function OutPutsTable() {
                         }}
                         colSpan={colSpan}
                     >
-                        <OutputsSubTable parentOutputs={currentStatu} />
+                        <OutputsSubTable statu={statu} refSubDatatable={refSubDatatable} status={status} parentOutputs={currentStatu} />
                     </TableCell>
                 </TableRow>
             );
@@ -70,22 +77,34 @@ export function OutPutsTable() {
     }
 
     const handleFormFilterSubmit = async (data: any) => {
-        StatusRequest.getAllNumberOrdersbyStatus(data)
-            .then(elements => setStatus(elements))
+       // setStatu(data)
+        //StatusRequest.getAllNumberOrdersbyStatus(data)
+        //    .then(elements => setNumberOrdersbyStatus(elements))
+
+        //console.log("estado id",data)
+
+        await refDatatable.current.filter({ statu : data});
+
+       
     }
 
     return (
         <>
             <MUIDataTable
                 ref={refDatatable}
-                data={status}
+                fetchData={StatusRequest.getAllNumberOrdersbyStatus}
                 // filterForm={<UserTableFilterForm handleSubmit={() => (console.log(''))}/>}
                 columns={columns}
                 options={options}
                 additionalDataByRow={{
                     isNewRecord: false,
                 }}
-                filterForm={<OutputsFilterForm handleFormFilterSubmit={handleFormFilterSubmit} />}
+                params={{
+                    overwrites: {
+                        statu: 'statu=',
+                    },
+                  }}
+                filterForm={<OutputsFilterForm status={status} handleFormFilterSubmit={handleFormFilterSubmit} />}
                 hasInitialLoad={false}
                 openFilterForm
             />

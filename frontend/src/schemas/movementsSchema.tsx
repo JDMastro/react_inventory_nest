@@ -9,9 +9,9 @@ export const movementsSchema: initialFValuesTypes = yup.object({
     idperson : yup.number().required("This field is required!"),
     //number_order : yup.number().required("This field is required!"),
     idproduct : yup.number().required("This field is required!"),
-    quantity : yup.number().required("This field is required!"),
+    quantity : yup.number().positive().required("This field is required!"),
          
-    totalPrice : yup.number().required("This field is required!"),
+    totalPrice : yup.number().positive().required("This field is required!"),
     observation : yup.string().required("This field is required!")
     //unitprice : yup.number().required("This field is required!"),
 })

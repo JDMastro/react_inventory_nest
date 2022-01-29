@@ -29,8 +29,16 @@ export class kindmovementsService {
         return await this._kindMovementsRepo.find({ where : { classification_kindmovement_id : 3 }, order : { name : 'ASC' } });
     }
 
-    async findAll() {
-        return await this._kindMovementsRepo.find({order : { name : 'ASC' }});
+    async findAll(page : number, perPage : number) {
+        const data = await this._kindMovementsRepo.find({ skip : (page - 1) * perPage, take : perPage });
+        const total = await this._kindMovementsRepo.count()
+        return {
+            data : data,
+            total,
+            page_count : perPage,
+            current_page : page,
+            last_page : Math.ceil(total/perPage)
+          }
     }
 
     async create(body: kindmovementsDto) {

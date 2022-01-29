@@ -11,7 +11,6 @@ import { IconButton } from '@mui/material';
 
 import { UpdateConsecutive } from "./update";
 
-import { red } from "@mui/material/colors";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { DeleteConsecutive } from "./delete";
 
@@ -89,7 +88,7 @@ export function ConsecutiveTable()
                                             setOpenDeleteDialogForm(true);
                                         }}
                                     >
-                                        <DeleteIcon fontSize="small" sx={{ color: red[700] }} />
+                                        <DeleteIcon fontSize="small" color="error" />
                                     </IconButton>
                                 )}
                                     />
@@ -128,7 +127,7 @@ export function ConsecutiveTable()
         <>
            <MUIDataTable
                 ref={refDatatable}
-                fetchData={ConsecutiveRequest.getAll}
+                fetchData={ConsecutiveRequest.findAllWithPagination}
                 title={"Lista de consecutivo"}
                 // filterForm={<UserTableFilterForm handleSubmit={() => (console.log(''))}/>}
                 columns={columns}

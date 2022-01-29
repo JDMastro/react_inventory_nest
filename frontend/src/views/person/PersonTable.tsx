@@ -15,7 +15,6 @@ import { UpdatePerson } from "./update";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 import { DeletePerson } from "./delete";
-import { red } from "@mui/material/colors";
 
 export function PersonTable() {
 
@@ -39,7 +38,7 @@ export function PersonTable() {
             },
         },
         {
-            name: 'kind_code',
+            name: 'kind_description',
             label: 'Tipo Id',
             options: {
                 filter: true,
@@ -115,7 +114,7 @@ export function PersonTable() {
                                             setOpenDeleteDialogForm(true);
                                         }}
                                     >
-                                        <DeleteIcon fontSize="small" sx={{ color: red[700] }} />
+                                        <DeleteIcon fontSize="small" color="error" />
                                     </IconButton>
                                 )}
                                     />

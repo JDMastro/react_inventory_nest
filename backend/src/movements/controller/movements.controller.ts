@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Put, Param, Delete, ParseIntPipe, UnauthorizedException, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Put, Param, Delete, ParseIntPipe, UnauthorizedException, Req, Query } from '@nestjs/common';
 import { MovementsRequest } from "../dto/movements.request";
 import { ConsecutiveService } from "../../consecutive/service/consecutive.service";
 import { HeaderService } from "../../header/service/header.service";
@@ -729,9 +729,12 @@ export class MovementsController {
                let converted = 0
                let converted_waste = 0
                let converted_total_amount_used = 0
+              // let converted_all_quantity_product_parent = 0
                const errors: any = []
                const operation = await this._conversionService.getOperation(check_product_parent.sale_unit_id, check_product_parent.purchase_unit_id)
+               const operation_inverse = await this._conversionService.getOperation(check_product_parent.purchase_unit_id,check_product_parent.sale_unit_id)
                let new_number_order = ""
+
        
        
                if (check_product_child.purchase_unit_id === check_product_child.sale_unit_id) {
@@ -936,7 +939,7 @@ export class MovementsController {
                             amount_used : parseFloat(body.amount_to_take),
                             suggest_generated : parseFloat(body.units_generated),
                             suggest_units : parseFloat(body.suggested_amount),
-                            waste_quantity : parseFloat(body.waste_quantity),
+                            waste_quantity : 0,
                             person_id : data['id'],
                             observation: null
                         
@@ -1076,7 +1079,7 @@ export class MovementsController {
                             amount_used : parseFloat(body.amount_to_take),
                             suggest_generated : parseFloat(body.units_generated),
                             suggest_units : parseFloat(body.suggested_amount),
-                            waste_quantity : parseFloat(body.waste_quantity),
+                            waste_quantity : 0,
                             person_id : data['id'],
                             observation: null
                         
@@ -1138,7 +1141,10 @@ export class MovementsController {
                            })
        
                        }
-       
+
+
+                       
+                   
        
        
        
@@ -1155,8 +1161,28 @@ export class MovementsController {
        
        
                    }
+
+                   let converted_quantity = 0
+
+                   if (check_product_parent.purchase_unit_id === check_product_parent.sale_unit_id) {
+                    converted_quantity = body.amount_to_take
+                } else {
+                    if (operation_inverse){
+                        converted_quantity = eval(`(${check_product_parent.current_existence}-(${converted_total_amount_used}+${converted_waste}))${operation_inverse.s_sign}${operation_inverse.c_conversion_quatity}`)
+                        
+                       
+        
+                    }else{
+                       errors.push({ field: "", msg: `esta operacion no existe en la tabla de conversion, por favor registrela` })}
+                }
+
+                  
        
-                   return { success: true, movement: await this._movementsService.findMovementByNumberOrder(new_number_order), new_number_order }
+                   return { 
+                       success: true, 
+                       current_quantity : body.total_amount_used > 0 ? check_product_parent.current_existence - (converted_total_amount_used + converted_waste) : check_product_parent.current_existence ,
+                       coverted_quantity : converted_quantity,
+                       movement: await this._movementsService.findMovementByNumberOrder(new_number_order), new_number_order }
                } else {
                    return { success: false, data: null, errors }
                }
@@ -1288,8 +1314,8 @@ export class MovementsController {
 
 
     @Get()
-    async findAll() {
-        return await this._movementsService.findAll()
+    async findAll(@Query() req) {
+        return await this._movementsService.findAll(req._page, req._limit)
     }
 
 

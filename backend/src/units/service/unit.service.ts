@@ -14,6 +14,22 @@ export class UnitsService {
         return await this._unitsRepo.find({ order : { code : 'ASC' } });
     }
 
+    async findAllWithPagination(page : number, perPage : number)
+    {
+        const data = await this._unitsRepo.find({ skip : (page - 1) * perPage, take : perPage })
+
+        const total = await this._unitsRepo.count()
+
+        return {
+            data : data,
+            total,
+            page_count : perPage,
+            current_page : page,
+            last_page : Math.ceil(total/perPage)
+          }
+                                        
+    }
+
     async findByCode(code : string)
     {
         return await this._unitsRepo.findOne({ where : { code } })

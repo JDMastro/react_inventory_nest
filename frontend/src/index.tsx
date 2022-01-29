@@ -7,7 +7,7 @@ import { Routes } from "./routes/routes";
 import { ThemeProvider } from '@mui/material/styles';
 import { createTheme } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline';
-import { BrowserRouter as Router } from "react-router-dom";
+//import { BrowserRouter as Router } from "react-router-dom";
 
 
 import { Provider } from 'react-redux';
@@ -71,6 +71,9 @@ const theme = createTheme({
   components: {
     MUIDataTable: {
       styleOverrides: {
+        /* tableRoot:{
+          maxWidth: 'none',
+        }, */
         paper: {
           boxShadow: 'none',
           backgroundColor: 'transparent',
@@ -125,9 +128,9 @@ ReactDOM.render(
     <ThemeProvider theme={theme}>
     <CssBaseline />
       <Provider store={store}>
-        <Router>
+        {/*<Router>*/}
           <Routes />
-        </Router>
+        {/*</Router>*/}
       </Provider>
     </ThemeProvider>
 

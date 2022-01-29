@@ -12,13 +12,25 @@ export class ConversionService {
         @InjectRepository(Conversion) private _conversionRepo: Repository<Conversion>,
     ) { }
 
-    async findAll() {
-        return  await getManager().createQueryBuilder("conversion","c")
+    async findAll(page : number, perPage : number) {
+        const consecutive = await getManager().createQueryBuilder("conversion","c")
         .select(["c.id as id", "c.conversion_from", "u.code as code_from", "c.conversion_to", "u2.code as code_to", "c.conversion_quatity", "c.signs_id", "s.sign"])
           .innerJoin(Signs, "s", "s.id = c.signs_id")
           .innerJoin(Units, "u", "c.conversion_from = u.id")
           .innerJoin(Units, "u2", "c.conversion_to = u2.id")
-          .getRawMany()
+          .offset((page - 1) * perPage)
+          .limit(perPage)
+          //.getRawMany()
+
+          const total = await consecutive.getCount()
+
+          return {
+            data : await consecutive.getRawMany(),
+            total,
+            page_count : perPage,
+            current_page : page,
+            last_page : Math.ceil(total/perPage)
+          }
     }
 
     async getOperation(from : number, to : number){

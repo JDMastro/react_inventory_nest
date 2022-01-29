@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { ConversionDto } from "../dto/conversion.dto";
 import { ConversionService } from "../service/conversion.service";
 
@@ -10,8 +10,11 @@ export class ConversionController {
     ) { }
 
     @Get()
-    async findAll() {
-        return await this._conversionService.findAll()
+    async findAll(@Query() req) {
+
+        //console.log(req)
+
+        return await this._conversionService.findAll(req._page, req._limit)
     }
 
 

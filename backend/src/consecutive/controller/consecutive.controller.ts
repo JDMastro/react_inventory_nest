@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { ConsecutiveDto } from "../dto/consecitive.dto";
 import { ConsecutiveService } from "../service/consecutive.service";
 
@@ -12,6 +12,12 @@ export class ConsecutiveController {
     @Get()
     async findAll() {
         return await this._consecutiveService.findAll()
+    }
+
+    @Get('withpagination')
+    async findAllWithPagination(@Query() req)
+    {
+        return await this._consecutiveService.findAllWithPagination(req._page, req._limit)
     }
 
     @Post()

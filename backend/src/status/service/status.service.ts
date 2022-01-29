@@ -17,6 +17,20 @@ export class StatusService {
         return await this._statusRepo.find({ order : { name : 'ASC' } });
     }
 
+    async findAllWithPagination(page : number, perPage : number)
+    {
+        const data = await this._statusRepo.find({ skip : (page - 1) * perPage, take : perPage })
+        const total = await this._statusRepo.count()
+
+        return {
+            data : data,
+            total,
+            page_count : perPage,
+            current_page : page,
+            last_page : Math.ceil(total/perPage)
+          }
+    }
+
     async findByCode (code:string)
     {
         return await this._statusRepo.findOne({ code })
@@ -67,16 +81,19 @@ export class StatusService {
           //.addGroupBy("h.creation_at")
           .orderBy("ps.fullname", "ASC")
           .getRawMany()
+
+          //.getRawMany()
     }
 
-    async getAllnumberOrders(number_orders : string)
+    async getAllnumberOrders(number_orders : string, status_id : number)
     {
-      return await getManager().createQueryBuilder("movements","m")
-      .select(["h.number_order", "p.name", "m.quantity", "h.creation_at", "m.id"])
+      return { data : await getManager().createQueryBuilder("movements","m")
+      .select(["h.number_order", "p.name", "m.quantity", "h.creation_at", "m.id as id"])
           .innerJoin(Header, "h","h.id = m.header_id")
           .innerJoin(Products, "p","p.id = m.product_id ")
           .where("h.number_order = :number_orders",{ number_orders: number_orders})
+          .andWhere("m.status_id = :status_id", { status_id })
           .orderBy("p.name", "ASC")
-          .getRawMany()
+          .getRawMany() }
     }
 }
