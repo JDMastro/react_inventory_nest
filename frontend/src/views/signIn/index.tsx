@@ -7,21 +7,11 @@ import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { FormikHelpers } from "formik";
-
 import { TextFieldUi, ButtonUi, UseForm, Snackbars } from "../../components";
-
 import { initialFValuesTypes } from "../../types/initialFValues";
 import { initialValuesSignIn } from "../../initialValues";
 import { SignInSchema } from "../../schemas/signInSchema";
-
-import { UsersRequest } from "../../services/usersService";
-
-
-import { useHistory } from "react-router-dom";
-
-import { useDispatch } from 'react-redux'
-
-import { Auth_Success } from "../../store/actions/auth.actions";
+import useAuth from "../../hooks/useAuth";
 
 
 function Copyright(props: any) {
@@ -40,17 +30,11 @@ function Copyright(props: any) {
 export function SignIn() {
     const [severity, setSeverity] = React.useState("success");
     const [disablebtn, setdisablebtn] = React.useState(false);
-    const [msg, setMsg] = React.useState("success");
     const [openn, setOpenn] = React.useState(false);
-
-    let history = useHistory();
-    const dispatch = useDispatch()
+    const { auth, login } = useAuth();
 
     const handleCloses = (event?: React.SyntheticEvent, reason?: string) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-
+        if (reason === 'clickaway') {return;}
         setOpenn(false);
     };
 
@@ -58,34 +42,23 @@ export function SignIn() {
         setOpenn(true);
     };
 
-
     const onSubmit = async (values: initialFValuesTypes, formikHelpers: FormikHelpers<any>) => {
-        //history.push('/dashboard')
         setdisablebtn(true)
-
-        try {
-            const res = await UsersRequest.login({ email: values.email_signin, password: values.password_signin })
-
-            if (res.success) {
-                handleClick()
-                setdisablebtn(false)
-                dispatch(Auth_Success(true))
-                history.push('/dashboard')
-            } else {
-                handleClick()
-                setMsg(res.error)
-                setSeverity('error')
-                dispatch(Auth_Success(false))
-                setdisablebtn(false)
-            }
-        } catch (error) {
-            console.log(error)
-        }
+        await login({
+            email: values.email_signin,
+            password: values.password_signin
+        });
 
     }
+    const formik = UseForm(initialValuesSignIn, SignInSchema, onSubmit);
 
-    const formik = UseForm(initialValuesSignIn, SignInSchema, onSubmit)
-
+    React.useEffect(() => {
+        if(auth.error){
+            handleClick();
+            setSeverity('error')
+            setdisablebtn(false)
+        }
+    }, [auth.error]);
 
     return (
         <Grid container component="main" sx={{ height: '100vh' }}>
@@ -163,14 +136,14 @@ export function SignIn() {
                         </Grid>
 
                         <Snackbars
-                            msg={msg}
+                            msg={auth.error}
                             open={openn}
                             severity={severity}
                             handleClose={handleCloses}
                         />
 
 
-                        
+
                         <Copyright sx={{ mt: 5 }} />
                     </Box>
                 </Box>

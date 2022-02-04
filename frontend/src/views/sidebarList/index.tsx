@@ -12,6 +12,7 @@ import Collapse from '@mui/material/Collapse';
 //import PersonIcon from '@mui/icons-material/Person';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { Profile } from "../profile";
+import Can from "../../components/can";
 
 
 
@@ -78,30 +79,20 @@ export function SideBarList() {
                 </ListItemButton>
                 <Collapse in={open} timeout="auto" unmountOnExit>
                     <List component="div" disablePadding>
-
-
-
-                        <ListItemButton sx={{ pl: 5 }}
-                            selected={selectedIndex === 12}
-                            onClick={(event: any) => handleListItemClick(event, 12)}
-                            component={Link}
-                            to={`/dashboard/maestro/conversion`}
-                        >
-
-                            <ListItemText primary="Conversión" />
-                        </ListItemButton>
-
-
-                        <ListItemButton sx={{ pl: 5 }}
-                            selected={selectedIndex === 10}
-                            onClick={(event: any) => handleListItemClick(event, 10)}
-                            component={Link}
-                            to={`/dashboard/inventary/consecutive`}>
-
-                            <ListItemText primary="Consecutivo" />
-                        </ListItemButton>
-
-
+                        <Can
+                            perform="users:view"
+                            yes={() => (
+                                <ListItemButton
+                                    sx={{ pl: 5 }}
+                                    selected={selectedIndex === 10}
+                                    onClick={(event: any) => handleListItemClick(event, 10)}
+                                    component={Link}
+                                    to={`/dashboard/inventary/consecutive`}
+                                >
+                                    <ListItemText primary="Consecutivo" />
+                                </ListItemButton>
+                            )}
+                        />
                         <ListItemButton sx={{ pl: 5 }}
                             selected={selectedIndex === 9}
                             onClick={(event: any) => handleListItemClick(event, 9)}

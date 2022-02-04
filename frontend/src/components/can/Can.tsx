@@ -1,4 +1,5 @@
 import React from 'react';
+import useUser from '../../hooks/useUser';
 import { check } from '../../utils/auth';
 
 interface CanProps {
@@ -9,11 +10,8 @@ interface CanProps {
 }
 
 const Can: React.FC<CanProps> = ({ perform, data, yes, no }) => {
-  const user = {
-    id: 1,
-    permissions: ['users:create', 'users:update']
-  };
-  const isAuthorized = check(user, perform, data);
+  const { user } = useUser();
+  const isAuthorized = check(user.data, perform, data);
   return isAuthorized ? yes() : no();
 };
 

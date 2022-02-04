@@ -22,8 +22,6 @@ export function Main() {
                 listItems={<SideBarList />}
                 imgSource={ <img src={Logo}></img> }
             />
-
         </div>
-
     )
 }

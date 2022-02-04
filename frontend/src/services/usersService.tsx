@@ -12,7 +12,7 @@ const Requests = {
 
 export const UsersRequest =
 {
-
+    me : async (queryParameters : any) => await Requests.getAll(urlFormatRest(`users/me`,queryParameters)),
     getAll : async (queryParameters : any) => await Requests.getAll(urlFormatRest(`users`,queryParameters)),
     register : async (body : any) => await Requests.register('users/register',body),
     delete : async (id: number, person_id : number) => await Requests.delete(`users/${id}/${person_id}`),

@@ -1,19 +1,34 @@
 import { AnyAction } from 'redux'
-import { AUTH_SUCCESS } from "../actionsType/auth.actionstype";
+import * as types from "../actionsType/auth.actionstype";
 
+export const initialState = {
+    loading: false,
+    error: null,
+};
 
-export function AuthReducer(state = {
-    auth: false
-
-    }, actions: AnyAction) {
+export default function reducer(state = initialState, actions: AnyAction) {
     switch (actions.type) {
 
-        case AUTH_SUCCESS :
-            return Object.assign({}, state, {
-                auth : actions.payload
-            })
+        case types.AUTH_INIT :
+            return {
+                ...state,
+                loading: true,
+                error: null,
+            };
+        case types.AUTH_SUCCESS :
+            return {
+                ...state,
+                loading: false,
+                error: null,
+            };
+        case types.AUTH_ERROR :
+            return {
+                ...state,
+                loading: false,
+                error: actions.payload,
+            };
 
-        default: return { ...state }
+        default: return state;
     }
 }
 
