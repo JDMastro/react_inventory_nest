@@ -10,5 +10,5 @@ export const PersonSchema: initialFValuesTypes = yup.object({
     phone: yup.string().required("Este campo es requerido"),
     name: yup.string().required("Este campo es requerido"),
     first_surname: yup.string().required("Este campo es requerido"),
-    roles_id: yup.number().required("Este campo es requerido")
+    //roles_id: yup.number().required("Este campo es requerido")
 })

@@ -2,6 +2,8 @@ import React from "react";
 import MUIDataTable from "../../components/table";
 import { UsersRequest } from "../../services/usersService";
 import { KindIdRequest } from "../../services/kindIdentityService";
+//import { RolesRequest } from "../../services/roleService";
+import { classificationPeopleRequest } from "../../services/classificationPeopleService";
 import { AlertDialogUi, FabUi } from "../../components";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -14,20 +16,31 @@ import { IconButton } from "@mui/material";
 import { UpdateUser } from "./update";
 
 import { DeleteUsers } from "./delete";
+import { UserIcon } from "./UserICon";
 
-export function UsersTable()
-{
+import AssignmentIcon from '@mui/icons-material/Assignment';
+
+import { ClientManufacturer } from "./ClientManufacturer";
+
+export function UsersTable() {
     const refDatatable: any = React.useRef();
     const [kindId, setKindId] = React.useState([])
+    const [classificationPeople, setClassificationPeople] = React.useState([])
     const [user, setUser] = React.useState({})
     const [openAddDialogForm, setOpenAddDialogForm] = React.useState<boolean>(false);
     const [openEditDialogForm, setOpenEditDialogForm] = React.useState<boolean>(false);
     const [openDeleteDialogForm, setOpenDeleteDialogForm] = React.useState<boolean>(false);
-    
+    const [openclientManufacturerDialogForm, setOpenclientManufacturerDialogForm] = React.useState<boolean>(false);
 
-    React.useEffect(()=>{
-        KindIdRequest.getAll().then(e => setKindId(e) )
-    },[])
+
+    React.useEffect(() => {
+        KindIdRequest.getAll().then(e => setKindId(e))
+    }, [])
+
+    React.useEffect(() => {
+        classificationPeopleRequest.getClassificationUserOrEmpleado().then(e => setClassificationPeople(e))
+    }, [])
+
 
     const columns = [
         {
@@ -87,6 +100,23 @@ export function UsersTable()
             },
         },
         {
+            name: 'cp_name',
+            label: 'Clasificación',
+            options: {
+                filter: false,
+                sort: false,
+                empty: true,
+                customBodyRenderLite: (dataIndex: number) => {
+                    const userSelected = refDatatable.current.findData(dataIndex);
+                    return (
+                        <>
+                            <UserIcon classification={userSelected.cp_name} />
+                        </>
+                    )
+                }
+            },
+        },
+        {
             name: 'actions',
             label: 'Acciones',
             options: {
@@ -95,9 +125,9 @@ export function UsersTable()
                 empty: true,
                 customBodyRenderLite: (dataIndex: number) => {
                     const userSelected = refDatatable.current.findData(dataIndex);
-                    return(
+                    return (
                         <>
-                         <Can
+                            <Can
                                 perform="users:create"
                                 yes={() => (
                                     <IconButton
@@ -114,17 +144,38 @@ export function UsersTable()
                             <Can
                                 perform="users:create"
                                 yes={() => (
-                                    <IconButton
-                                        aria-label="delete"
-                                        onClick={() => {
-                                            setUser(userSelected);
-                                            setOpenDeleteDialogForm(true);
-                                        }}
-                                    >
-                                        <DeleteIcon fontSize="small" color="error" />
-                                    </IconButton>
+                                    userSelected.p_actived ? (
+                                        <IconButton
+                                            aria-label="delete"
+                                            onClick={() => {
+                                                setUser(userSelected);
+                                                setOpenDeleteDialogForm(true);
+                                            }}
+                                        >
+                                            <DeleteIcon fontSize="small" color="error" />
+                                        </IconButton>
+                                    ) : (<span></span>)
                                 )}
                             />
+                            <Can
+                                perform="users:create"
+                                yes={() => (
+                                    userSelected.p_actived ? (
+                                        <IconButton
+                                            aria-label="delete"
+                                            onClick={() => {
+                                                setUser(userSelected);
+                                                setOpenclientManufacturerDialogForm(true);
+                                            }}
+                                        >
+                                            <AssignmentIcon fontSize="small" color="success" />
+                                        </IconButton>
+                                    ) : (<span></span>)
+
+
+                                )}
+                            />
+
                         </>
                     )
                 }
@@ -132,41 +183,45 @@ export function UsersTable()
         }
     ]
 
+    /*
+     
+    
+    */
+
     const options = {
         serverSide: true,
         print: true,
         download: true,
     };
 
-    const handleProductSaveClick = (oper : string, updatedConsecutive: any) => {
-        switch(oper)
-        {
-            case "CREATED" :
+    const handleProductSaveClick = (oper: string, updatedConsecutive: any) => {
+        switch (oper) {
+            case "CREATED":
                 refDatatable.current.createRecord(updatedConsecutive)
                 break;
-            case "UPDATED" :
+            case "UPDATED":
                 refDatatable.current.updateRecord(updatedConsecutive.id, updatedConsecutive)
                 break;
-            case "DELETED" :
-                refDatatable.current.deleteRecord(updatedConsecutive.id);
+            case "DELETED":
+                refDatatable.current.updateRecord(updatedConsecutive.id, updatedConsecutive)
                 break;
-            default : break;
+            default: break;
         }
         //refDatatable.current.updateRecord(updatedProduct.id, updatedProduct);
     };
 
     return (
         <>
-          <MUIDataTable
+            <MUIDataTable
                 ref={refDatatable}
                 fetchData={UsersRequest.getAll}
-                title={"Lista de empleados"}
+                title={"Lista de usuarios"}
                 // filterForm={<UserTableFilterForm handleSubmit={() => (console.log(''))}/>}
                 columns={columns}
                 options={options}
             />
 
-<FabUi
+            <FabUi
                 size="small"
                 color="primary" onClick={() => setOpenAddDialogForm(true)}
                 ariaLabel="add"
@@ -180,6 +235,7 @@ export function UsersTable()
                         onClose={() => setOpenAddDialogForm(false)}
                         onSubmit={handleProductSaveClick}
                         kindId={kindId}
+                        classificationPeople={classificationPeople}
                     />
                 }
                 open={openAddDialogForm}
@@ -193,6 +249,7 @@ export function UsersTable()
                         onSubmit={handleProductSaveClick}
                         data={user}
                         kindId={kindId}
+                        classificationPeople={classificationPeople}
                     />}
                 open={openEditDialogForm}
                 title=""
@@ -207,6 +264,20 @@ export function UsersTable()
                     />
                 }
                 open={openDeleteDialogForm}
+                title=""
+            />
+
+            <AlertDialogUi
+                maxWidth="md"
+                handleClose={() => setOpenclientManufacturerDialogForm(false)}
+                content={
+                    <ClientManufacturer
+                        onClose={() => setOpenclientManufacturerDialogForm(false)}
+                        data={user}
+                    />
+
+                }
+                open={openclientManufacturerDialogForm}
                 title=""
             />
         </>

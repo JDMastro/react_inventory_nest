@@ -4,14 +4,14 @@ import { drawerProps } from "../../types/drawerType";
 import { Toolbar } from "@mui/material";
 const drawerWidth = 240;
 
-export function DrawerUi({ window, handleDrawerToggle, mobileOpen, appBar, listItems, main  } : drawerProps) {
+export function DrawerUi({ window, handleDrawerToggle, mobileOpen, appBar, listItems, main, imgSource }: drawerProps) {
 
   const container = window !== undefined ? () => window().document.body : undefined;
 
   return (
     <Box sx={{ display: 'flex' }}>
       {
-          appBar
+        appBar
       }
 
       <Box
@@ -33,7 +33,11 @@ export function DrawerUi({ window, handleDrawerToggle, mobileOpen, appBar, listI
             '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
           }}
         >
+
+
+          {imgSource}
           {listItems}
+
         </Drawer>
         <Drawer
           variant="permanent"
@@ -43,6 +47,8 @@ export function DrawerUi({ window, handleDrawerToggle, mobileOpen, appBar, listI
           }}
           open
         >
+          {imgSource}
+
           {listItems}
         </Drawer>
       </Box>
@@ -50,10 +56,10 @@ export function DrawerUi({ window, handleDrawerToggle, mobileOpen, appBar, listI
         component="main"
         sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` } }}
       >
-          <Toolbar />
-       {
-           main
-       }
+        <Toolbar />
+        {
+          main
+        }
       </Box>
     </Box>
   );

@@ -32,7 +32,10 @@ export class UsersController {
         if (!user)
             return { success: false, data: null, error: "Credenciales invalidas" }
 
-        if (! await compare_password(password, user.password))
+        if (! await compare_password(password, user.password) )
+            return { success: false, data: null, error: "Credenciales invalidas" }
+
+        if(!user.actived)
             return { success: false, data: null, error: "Credenciales invalidas" }
 
         const jwt = await this.jwtService.signAsync({ id : user.person_id })
@@ -47,7 +50,7 @@ export class UsersController {
         const { code, email, password,
             kind_id, idnumber, name, second_name,
             first_surname, second_surname, fullname, address,
-            phone, contact, user_id } = body
+            phone, contact, user_id, classificationpeople_id } = body
 
         const errors: any = []
         const users = new Users()
@@ -84,7 +87,7 @@ export class UsersController {
             person.kind_id = kind_id
             person.name = name
             person.phone = phone
-            person.roles_id = 3
+            person.classificationpeople_id = classificationpeople_id
             person.second_name = second_name
             person.second_surname = second_surname
             person.user_id = user_id
@@ -119,7 +122,7 @@ export class UsersController {
         const { code, email, password,
             kind_id, idnumber, name, second_name,
             first_surname, second_surname, fullname, address,
-            phone, contact, user_id, person_id } = body
+            phone, contact, user_id, person_id, classificationpeople_id, actived } = body
 
         const errors: any = []
         const users = new Users()
@@ -133,10 +136,12 @@ export class UsersController {
         person.kind_id = kind_id
         person.name = name
         person.phone = phone
-        person.roles_id = 3
+        person.classificationpeople_id = classificationpeople_id
         person.second_name = second_name
         person.second_surname = second_surname
         person.user_id = user_id
+        person.actived = actived
+        
         
 
         try {
@@ -147,6 +152,9 @@ export class UsersController {
             users.code = code
             users.email = email
             users.password = await encrypt(password)
+            users.actived = actived
+
+            console.log("dasdasdas",actived)
 
             const res = await this.UsersService.update(id, users)
             return { success: true, data: res, error: null }
@@ -172,9 +180,10 @@ export class UsersController {
     @Delete(':id/:person_id')
     async remove(@Param('id') id: number, @Param('person_id') person_id: number) {
         try {
-            await this.UsersService.delete(id)
             await this._personService.delete(person_id)
-            return { success: true, data: null, error: null }
+            
+            const user = await this.UsersService.delete(id)
+            return { success: true, data: user, error: null }
         } catch (err) {
             return { success: false, data: null, error: "No se puede eliminar, hay registros que dependen de este" }
         }

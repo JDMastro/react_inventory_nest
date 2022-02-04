@@ -9,7 +9,7 @@ import { FormikHelpers } from "formik";
 
 
 
-export function AddPerson({ roles, kindId, onClose, onSubmit : on }: any) {
+export function AddPerson({ kindId, onClose, onSubmit : on }: any) {
     const [severity, setSeverity] = useState("success");
     const [msg, setMsg] = useState("success");
     const [openn, setOpenn] = useState(false);
@@ -43,8 +43,7 @@ export function AddPerson({ roles, kindId, onClose, onSubmit : on }: any) {
                 first_surname: values.first_surname,
                 second_name: values.second_name,
                 second_surname: values.second_surname,
-                user_id : 0,
-                roles_id : values.roles_id
+                user_id : 0
             })
             if (res.success) {
                 setMsg("Guardado exitosamente")
@@ -193,7 +192,7 @@ export function AddPerson({ roles, kindId, onClose, onSubmit : on }: any) {
 
                 
 
-                <Grid item xs={6}>
+                <Grid item xs={12}>
                     <TextFieldUi
                         autofocus={false}
                         error={formik.errors.contact}
@@ -209,20 +208,7 @@ export function AddPerson({ roles, kindId, onClose, onSubmit : on }: any) {
 
                 </Grid>
 
-                <Grid item xs={6}>
-                    <SelectWrapperUi
-                        label='Rol'
-                        name="roles_id"
-                        value={formik.values.roles_id}
-                        onChange={formik.handleChange}
-                        error={formik.errors.roles_id}
-                        menuItems={roles.map((data: any, i: any) => <MenuItem value={data.id} key={i}>{`${data.name}`}</MenuItem>)}
-
-                    />
-                    
-                   
-                </Grid>
-
+               
                 <Grid item xs={12}> <Divider style={{ marginTop: '15px' }} /></Grid>
 
                 

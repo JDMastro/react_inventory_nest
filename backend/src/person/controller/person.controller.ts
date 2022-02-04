@@ -21,7 +21,7 @@ export class PersonController {
     @Post()
     async register(@Body() body: personDto) {
         const { address, contact, first_surname, fullname,
-            idnumber, kind_id, name, phone, roles_id,
+            idnumber, kind_id, name, phone,
             second_name, user_id, second_surname } = body
 
         const errors: any = []
@@ -44,7 +44,7 @@ export class PersonController {
         person.kind_id = kind_id
         person.name = name
         person.phone = phone
-        person.roles_id = roles_id
+        person.classificationpeople_id = 1
         person.second_name = second_name
         person.second_surname = second_surname
         person.user_id = user_id
@@ -59,8 +59,8 @@ export class PersonController {
     @Put(':id')
     async update(@Param('id') id: number, @Body() body: personDto) {
         const { address, contact, first_surname, fullname,
-            idnumber, kind_id, name, phone, roles_id,
-            second_name, user_id, second_surname } = body
+            idnumber, kind_id, name, phone, classificationpeople_id,
+            second_name, user_id, second_surname, actived } = body
 
         const person = new personDto()
 
@@ -72,10 +72,11 @@ export class PersonController {
         person.kind_id = kind_id
         person.name = name
         person.phone = phone
-        person.roles_id = roles_id
+        person.classificationpeople_id = classificationpeople_id
         person.second_name = second_name
         person.second_surname = second_surname
-        person.user_id = user_id
+        person.user_id = user_id,
+        person.actived = actived
 
 
         try {
@@ -94,7 +95,7 @@ export class PersonController {
     @Delete(':id')
     async remove(@Param('id') id: number) {
         try {
-            return { success: await this._personService.delete(id), data: null, error: null }
+            return { success: true, data: await this._personService.delete(id), error: null }
         } catch (error) {
             return { success: false, data: null, error: "Debe eliminar todos los registros que tengan esta persona" }
         }

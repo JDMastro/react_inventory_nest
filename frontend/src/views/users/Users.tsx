@@ -20,7 +20,7 @@ export function Users()
         <Grid item xs={12}>
             <PapperBlock
                 className={classes.paper}
-                title="Empleados"
+                title="Usuarios"
                 desc="...."
                 icon={<PeopleIcon />}
             >

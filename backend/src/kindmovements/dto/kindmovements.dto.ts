@@ -5,7 +5,7 @@ export class kindmovementsDto {
     name: string
     description: string
     user_id: number
-    role_id: number
+    classificationpeople_id: number
     /*provider: boolean
     input: boolean
     output: boolean

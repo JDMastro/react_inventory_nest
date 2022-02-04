@@ -9,6 +9,7 @@ export class UsersDto {
     creationAt?: Date;
     updateAt?: Date;
     deleteAt?: Date;
+    actived : boolean
 }
 
 export class UsersEmployeeDto {
@@ -31,5 +32,6 @@ export class UsersEmployeeDto {
     contact: string
     status: boolean
     user_id: number
+    classificationpeople_id : number
   
 }

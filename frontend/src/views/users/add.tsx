@@ -16,10 +16,11 @@ import React, { useState } from 'react';
 
 
 
-export function AddUsers({ onClose, kindId, onSubmit : on }: any) {
+export function AddUsers({ onClose, kindId, onSubmit : on, classificationPeople }: any) {
     const [severity, setSeverity] = useState("success");
     const [msg, setMsg] = useState("success");
     const [openn, setOpenn] = useState(false);
+
 
     const [disablebtn, setdisablebtn] = React.useState(false);
 
@@ -55,7 +56,8 @@ export function AddUsers({ onClose, kindId, onSubmit : on }: any) {
                 address: values.address,
                 phone: values.phone,
                 contact: values.contact,
-                user_id: 0
+                user_id: 0,
+                classificationpeople_id : values.classificationpeople_id
             })
 
             if (res.success) {
@@ -257,9 +259,11 @@ export function AddUsers({ onClose, kindId, onSubmit : on }: any) {
                             type="password"
                             value={formik.values.confirmpassword}
                         />
-                    </Grid>       
+                    </Grid>  
 
-                    <Grid item xs={12}>
+
+
+                    <Grid item xs={6}>
                         <TextFieldUi
                             autofocus={false}
                             error={formik.errors.contact}
@@ -273,6 +277,18 @@ export function AddUsers({ onClose, kindId, onSubmit : on }: any) {
                             value={formik.values.contact}
                         />
                     </Grid>
+
+                    <Grid item xs={6}>
+                        <SelectWrapperUi
+                            label='tipo de persona'
+                            name="classificationpeople_id"
+                            value={formik.values.classificationpeople_id}
+                            onChange={formik.handleChange}
+                            error={formik.errors.classificationpeople_id}
+                            menuItems={classificationPeople.map((data: any, i: any) => <MenuItem value={data.id} key={i}>{`${data.name}`}</MenuItem>)}
+
+                        />
+                        </Grid>
 
                     <Divider style={{ marginTop : '15px' }} />
 

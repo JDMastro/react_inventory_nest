@@ -29,7 +29,7 @@ function Copyright(props: any) {
         <Typography variant="body2" color="text.secondary" align="center" {...props}>
             {'Copyright © '}
             <Link color="inherit" href="https://mui.com/">
-                Your Website
+                Derechos reservados
             </Link>{' '}
             {new Date().getFullYear()}
             {'.'}
@@ -170,18 +170,7 @@ export function SignIn() {
                         />
 
 
-                        <Grid container>
-                            <Grid item xs>
-                                <Link href="#" variant="body2">
-                                    Forgot password?
-                                </Link>
-                            </Grid>
-                            <Grid item>
-                                <Link href="#" variant="body2">
-                                    {"Don't have an account? Sign Up"}
-                                </Link>
-                            </Grid>
-                        </Grid>
+                        
                         <Copyright sx={{ mt: 5 }} />
                     </Box>
                 </Box>

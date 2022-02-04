@@ -22,24 +22,14 @@ export class StatusController {
         return await this._statusService.findAllWithPagination(req._page, req._limit)
     }
 
-    @Get('getAllNumberOrdersbyStatus/:status_id')
-      async getAllNumberOrdersbyStatus(@Req() request :Request ,@Param('status_id') status_id : number)
+    @Get('getAllNumberOrdersbyStatus/:status_id/:person_id')
+      async getAllNumberOrdersbyStatus(@Param('status_id') status_id : number, @Param('person_id') person_id : number)
       {
-        try {
-            const cookie = request.cookies['jwt']
-
-            const data = await this._usersService.verifyToken(cookie)
-            if(!data){
-               throw new UnauthorizedException()
-            }
+        
             
 
-              return await this._statusService.getAllNumberOrdersbyStatus(status_id, data.id)
-            //return 
-        } catch (e) {
-            console.log("error", e)
-            throw new UnauthorizedException()
-        }
+              return await this._statusService.getAllNumberOrdersbyStatus(status_id, person_id)
+      
         //return await this._statusService.getAllNumberOrdersbyStatus(status_id, person_id)
       }
 

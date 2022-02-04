@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { Stack, Box, Grid, Divider, MenuItem } from '@mui/material/';
 import { PersonSchema } from "../../schemas/personSchema";
-import { UseForm, TextFieldUi, Snackbars, ButtonUi, SelectWrapperUi } from "../../components";
+import { UseForm, TextFieldUi, Snackbars, ButtonUi, SelectWrapperUi, CheckboxUi } from "../../components";
 import { initialFValuesTypes } from "../../types/initialFValues";
 import { PersonRequest } from "../../services/personService";
 import { FormikHelpers } from "formik";
 
 
-export function UpdatePerson({roles, kindId, onClose, data, onSubmit : on }: any) {
+export function UpdatePerson({ kindId, onClose, data, onSubmit : on }: any) {
     const [severity, setSeverity] = useState("success");
     const [msg, setMsg] = useState("success");
     const [openn, setOpenn] = useState(false);
@@ -42,13 +42,13 @@ export function UpdatePerson({roles, kindId, onClose, data, onSubmit : on }: any
                 first_surname: values.first_surname,
                 second_name: values.second_name,
                 second_surname: values.second_surname,
-                user_id: 0
+                user_id: 0,
+                actived : values.actived
             })
             if (res.success) {
                 setMsg("Guardado exitosamente")
                 handleClick()
                 setdisablebtn(false)
-                console.log(res)
                 on("UPDATED", res.data)
                 onClose()
             } else {
@@ -74,7 +74,7 @@ export function UpdatePerson({roles, kindId, onClose, data, onSubmit : on }: any
         first_surname: data.p_first_surname,
         second_name: data.p_second_name ? data.p_second_name : "",
         second_surname: data.p_second_surname,
-        roles_id : data.role_id
+        actived : data.p_actived
     }, PersonSchema, onSubmit)
 
     return (
@@ -203,7 +203,7 @@ export function UpdatePerson({roles, kindId, onClose, data, onSubmit : on }: any
 
               
 
-                <Grid item xs={6}>
+                <Grid item xs={12}>
                     <TextFieldUi
                         autofocus={false}
                         error={formik.errors.contact}
@@ -218,20 +218,20 @@ export function UpdatePerson({roles, kindId, onClose, data, onSubmit : on }: any
                     />
 
                 </Grid>
-                <Grid item xs={6}>
-                    <SelectWrapperUi
-                        label='Rol'
-                        name="roles_id"
-                        value={formik.values.roles_id}
-                        onChange={formik.handleChange}
-                        error={formik.errors.roles_id}
-                        menuItems={roles.map((data: any, i: any) => <MenuItem value={data.id} key={i}>{`${data.name}`}</MenuItem>)}
 
-                    />
-                    
-                   
-                </Grid>
-
+                {
+                    data.p_actived ? (<span></span>) : (
+                        <Grid item xs={12}>
+                       <CheckboxUi
+                         checked={formik.values.actived}
+                         label="Habilitar"
+                         name="actived"
+                         onChange={formik.handleChange}
+                       />
+                    </Grid>
+                    )
+                }
+             
                 <Grid item xs={12}> <Divider style={{ marginTop: '15px' }} /></Grid>
             </Grid>
 

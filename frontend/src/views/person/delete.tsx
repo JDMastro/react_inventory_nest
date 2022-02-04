@@ -28,7 +28,7 @@ export function DeletePerson({ onClose, data, onSubmit : on }: any)
                 setMsg("Eliminado exitosamente")
                 handleClick()
                 setdisablebtn(false)
-                on("DELETED", { id : data.id })
+                on("DELETED", res.data)
                 onClose()
             } else {
                 setSeverity("error")

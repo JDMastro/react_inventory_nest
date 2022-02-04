@@ -2,8 +2,9 @@ import React from "react";
 import MUIDataTable from "../../components/table";
 import { KindMovementsRequest } from "../../services/kindmovementsService";
 import { StatusRequest } from "../../services/statusService";
-import { RolesRequest } from "../../services/roleService";
+//import { RolesRequest } from "../../services/roleService";
 import { ClassificationkindmovementRequest } from "../../services/classificationkindmovementService";
+import { classificationPeopleRequest } from "../../services/classificationPeopleService";
 import { ConsecutiveRequest } from "../../services/consecutiveService";
 import { AlertDialogUi, FabUi } from "../../components";
 
@@ -22,7 +23,8 @@ export function KindMovementsTable() {
 
     const refDatatable: any = React.useRef();
     const [kindMov, setKindMov] = React.useState({})
-    const[roles, setRoles] = React.useState([])
+    //const[roles, setRoles] = React.useState([])
+    const[classificationPeople, setClassificationPeople] = React.useState([])
     const[classificationkindMove, setClassificationkindMove] = React.useState([])
     const[consecutive, setConsecutive] = React.useState([])
     const[status, setStatus] = React.useState([])
@@ -36,7 +38,7 @@ export function KindMovementsTable() {
     }, [])
 
     React.useEffect(() => {
-        RolesRequest.getAll().then(e => setRoles(e) )
+        classificationPeopleRequest.getAll().then(e => setClassificationPeople(e) )
     }, [])
 
     React.useEffect(() => {
@@ -161,7 +163,7 @@ export function KindMovementsTable() {
                     <Addkindmovements
                         onClose={() => setOpenAddDialogForm(false)}
                         onSubmit={handleProductSaveClick}
-                        roles={roles}
+                        classificationPeople={classificationPeople}
                         consecutives={consecutive} 
                         Classificationkindmovement={classificationkindMove}
                         status={status}
@@ -177,7 +179,7 @@ export function KindMovementsTable() {
                     <UpdateMovements
                     onClose={() => setOpenEditDialogForm(false)}
                     onSubmit={handleProductSaveClick}
-                    roles={roles}
+                    classificationPeople={classificationPeople}
                     consecutives={consecutive} 
                     Classificationkindmovement={classificationkindMove}
                     status={status}

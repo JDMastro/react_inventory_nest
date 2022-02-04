@@ -17,6 +17,9 @@ import Production from "../views/productions";
 import { Conversion } from "../views/conversion";
 import { OutPuts } from "../views/outputs";
 import { Settings } from "../views/settings";
+import { Roles } from "../views/roles";
+
+import { SettingStatus } from "../views/settingstatus";
 
 
 import { useSelector } from 'react-redux'
@@ -78,7 +81,9 @@ export const DashboardRoute = () => {
 
             <ProtectedRoute path="/dashboard/maestro/productions" component={Production} />
 
-            <ProtectedRoute path="/dashboard/maestro/settings" component={Settings} />
+            <ProtectedRoute exact path="/dashboard/maestro/settings" component={Settings} />
+            <ProtectedRoute exact path="/dashboard/maestro/settings/roles" component={Roles} />
+            <ProtectedRoute exact path="/dashboard/maestro/settings/status" component={SettingStatus} />
 
             <Route path="*" component={() => { return (<div>Page 404</div>) }} />
         </Switch>

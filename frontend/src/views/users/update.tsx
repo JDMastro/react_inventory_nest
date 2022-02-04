@@ -2,13 +2,13 @@ import Stack from '@mui/material/Stack';
 import { Box, Grid, Divider, MenuItem } from '@mui/material/';
 
 import { UsersSchema } from "../../schemas/usersSchema";
-import { UseForm, TextFieldUi, Snackbars, ButtonUi, SelectWrapperUi } from "../../components";
+import { UseForm, TextFieldUi, Snackbars, ButtonUi, SelectWrapperUi, CheckboxUi } from "../../components";
 import { initialFValuesTypes } from "../../types/initialFValues";
 import { UsersRequest } from "../../services/usersService";
 import { FormikHelpers } from "formik";
 import React from 'react';
 
-export function UpdateUser({ kindId, onClose, data, onSubmit: on }: any) {
+export function UpdateUser({ kindId, onClose, data, onSubmit: on, classificationPeople }: any) {
     const [severity, setSeverity] = React.useState("success");
     const [msg, setMsg] = React.useState("success");
     const [openn, setOpenn] = React.useState(false);
@@ -46,7 +46,9 @@ export function UpdateUser({ kindId, onClose, data, onSubmit: on }: any) {
                 phone: values.phone,
                 contact: values.contact,
                 user_id: 0,
-                person_id: data.u_person_id
+                person_id: data.u_person_id,
+                classificationpeople_id : values.classificationpeople_id,
+                actived : values.actived
             })
 
             console.log(res)
@@ -87,6 +89,9 @@ export function UpdateUser({ kindId, onClose, data, onSubmit: on }: any) {
         address: data.address,/* */
         phone: data.phone,/* */
         contact: data.p_contact,/* */
+        classificationpeople_id : data.cp_id,
+        
+        actived : data.p_actived
     }, UsersSchema, onSubmit)
 
 
@@ -265,7 +270,7 @@ export function UpdateUser({ kindId, onClose, data, onSubmit: on }: any) {
                         />
                     </Grid>
 
-                    <Grid item xs={12}>
+                    <Grid item xs={6}>
                         <TextFieldUi
                             autofocus={false}
                             error={formik.errors.contact}
@@ -279,6 +284,31 @@ export function UpdateUser({ kindId, onClose, data, onSubmit: on }: any) {
                             value={formik.values.contact}
                         />
                     </Grid>
+
+                    <Grid item xs={6}>
+                        <SelectWrapperUi
+                            label='tipo de persona'
+                            name="classificationpeople_id"
+                            value={formik.values.classificationpeople_id}
+                            onChange={formik.handleChange}
+                            error={formik.errors.classificationpeople_id}
+                            menuItems={classificationPeople.map((data: any, i: any) => <MenuItem value={data.id} key={i}>{`${data.name}`}</MenuItem>)}
+
+                        />
+                        </Grid>
+
+                        {
+                    data.p_actived ? (<span></span>) : (
+                        <Grid item xs={12}>
+                       <CheckboxUi
+                         checked={formik.values.actived}
+                         label="Habilitar"
+                         name="actived"
+                         onChange={formik.handleChange}
+                       />
+                    </Grid>
+                    )
+                }
 
                     <Divider style={{ marginTop: '15px' }} />
 

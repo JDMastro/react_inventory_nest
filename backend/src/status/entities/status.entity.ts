@@ -1,6 +1,7 @@
 import { KindMovements } from 'src/kindmovements/entities/kindmovements.entity';
 import { Entity, Column, PrimaryGeneratedColumn, Unique, OneToMany } from 'typeorm';
 import { Movements } from "../../movements/entities/movements.entity";
+import { SettingStatus } from "../../settings-status/entities/settingStatus.entity";
 
 @Entity()
 @Unique("idx_status",["code"])
@@ -26,4 +27,7 @@ export class Status {
 
     @OneToMany(() => Movements, Movements => Movements.Status)
     Movements: Movements[];
+
+    @OneToMany(() => SettingStatus, SettingStatus => SettingStatus.Status)
+    SettingStatus: SettingStatus[];
 }

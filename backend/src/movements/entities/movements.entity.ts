@@ -66,4 +66,5 @@ export class Movements {
 
     @Column("timestamp", { nullable: true, precision: 3, default: () => "CURRENT_TIMESTAMP(3)", onUpdate: "CURRENT_TIMESTAMP(3)" })
     updateAt: Date;
+
 }

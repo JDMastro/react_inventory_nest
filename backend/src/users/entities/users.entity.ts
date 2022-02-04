@@ -37,4 +37,8 @@ export class Users {
   @Column()
   person_id: number
 
+  @Column({ default: true })
+  actived : boolean
+
+
 }

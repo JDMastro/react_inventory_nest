@@ -1,7 +1,7 @@
 import { Status } from 'src/status/entities/status.entity';
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
 import { Header } from "../../header/entities/header.entity";
-import { Roles } from "../../roles/entities/roles.entity";
+import { classificationPeople } from "../../classification_people/entities/classificationPeople.entity";
 import { ClassificationKindMovement } from "../../classificationkindmovement/entities/classificationkindmovement.entity";
 import { Consecutive } from "../../consecutive/entities/consecutive.entity";
 
@@ -21,12 +21,12 @@ export class KindMovements {
 
     
 
-    @ManyToOne(() => Roles, Roles => Roles.KindMovement)
-    @JoinColumn({ name: 'roles_id' })
-    Roles: Roles;
+    @ManyToOne(() => classificationPeople, classificationPeople => classificationPeople.KindMovement)
+    @JoinColumn({ name: 'classificationpeople_id' })
+    classificationPeople: classificationPeople;
 
     @Column()
-    roles_id: number
+    classificationpeople_id: number
 
    /* @Column({ default: false })
     provider: boolean

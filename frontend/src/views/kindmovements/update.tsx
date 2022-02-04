@@ -6,7 +6,8 @@ import { initialFValuesTypes } from "../../types/initialFValues";
 import { KindMovementsRequest } from "../../services/kindmovementsService";
 import { FormikHelpers } from "formik";
 
-export function UpdateMovements({ consecutives, Classificationkindmovement, roles, onClose, onSubmit : on ,data, status}: any) {
+export function UpdateMovements({ consecutives, Classificationkindmovement, classificationPeople, onClose, onSubmit : on ,data, status}: any) {
+   
     const [severity, setSeverity] = React.useState("success");
     const [msg, setMsg] = React.useState("success");
     const [openn, setOpenn] = React.useState(false);
@@ -41,7 +42,7 @@ export function UpdateMovements({ consecutives, Classificationkindmovement, role
             const res = await KindMovementsRequest.update(data.id,{
                 name: values.name,
                 description: values.description,
-                role_id : values.roles_id,
+                classificationpeople_id : values.classificationpeople_id,
                 classification_kindmovement_id : values.classificationkindmovement_id,
                 status_id : values.status_id,
                 user_id : 0,
@@ -73,7 +74,7 @@ export function UpdateMovements({ consecutives, Classificationkindmovement, role
         description: data.description,
         iduser: data.iduser,
         status_id : data.status_id,
-        roles_id : data.roles_id,
+        classificationpeople_id : data.classificationpeople_id,
         classificationkindmovement_id : data.classification_kindmovement_id,
         require_consecutive : data.require_consecutive,
         consecutive_id : data.consecutive_id === null ? "" : data.consecutive_id
@@ -132,12 +133,12 @@ export function UpdateMovements({ consecutives, Classificationkindmovement, role
 
                     <Grid item xs={6}>
                         <SelectWrapperUi
-                            label='Roles'
-                            name="roles_id"
-                            value={formik.values.roles_id}
+                            label='tipo de persona'
+                            name="classificationpeople_id"
+                            value={formik.values.classificationpeople_id}
                             onChange={formik.handleChange}
-                            error={formik.errors.roles_id}
-                            menuItems={roles.map((data: any, i: any) => <MenuItem value={data.id} key={i}>{`${data.name}`}</MenuItem>)}
+                            error={formik.errors.classificationpeople_id}
+                            menuItems={classificationPeople.map((data: any, i: any) => <MenuItem value={data.id} key={i}>{`${data.name}`}</MenuItem>)}
 
                         />
                     </Grid>

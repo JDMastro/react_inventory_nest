@@ -21,13 +21,13 @@ export function PersonTable() {
     const refDatatable: any = React.useRef();
     const [person, setPerson] = React.useState<any>({});
     const [kindId, setkindId] = React.useState([]);
-    const [roles, setroles] = React.useState([]);
+    //const [roles, setroles] = React.useState([]);
     const [openAddDialogForm, setOpenAddDialogForm] = React.useState<boolean>(false);
     const [openEditDialogForm, setOpenEditDialogForm] = React.useState<boolean>(false);
     const [openDeleteDialogForm, setOpenDeleteDialogForm] = React.useState<boolean>(false);
 
     useEffect(() => { KindIdRequest.getAll().then(e => setkindId(e)) }, [])
-    useEffect(() => { RolesRequest.getRoleProviderOrClient().then(e => setroles(e)) }, [])
+    //useEffect(() => { RolesRequest.getRoleProviderOrClient().then(e => setroles(e)) }, [])
 
     const columns = [
         {
@@ -59,7 +59,7 @@ export function PersonTable() {
             },
         },
         {
-            name: 'r_name',
+            name: 'cp_name',
             label: 'Descripción',
             options: {
                 filter: true,
@@ -107,7 +107,8 @@ export function PersonTable() {
                             <Can
                                 perform="users:create"
                                 yes={() => (
-                                    <IconButton
+                                    personSelected.p_actived ? (
+                                        <IconButton
                                         aria-label="delete"
                                         onClick={() => {
                                             setPerson(personSelected);
@@ -116,6 +117,7 @@ export function PersonTable() {
                                     >
                                         <DeleteIcon fontSize="small" color="error" />
                                     </IconButton>
+                                    ) : (<span></span>)
                                 )}
                                     />
                         </>
@@ -124,6 +126,11 @@ export function PersonTable() {
             }
         }
     ]
+
+    /*
+    
+    
+    */
 
     const options = {
         serverSide: true,
@@ -140,8 +147,7 @@ export function PersonTable() {
                 refDatatable.current.updateRecord(updatedConsecutive.id, updatedConsecutive)
                 break;
             case "DELETED":
-                console.log(updatedConsecutive.p_id)
-                refDatatable.current.deleteRecord(updatedConsecutive.id);
+                refDatatable.current.updateRecord(updatedConsecutive.id, updatedConsecutive)
                 break;
             default: break;
         }
@@ -153,7 +159,7 @@ export function PersonTable() {
             <MUIDataTable
                 ref={refDatatable}
                 fetchData={PersonRequest.getAll}
-                title={"Lista de proveedores y clientes"}
+                title={"Lista de proveedores"}
                 columns={columns}
                 options={options}
             />
@@ -171,7 +177,6 @@ export function PersonTable() {
                     <AddPerson
                         onClose={() => setOpenAddDialogForm(false)}
                         onSubmit={handleProductSaveClick}
-                        roles={roles}
                         kindId={kindId}
                     />
                 }
@@ -184,7 +189,6 @@ export function PersonTable() {
                 content={
                     <UpdatePerson
                         onClose={() => setOpenEditDialogForm(false)}
-                        roles={roles}
                         kindId={kindId}
                         data={person}
                         onSubmit={handleProductSaveClick}

@@ -2,7 +2,8 @@ import { Entity, Column, PrimaryGeneratedColumn, Unique, ManyToOne, JoinColumn, 
 import { Kindidentity } from "../../kindidentity/entities/kindidentity.entity";
 import { Users } from "../../users/entities/users.entity";
 import { Header } from "../../header/entities/header.entity";
-import { Roles } from "../../roles/entities/roles.entity";
+import { classificationPeople } from "../../classification_people/entities/classificationPeople.entity";
+import { ClientManufacturer } from "../../client-manufacturer/entities/clientManufacturer.entity";
 
 @Entity()
 @Unique("idx_person", ["phone", "idnumber"])
@@ -77,11 +78,17 @@ export class Person {
   Headers: Header[];
 
 
-  @ManyToOne(() => Roles, Roles => Roles.persons)
-  @JoinColumn({ name: 'roles_id' })
-  Roles: Roles;
+  @ManyToOne(() => classificationPeople, classificationPeople => classificationPeople.persons)
+  @JoinColumn({ name: 'classificationpeople_id' })
+  classificationPeople: classificationPeople;
 
   @Column()
-  roles_id: number
+  classificationpeople_id: number
+
+  @Column({ default: true })
+  actived : boolean
+
+  @OneToMany(() => ClientManufacturer, ClientManufacturer => ClientManufacturer.Manufacturer)
+  ClientManufacturer: ClientManufacturer[];
 
 }

@@ -10,13 +10,16 @@ import { KindidentityModule } from './kindidentity/kindidentity.module';
 import { PersonModule } from './person/person.module';
 import { KindmovementsModule } from './kindmovements/kindmovements.module';
 import { HeaderModule } from './header/header.module';
-import { RolesModule } from './roles/roles.module';
+import { classificationPeopleModule } from './classification_people/classificationPeople.module';
 import { ClassificationkindmovementModule } from './classificationkindmovement/classificationkindmovement.module';
 import { ConsecutiveModule } from './consecutive/consecutive.module';
 import { MovementsModule } from './movements/movements.module';
 import { ConversionModule } from './conversion/conversion.module';
 import { SignsModule } from './signs/signs.module';
 import { SettingsModule } from './settings/settings.module';
+import { RolesModule } from './roles/roles.module';
+import { ClientManufacturerModule } from './client-manufacturer/client-manufacturer.module';
+import { SettingsStatusModule } from './settings-status/settings-status.module';
 
 
 @Module({
@@ -32,8 +35,7 @@ import { SettingsModule } from './settings/settings.module';
       entities: ['dist/**/*.entity{.ts,.js}'],
       synchronize: false,
       retryDelay: 3000,
-      retryAttempts: 10,
-      logging: true
+      retryAttempts: 10
     }),
     UsersModule,
     UnitsModule,
@@ -43,13 +45,16 @@ import { SettingsModule } from './settings/settings.module';
     PersonModule,
     KindmovementsModule,
     HeaderModule,
-    RolesModule,
+    classificationPeopleModule,
     ClassificationkindmovementModule,
     ConsecutiveModule,
     MovementsModule,
     ConversionModule,
     SignsModule,
     SettingsModule,
+    RolesModule,
+    ClientManufacturerModule,
+    SettingsStatusModule,
   ],
   controllers: [AppController],
   providers: [AppService],

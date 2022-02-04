@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Stack, Box, Grid, Divider, MenuItem } from '@mui/material/';
 import { initialValueskindmovements } from "../../initialValues";
 import { KindMovementsSchema } from "../../schemas/kindmovementsSchema";
@@ -7,7 +7,8 @@ import { initialFValuesTypes } from "../../types/initialFValues";
 import { KindMovementsRequest } from "../../services/kindmovementsService";
 import { FormikHelpers } from "formik";
 
-export function Addkindmovements({ consecutives, Classificationkindmovement, roles, onClose, status, onSubmit : on}: any) {
+export function Addkindmovements({ consecutives, Classificationkindmovement, classificationPeople, onClose, status, onSubmit : on}: any) {
+    
     const [severity, setSeverity] = React.useState("success");
     const [msg, setMsg] = React.useState("success");
     const [openn, setOpenn] = React.useState(false);
@@ -42,7 +43,7 @@ export function Addkindmovements({ consecutives, Classificationkindmovement, rol
                 const res = await KindMovementsRequest.save({
                     name: values.name,
                     description: values.description,
-                    role_id : values.roles_id,
+                    classificationpeople_id : values.classificationpeople_id,
                     classification_kindmovement_id : values.classificationkindmovement_id,
                     status_id : values.status_id,
                     user_id : 0,
@@ -123,12 +124,12 @@ export function Addkindmovements({ consecutives, Classificationkindmovement, rol
 
                     <Grid item xs={6}>
                         <SelectWrapperUi
-                            label='Roles'
-                            name="roles_id"
-                            value={formik.values.roles_id}
+                            label='tipo de persona'
+                            name="classificationpeople_id"
+                            value={formik.values.classificationpeople_id}
                             onChange={formik.handleChange}
-                            error={formik.errors.roles_id}
-                            menuItems={roles.map((data: any, i: any) => <MenuItem value={data.id} key={i}>{`${data.name}`}</MenuItem>)}
+                            error={formik.errors.classificationpeople_id}
+                            menuItems={classificationPeople.map((data: any, i: any) => <MenuItem value={data.id} key={i}>{`${data.name}`}</MenuItem>)}
 
                         />
                     </Grid>

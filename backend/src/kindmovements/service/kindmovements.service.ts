@@ -13,7 +13,7 @@ export class kindmovementsService {
 
     async findKindMovClientOrProvider()
     {
-        return await this._kindMovementsRepo.find({ where : { roles_id : Not(3) } })
+        return await this._kindMovementsRepo.find({ where : { classificationpeople_id : Not(3) } })
     }
 
     async findById(id:number)
@@ -42,16 +42,16 @@ export class kindmovementsService {
     }
 
     async create(body: kindmovementsDto) {
-        const { consecutive_id, description, role_id, name, user_id, status_id, require_consecutive, classification_kindmovement_id } = body
-        return await this._kindMovementsRepo.save({ consecutive_id, require_consecutive ,description, roles_id : role_id, name, user_id, status_id, classification_kindmovement_id })
+        const { consecutive_id, description, classificationpeople_id, name, user_id, status_id, require_consecutive, classification_kindmovement_id } = body
+        return await this._kindMovementsRepo.save({ consecutive_id, require_consecutive ,description, classificationpeople_id, name, user_id, status_id, classification_kindmovement_id })
     }
 
     async update(id: number, body: kindmovementsDto) {
-        const { consecutive_id, description, role_id, name, user_id, status_id, require_consecutive, classification_kindmovement_id } = body
+        const { consecutive_id, description, classificationpeople_id, name, user_id, status_id, require_consecutive, classification_kindmovement_id } = body
         const kind_movement = await this._kindMovementsRepo.findOne(id)
 
         await this._kindMovementsRepo.merge(kind_movement, {
-            consecutive_id, description, roles_id : role_id ,name, user_id, status_id, require_consecutive, classification_kindmovement_id
+            consecutive_id, description, classificationpeople_id ,name, user_id, status_id, require_consecutive, classification_kindmovement_id
         })
 
         return await this._kindMovementsRepo.save(kind_movement)

@@ -5,6 +5,8 @@ import { StatusRequest } from "../../services/statusService";
 import { OutputsFilterForm } from "./OutputsFilterForm";
 import { OutputsSubTable } from "./OutputsSubTable";
 import { formatWeight } from "../../utils/FormatNumbers";
+import { clientManufacturerRequest } from "../../services/clientManufacturerService";
+import { SettingsStatusRequest } from "../../services/settingsStatusService";
 
 
 export function OutPutsTable() {
@@ -12,11 +14,14 @@ export function OutPutsTable() {
     const refSubDatatable: any = React.useRef();
     const [status, setStatus] = useState([])
     const [statu, setStatu] = useState([])
+    const [statusChild, setStatusChild] = useState([])
+    const [people, setPeople] = useState([]) 
     const [numberOrdersbyStatus, setNumberOrdersbyStatus] = useState([])
     //NumberOrdersbyStatus
 
 
     useEffect(() => { StatusRequest.findStatusEmployee().then(elements => setStatus(elements)) }, [])
+    useEffect(() => { clientManufacturerRequest.findUsersByClientManufacture().then(elements => setPeople(elements) ) }, [])
 
     const columns = [
         {
@@ -69,7 +74,7 @@ export function OutPutsTable() {
                         }}
                         colSpan={colSpan}
                     >
-                        <OutputsSubTable statu={statu} refSubDatatable={refSubDatatable} status={status} parentOutputs={currentStatu} />
+                        <OutputsSubTable statusChild={statusChild} statu={statu} refSubDatatable={refSubDatatable} status={status} parentOutputs={currentStatu} />
                     </TableCell>
                 </TableRow>
             );
@@ -77,34 +82,37 @@ export function OutPutsTable() {
     }
 
     const handleFormFilterSubmit = async (data: any) => {
-       // setStatu(data)
-        //StatusRequest.getAllNumberOrdersbyStatus(data)
-        //    .then(elements => setNumberOrdersbyStatus(elements))
-
-        //console.log("estado id",data)
-
-        await refDatatable.current.filter({ statu : data});
-
+        setStatu(data.status_id)
        
+        StatusRequest.getAllNumberOrdersbyStatus(data.status_id, data.person_id)
+            .then(elements => setNumberOrdersbyStatus(elements))
+
+            SettingsStatusRequest.findStatusbysetting(data.status_id)
+                .then(elements => setStatusChild(elements) )
+
+        //await refDatatable.current.filter({ statu : data});
+
+       //setStatusChild
     }
 
     return (
         <>
             <MUIDataTable
                 ref={refDatatable}
-                fetchData={StatusRequest.getAllNumberOrdersbyStatus}
+                data={numberOrdersbyStatus}
+                //fetchData={StatusRequest.getAllNumberOrdersbyStatus}
                 // filterForm={<UserTableFilterForm handleSubmit={() => (console.log(''))}/>}
                 columns={columns}
                 options={options}
                 additionalDataByRow={{
                     isNewRecord: false,
                 }}
-                params={{
+               /* params={{
                     overwrites: {
                         statu: 'statu=',
                     },
-                  }}
-                filterForm={<OutputsFilterForm status={status} handleFormFilterSubmit={handleFormFilterSubmit} />}
+                  }}*/
+                filterForm={<OutputsFilterForm people={people} status={status} handleFormFilterSubmit={handleFormFilterSubmit} />}
                 hasInitialLoad={false}
                 openFilterForm
             />

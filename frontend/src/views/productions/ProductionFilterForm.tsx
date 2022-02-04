@@ -49,7 +49,7 @@ const ProductionFilterForm = ({ converted_current_existence_parent, setconverted
     };
     useEffect(() => { 
         
-        ProductsRequest.findProductParentProducction().then(e =>{ setproducts(e); console.log(e) }) 
+        ProductsRequest.findProductParentProducction().then(e =>{ setproducts(e) }) 
     }, [])
 
 

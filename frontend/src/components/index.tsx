@@ -12,6 +12,7 @@ import { TableNormalUi } from "./tableNormal";
 import { TextFieldUi } from "./textfield";
 import { FabUi } from "./fab";
 import { AccordioUi } from "./accordion";
+import { AvatarUi } from "./avatar";
 
 export {
     AppbarUi,
@@ -27,5 +28,6 @@ export {
     TableNormalUi,
     TextFieldUi,
     FabUi,
-    AccordioUi
+    AccordioUi,
+    AvatarUi
 }

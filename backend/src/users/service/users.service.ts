@@ -5,7 +5,7 @@ import { Users } from "../entities/users.entity";
 import { UsersDto } from "../dto/users.dto";
 import { Kindidentity } from "../../kindidentity/entities/kindidentity.entity";
 import { Person } from "../../person/entities/person.entity";
-import { Roles } from "../../roles/entities/roles.entity";
+import { classificationPeople } from "../../classification_people/entities/classificationPeople.entity";
 import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
@@ -20,12 +20,12 @@ export class UsersService {
         .select([
             "u.id as id" ,"u.code", "u.email", "u.person_id", "k.id as kind_id", 
             "k.description as kind_description", "p.fullname", "p.idnumber"," p.address"," p.phone",
-            "p.contact", "p.name", "p.second_name", "p.first_surname", "p.second_surname"
+            "p.contact", "p.name", "p.second_name", "p.first_surname", "p.second_surname", "cp.name", "cp.id", "p.actived"
         ])
         .innerJoin(Person, "p", "p.id = u.person_id")
         .innerJoin(Kindidentity, "k", "k.id = p.kind_id")
-        .innerJoin(Roles,"r","r.id = p.roles_id")
-        .where("r.name = 'EMPLEADO'")
+        .innerJoin(classificationPeople, "cp", "cp.id = p.classificationpeople_id")
+        .where("cp.name != 'PROVEEDOR'")
         .orderBy("p.fullname")
         //.getRawMany()
 
@@ -66,11 +66,11 @@ export class UsersService {
         .select([
             "u.id as id" ,"u.code", "u.email", "u.person_id", "k.id as kind_id", 
             "k.description as kind_description", "p.fullname", "p.idnumber"," p.address"," p.phone",
-            "p.contact", "p.name", "p.second_name", "p.first_surname", "p.second_surname"
+            "p.contact", "p.name", "p.second_name", "p.first_surname", "p.second_surname", "cp.name", "cp.id", "p.actived"
         ])
         .innerJoin(Person, "p", "p.id = u.person_id")
         .innerJoin(Kindidentity, "k", "k.id = p.kind_id")
-        .innerJoin(Roles,"r","r.id = p.roles_id")
+        .innerJoin(classificationPeople, "cp", "cp.id = p.classificationpeople_id")
         .where("u.id = :id", { id })
         .getRawOne()
     }
@@ -89,7 +89,8 @@ export class UsersService {
         await this.UsersRepo.merge( user ,{
             code : body.code,
             email : body.email,
-            password : body.password
+            password : body.password,
+            actived : body.actived
         })
         const res = await this.UsersRepo.save(user)
 
@@ -98,7 +99,15 @@ export class UsersService {
 
     async delete(id : number)
     {
-        await this.UsersRepo.delete(id)
-        return true
+        //await this.UsersRepo.delete(id)
+        //return true
+
+        const person = await this.UsersRepo.findOne(id)
+
+        await this.UsersRepo.merge(person,{ actived : false })
+
+        const updated = await this.UsersRepo.save(person)
+
+        return this.getLastInserted(updated.id)
     }
 }

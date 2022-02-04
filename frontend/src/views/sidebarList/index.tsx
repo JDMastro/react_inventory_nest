@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Toolbar from '@mui/material/Toolbar';
+//import Toolbar from '@mui/material/Toolbar';
 import { Divider, List, ListItemButton, ListItemText, ListItemIcon } from "@mui/material";
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import { Link } from 'react-router-dom';
@@ -20,7 +20,8 @@ export function SideBarList() {
     const [selectedIndex, setSelectedIndex] = React.useState(0);
     const [open, setOpen] = React.useState(false);
     const [openInventary, setOpenInventary] = React.useState(false);
- const [openConsultas, setConsultas] = React.useState(false);
+    const [openConsultas, setConsultas] = React.useState(false);
+    const [settings, setSettings] = React.useState(false);
 
 
     const handleClick = () => {
@@ -40,12 +41,16 @@ export function SideBarList() {
 
     const handleClickConsultas = () => {
         setConsultas(!openConsultas);
-      };
+    };
+
+    const handleClickSettings = () => {
+        setSettings(!settings);
+    };
 
 
     return (
         <div>
-            <Toolbar />
+            {/*<Toolbar />*/}
             <Divider />
             <List component="nav" aria-label="main mailbox folders">
                 <Profile />
@@ -74,13 +79,13 @@ export function SideBarList() {
                 <Collapse in={open} timeout="auto" unmountOnExit>
                     <List component="div" disablePadding>
 
-                   
 
-                    <ListItemButton sx={{ pl: 5 }}
-                                        selected={selectedIndex === 12}
-                                        onClick={(event: any) => handleListItemClick(event, 12)}
-                                        component={Link}
-                                        to={`/dashboard/maestro/conversion`}
+
+                        <ListItemButton sx={{ pl: 5 }}
+                            selected={selectedIndex === 12}
+                            onClick={(event: any) => handleListItemClick(event, 12)}
+                            component={Link}
+                            to={`/dashboard/maestro/conversion`}
                         >
 
                             <ListItemText primary="Conversión" />
@@ -141,7 +146,7 @@ export function SideBarList() {
                             component={Link}
                             to={`/dashboard/maestro/person`}>
 
-                            <ListItemText primary="Proveedores y clientes" />
+                            <ListItemText primary="Proveedores" />
                         </ListItemButton>
 
 
@@ -161,11 +166,11 @@ export function SideBarList() {
                             <ListItemText primary="Tipos de movimiento" />
                         </ListItemButton>
 
-                        
 
 
-                       
-                     
+
+
+
 
 
 
@@ -173,37 +178,37 @@ export function SideBarList() {
                     </List>
                 </Collapse>
 
-                
+
                 <ListItemButton onClick={handleClickConsultas}>
-          
-          <ListItemIcon style={{ marginRight: '-25px' }} >
-                <DashboardIcon fontSize="small" />
-              </ListItemIcon>
 
-          <ListItemText
-            primary="Consultas"
-          />
-          {openConsultas ? <ExpandLess /> : <ExpandMore />}
-        </ListItemButton>
-        <Collapse in={openConsultas} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding>
-          <ListItemButton sx={{ pl: 5 }}
-              selected={selectedIndex === 14}
-              onClick={(event: any) => handleListItemClick(event, 14)}
-              component={Link}
-              to={`/dashboard/inventary/outputs`}>
+                    <ListItemIcon style={{ marginRight: '-25px' }} >
+                        <DashboardIcon fontSize="small" />
+                    </ListItemIcon>
 
-              <ListItemText
-                disableTypography
-                primary="Por estado"
-              />
-            </ListItemButton>
+                    <ListItemText
+                        primary="Consultas"
+                    />
+                    {openConsultas ? <ExpandLess /> : <ExpandMore />}
+                </ListItemButton>
+                <Collapse in={openConsultas} timeout="auto" unmountOnExit>
+                    <List component="div" disablePadding>
+                        <ListItemButton sx={{ pl: 5 }}
+                            selected={selectedIndex === 14}
+                            onClick={(event: any) => handleListItemClick(event, 14)}
+                            component={Link}
+                            to={`/dashboard/inventary/outputs`}>
 
-
+                            <ListItemText
+                                disableTypography
+                                primary="Por estado"
+                            />
+                        </ListItemButton>
 
 
-          </List>
-        </Collapse>
+
+
+                    </List>
+                </Collapse>
 
 
 
@@ -232,10 +237,10 @@ export function SideBarList() {
                         </ListItemButton>
 
                         <ListItemButton sx={{ pl: 5 }}
-                                        selected={selectedIndex === 11}
-                                        onClick={(event: any) => handleListItemClick(event, 11)}
-                                        component={Link}
-                                        to={`/dashboard/maestro/productions`}
+                            selected={selectedIndex === 11}
+                            onClick={(event: any) => handleListItemClick(event, 11)}
+                            component={Link}
+                            to={`/dashboard/maestro/productions`}
                         >
 
                             <ListItemText primary="Produccion" />
@@ -260,8 +265,54 @@ export function SideBarList() {
                     <ListItemText primary="Usuarios" />
                 </ListItemButton>
 
+                <ListItemButton onClick={handleClickSettings}>
+                    <ListItemIcon style={{ marginRight: '-25px' }}>
+                        <SettingsIcon fontSize="small" />
+                    </ListItemIcon>
 
-                <ListItemButton
+                    <ListItemText
+                        primary="Configuración"
+                    />
+                    {settings ? <ExpandLess /> : <ExpandMore />}
+                </ListItemButton>
+                <Collapse in={settings} timeout="auto" unmountOnExit>
+                    <ListItemButton
+                        sx={{ pl: 5 }}
+                        selected={selectedIndex === 15}
+                        onClick={(event: any) => handleListItemClick(event, 15)}
+                        component={Link}
+                        to={`/dashboard/maestro/settings`}
+                    >
+                        <ListItemText primary="Configuración" />
+                    </ListItemButton>
+
+                    <ListItemButton
+                        sx={{ pl: 5 }}
+                        selected={selectedIndex === 16}
+                        onClick={(event: any) => handleListItemClick(event, 16)}
+                        component={Link}
+                        to={`/dashboard/maestro/settings/roles`}
+                    >
+                        <ListItemText primary="Roles" />
+                    </ListItemButton>
+
+                    <ListItemButton
+                        sx={{ pl: 5 }}
+                        selected={selectedIndex === 17}
+                        onClick={(event: any) => handleListItemClick(event, 17)}
+                        component={Link}
+                        to={`/dashboard/maestro/settings/status`}
+                    >
+                        <ListItemText primary="Estado" />
+                    </ListItemButton>
+
+
+
+                </Collapse>
+
+
+
+                {/* <ListItemButton
                             selected={selectedIndex === 15}
                             onClick={(event: any) => handleListItemClick(event, 15)}
                             component={Link}
@@ -271,7 +322,7 @@ export function SideBarList() {
                         <SettingsIcon fontSize="small" />
                     </ListItemIcon>
                             <ListItemText primary="Configuración" />
-                        </ListItemButton>
+               </ListItemButton>*/}
 
 
 

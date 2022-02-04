@@ -10,7 +10,7 @@ import { MovementRequest } from "../../services/movementService";
 //import { StatusRequest } from "../../services/statusService";
 
 
-export function Status({ status, onClose, onSubmit : on, data }:any)
+export function Status({ statusChild, onClose, onSubmit : on, data }:any)
 {
     const [severity] = useState("success");
     const [msg, setMsg] = useState("success");
@@ -58,7 +58,7 @@ export function Status({ status, onClose, onSubmit : on, data }:any)
                         value={formik.values.status_id}
                         onChange={formik.handleChange}
                         error={formik.errors.status_id}
-                        menuItems={status.map((data: any, i: any) => <MenuItem value={data.id} key={i}>{`${data.name}`}</MenuItem>)}
+                        menuItems={statusChild.map((data: any, i: any) => <MenuItem value={data.id} key={i}>{`${data.name}`}</MenuItem>)}
 
                     />
                 </Grid>

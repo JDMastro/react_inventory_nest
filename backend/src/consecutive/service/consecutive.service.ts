@@ -11,7 +11,7 @@ export class ConsecutiveService {
     ) { }
 
     async findAll() {
-        return { data : await this._consecutiveRepo.find({ order : { name : 'ASC' } })}
+        return  await this._consecutiveRepo.find({ order : { name : 'ASC' } })
     }
 
     async findAllWithPagination(page : number, perPage : number)

@@ -14,6 +14,7 @@ export class personDto {
     contact : string
     //provider : boolean
     user_id : number
-    roles_id: number
+    classificationpeople_id: number
+    actived : boolean
     //is_employee: boolean
 }

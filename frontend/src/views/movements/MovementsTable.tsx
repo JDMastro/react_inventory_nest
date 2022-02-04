@@ -120,10 +120,10 @@ export function MovementsTable() {
                 },
             },
         },
-        {
+       {
             name: 'type_icon',
             label: 'Estado',
-            options: {
+            options: { 
                 filter: false,
                 sort: false,
                 empty: true,

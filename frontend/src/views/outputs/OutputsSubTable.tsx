@@ -10,6 +10,8 @@ import EditIcon from "@mui/icons-material/Edit";
 import { IconButton } from "@mui/material";
 import { AlertDialogUi } from "../../components";
 
+import { DateTimeFormat } from "../../utils/DateTimeFormat";
+
 import { Status } from "./ChangeStatus";
 
 
@@ -26,12 +28,14 @@ const useStyles = makeStyles((theme: any) => ({
     }
 }));
 
-export function OutputsSubTable({ statu, parentOutputs, status, refSubDatatable } : any)
+export function OutputsSubTable({ statu, parentOutputs, refSubDatatable, statusChild } : any)
 {
     const classes = useStyles();
     const [output, setOutput] = useState<any>({});
 
    //statu
+
+   useEffect(()=>{ console.log(statusChild) },[])
     
     const [openEditDialogForm, setOpenEditDialogForm] = useState<boolean>(false);
 
@@ -59,6 +63,9 @@ export function OutputsSubTable({ statu, parentOutputs, status, refSubDatatable 
             label: 'Fecha de Creación',
             options: {
                 filter: true,
+                customBodyRender: (value: any) => {
+                    return DateTimeFormat(value);
+                },
             },
         },
         {
@@ -129,8 +136,8 @@ export function OutputsSubTable({ statu, parentOutputs, status, refSubDatatable 
                     <Status
                         onClose={() => setOpenEditDialogForm(false)}
                         data={output}
+                        statusChild={statusChild}
                         onSubmit={handleStateSaveClick}
-                        status={status}
                     />}
                 open={openEditDialogForm}
                 title=""

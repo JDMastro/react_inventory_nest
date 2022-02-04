@@ -32,20 +32,20 @@ export class kindmovementsController {
 
     @Post()
     async create(@Body() body: kindmovementsDto) {
-        const { consecutive_id, description, name, role_id, user_id, status_id, require_consecutive, classification_kindmovement_id } = body
+        const { consecutive_id, description, name, classificationpeople_id, user_id, status_id, require_consecutive, classification_kindmovement_id } = body
 
         return {
             success: true,
-            data: await this._kindmovementsService.create({ consecutive_id, description, name, role_id, user_id, status_id, require_consecutive, classification_kindmovement_id }),
+            data: await this._kindmovementsService.create({ consecutive_id, description, name, classificationpeople_id, user_id, status_id, require_consecutive, classification_kindmovement_id }),
             errors: null
         }
     }
 
     @Put(':id')
     async update(@Param('id') id: number, @Body() body: kindmovementsDto) {
-        const { consecutive_id, description, name, role_id, user_id, status_id, require_consecutive, classification_kindmovement_id } = body
+        const { consecutive_id, description, name, classificationpeople_id, user_id, status_id, require_consecutive, classification_kindmovement_id } = body
 
-        return { success: true, data: await this._kindmovementsService.update(id, { consecutive_id, description, role_id, name, user_id, status_id, require_consecutive, classification_kindmovement_id }), errors: null }
+        return { success: true, data: await this._kindmovementsService.update(id, { consecutive_id, description, classificationpeople_id, name, user_id, status_id, require_consecutive, classification_kindmovement_id }), errors: null }
 
     }
 

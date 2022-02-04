@@ -20,7 +20,7 @@ export class MovementsService {
     ) { }
 
     async create(body: MovementsDto) {
-        const { observation, person_id, product_id, quantity, total_purchasePrice, unit_price, header_id, quantity_returned, status_id, amount_used, suggest_units, waste_quantity, suggest_generated } = body
+        const {  observation, person_id, product_id, quantity, total_purchasePrice, unit_price, header_id, quantity_returned, status_id, amount_used, suggest_units, waste_quantity, suggest_generated } = body
         const movement = await this._movementsRepo.save({
             product_id,
             quantity,
@@ -34,7 +34,7 @@ export class MovementsService {
             waste_quantity,
             suggest_generated,
             person_id,
-            observation
+            observation,
         })
 
         return await this.getLastCreated(movement.id)

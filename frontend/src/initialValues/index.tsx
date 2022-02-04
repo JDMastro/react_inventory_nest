@@ -22,6 +22,7 @@ export const initialValuesUsers: initialFValuesTypes = {
   contact: "",
   provider: false,
   user_id: "",
+  classificationpeople_id : "",
 }
 
 export const initialValuesUnits: initialFValuesTypes = {
@@ -66,15 +67,14 @@ export const initialValuesPerson: initialFValuesTypes = {
   name: "", 
   first_surname: "",
   second_name: "", 
-  second_surname: "",
-  roles_id : ""
+  second_surname: ""
 }
 
 export const initialValueskindmovements: initialFValuesTypes = {
   name: "",
   description: "",
   classificationkindmovement_id : "",
-  roles_id : "",
+  classificationpeople_id : "",
   status_id : "",
   require_consecutive : false,
   consecutive_id : ""
@@ -117,4 +117,13 @@ export const initialValuesProductionRejected: initialFValuesTypes = {
 
 export const initialValuesStatusChange: initialFValuesTypes = {
   status_id: "",
+}
+
+export const initialValuesRoles: initialFValuesTypes = {
+  name: "",
+}
+
+export const initialValuesSettinsStatus: initialFValuesTypes = {
+  status_parent_id: "",
+  status_child_id: ""
 }

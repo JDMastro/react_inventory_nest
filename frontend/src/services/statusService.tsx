@@ -20,7 +20,7 @@ export const StatusRequest =
     update : async (id : number, body : any) => await Requests.update(`status/${id}`,body),
     delete : async (id: number) => await Requests.delete(`status/${id}`),
     
-    getAllNumberOrdersbyStatus : async (status_id : any) => console.log("request",status_id), //await Requests.getAllNumberOrdersbyStatus(`status/getAllNumberOrdersbyStatus/${status_id}`),
+    getAllNumberOrdersbyStatus : async (status_id : number, person_id : number) =>  await Requests.getAllNumberOrdersbyStatus(`status/getAllNumberOrdersbyStatus/${status_id}/${person_id}`),
     //getAllNumberOrdersbyStatus : async (status_id : number, queryParameters? : any) => await Requests.getAllNumberOrdersbyStatus(urlFormatRest(`status/getAllNumberOrdersbyStatus/${status_id}`, queryParameters)),
 
     getAllnumberOrders : async ({ number_order, status_id } : any) => await Requests.getAllnumberOrders(`status/getAllnumberOrders/${number_order}/${status_id}`),

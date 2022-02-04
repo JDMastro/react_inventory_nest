@@ -5,4 +5,5 @@ export interface drawerProps{
     appBar : React.ReactChild[] | any;
     main : React.ReactChild[] | any;
     listItems : React.ReactChild[] | any;
+    imgSource? : React.ReactChild[] | any
 }

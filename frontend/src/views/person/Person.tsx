@@ -19,7 +19,7 @@ export function Person() {
         <Grid item xs={12}>
             <PapperBlock
                 className={classes.paper}
-                title="Proveedores y clientes"
+                title="Proveedores"
                 desc="...."
                 icon={<PeopleIcon />}
             >

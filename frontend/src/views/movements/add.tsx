@@ -47,7 +47,108 @@ export function AddMovements({ kindOfMovement, onClose, onSubmit: on }: any) {
 
         setdisablebtns(true)
 
-        if (kindmov_selected.roles_id === 1) {
+        console.log(kindmov_selected)
+        console.log(values.number_order)
+
+        if(!kindmov_selected.require_consecutive && values.number_order === "")
+        {
+            formik.setFieldError('number_order', 'Este campo requerido')
+        }else{
+            if (kindmov_selected.classificationpeople_id === 1) {
+                const res = await MovementRequest.createProvider({
+                    classification_kindmovement_id: kindmov_selected.classification_kindmovement_id,
+                    require_consecutive: kindmov_selected.require_consecutive,
+                    consecutive_id: kindmov_selected.consecutive_id,
+                    status_id: kindmov_selected.status_id,
+                    product_id: values.idproduct,
+                    quantity: values.quantity,
+                    total_purchasePrice: values.totalPrice,
+                    unit_price: values.unitprice,
+                    quantity_returned: values.orderReturned,
+                    number_order: values.number_order,
+                    person_id: values.idperson,
+                    kind_movements_id: formik.values.kindmovements,
+                    observation: values.observation,
+                    orderReturned: values.orderReturned
+                })
+    
+    
+    
+                if (res.success) {
+                    formikHelpers.setFieldValue("number_order", res.new_number_order)
+                    on("CREATED", res.lastmovement)
+                    setmovements(res.movement)
+    
+    
+    
+                    setSeverity("success")
+                    setMsg("Guardado exitosamente")
+                    handleClick()
+    
+    
+                    formikHelpers.setFieldValue("quantity", "")
+                    formikHelpers.setFieldValue("totalPrice", "")
+                    formikHelpers.setFieldValue("unitprice", "")
+    
+                } else {
+                    formikHelpers.setFieldError("quantity", res.error.quantity)
+                    setSeverity("error")
+                    setMsg("¡Hubo un error :( !")
+                    handleClick()
+                }
+            }
+    
+            if (kindmov_selected.classificationpeople_id === 2) {
+    
+                const res = await MovementRequest.createClient({
+                    classification_kindmovement_id: kindmov_selected.classification_kindmovement_id,
+                    require_consecutive: kindmov_selected.require_consecutive,
+                    consecutive_id: kindmov_selected.consecutive_id,
+                    status_id: kindmov_selected.status_id,
+                    product_id: values.idproduct,
+                    quantity: values.quantity,
+                    total_purchasePrice: values.totalPrice,
+                    unit_price: values.unitprice,
+                    quantity_returned: values.orderReturned,
+                    number_order: values.number_order,
+                    person_id: values.idperson,
+                    kind_movements_id: formik.values.kindmovements,
+                    observation: values.observation,
+                    orderReturned: values.orderReturned
+                })
+    
+    
+                console.log(res)
+    
+    
+    
+                if (res.success) {
+                    formikHelpers.setFieldValue("number_order", res.new_number_order)
+                    on("CREATED", res.lastmovement)
+                    setmovements(res.movement)
+    
+    
+    
+    
+    
+                    formikHelpers.setFieldValue("quantity", "")
+                    formikHelpers.setFieldValue("totalPrice", "")
+                    formikHelpers.setFieldValue("unitprice", "")
+    
+                    setSeverity("success")
+                    setMsg("Guardado exitosamente")
+                    handleClick()
+    
+                } else {
+                    formikHelpers.setFieldError("quantity", res.error.quantity)
+                    setSeverity("error")
+                    setMsg("¡Hubo un error :( !")
+                    handleClick()
+                }
+            }
+        }
+
+        /*if (kindmov_selected.classificationpeople_id === 1) {
             const res = await MovementRequest.createProvider({
                 classification_kindmovement_id: kindmov_selected.classification_kindmovement_id,
                 require_consecutive: kindmov_selected.require_consecutive,
@@ -91,7 +192,7 @@ export function AddMovements({ kindOfMovement, onClose, onSubmit: on }: any) {
             }
         }
 
-        if (kindmov_selected.roles_id === 2) {
+        if (kindmov_selected.classificationpeople_id === 2) {
 
             const res = await MovementRequest.createClient({
                 classification_kindmovement_id: kindmov_selected.classification_kindmovement_id,
@@ -138,7 +239,7 @@ export function AddMovements({ kindOfMovement, onClose, onSubmit: on }: any) {
                 setMsg("¡Hubo un error :( !")
                 handleClick()
             }
-        }
+        }*/
 
         setdisablebtns(false)
         setdisable(true)
@@ -171,8 +272,11 @@ export function AddMovements({ kindOfMovement, onClose, onSubmit: on }: any) {
                             formik.setFieldValue("idproduct", "")
                             formik.setFieldValue("idperson", "")
                             formik.setFieldValue("orderReturned", "")
+                            formik.setFieldValue("unitprice", "")
+                            formik.setFieldValue("totalPrice", "")
+                            formik.setFieldValue("quantity", "")
                             setkindmov_selected(kind)
-                            getpersons(kind.roles_id)
+                            getpersons(kind.classificationpeople_id)
                         }}
                         error={formik.errors.kindmovements}
                         label="Tipo de movimientos"
@@ -194,7 +298,7 @@ export function AddMovements({ kindOfMovement, onClose, onSubmit: on }: any) {
                               EL TIPO DE MOVIMIENTO TENGA ROL DE PROVEEDOR SE VA A BUSCAR LOS
                               PRODUCTOS QUE NO SEAN DERIVADOS
                             */
-                            if (kindmov_selected && kindmov_selected.roles_id === 1)
+                            if (kindmov_selected && kindmov_selected.classificationpeople_id === 1)
                                 ProductsRequest.findProductByDerivate(false).then(e =>{ console.log(e); setproducts(e)})
 
                             /*
@@ -202,7 +306,7 @@ export function AddMovements({ kindOfMovement, onClose, onSubmit: on }: any) {
                           EL TIPO DE MOVIMIENTO TENGA ROL DE CLIENTE SE VA A BUSCAR LOS
                           PRODUCTOS QUE SEAN DERIVADOS
                         */
-                            if (kindmov_selected && kindmov_selected.roles_id === 2)
+                            if (kindmov_selected && kindmov_selected.classificationpeople_id === 2)
                                 ProductsRequest.findProductByDerivate(true).then(e =>{ console.log(e); setproducts(e)})
 
 
@@ -258,7 +362,7 @@ export function AddMovements({ kindOfMovement, onClose, onSubmit: on }: any) {
                     */
 
                     !kindmov_selected ? (<span></span>) :
-                        kindmov_selected.classification_kindmovement_id === 2 && kindmov_selected.roles_id === 1 ?
+                        kindmov_selected.classification_kindmovement_id === 2 && kindmov_selected.classificationpeople_id === 1 ?
                             (
                                 <Grid item xs={6}>
                                     <SelectWrapperUi
@@ -277,7 +381,7 @@ export function AddMovements({ kindOfMovement, onClose, onSubmit: on }: any) {
 
                                     />
                                 </Grid>) :
-                            kindmov_selected.classification_kindmovement_id === 1 && kindmov_selected.roles_id === 2 ?
+                            kindmov_selected.classification_kindmovement_id === 1 && kindmov_selected.classificationpeople_id === 2 ?
                                 (
                                     <Grid item xs={6}>
                                         <SelectWrapperUi
@@ -350,7 +454,7 @@ export function AddMovements({ kindOfMovement, onClose, onSubmit: on }: any) {
                              ESTE CAMPO ES PARA MOSTRAR LA EXISTENCIA ACTUAL QUE TIENE UN PRODUCTO
                             */
                             formik.values.idproduct !== "" && products.find((e: any) => e.id === formik.values.idproduct) ?
-                                formik.values.current_existence = products.find((e: any) => e.id === formik.values.idproduct).p_current_existence : "0"}
+                                formik.values.current_existence = products.find((e: any) => e.id === formik.values.idproduct).p_current_existence : formik.values.current_existence="0"}
                     />
                 </Grid>
 
@@ -371,11 +475,11 @@ export function AddMovements({ kindOfMovement, onClose, onSubmit: on }: any) {
                         inputInside={
                             /*  EN CASO  DE QUE EL TIPO DE MOVIMIENTO Y PRODUCTO SEA SELECCIONADO Y EL ROL SEA PROVEEDOR(1)
                                 SE VA A MOSTRAR LA UNIDAD DE COMPRA */
-                            kindmov_selected && kindmov_selected.roles_id === 1 && product_selected ?
+                            kindmov_selected && kindmov_selected.classificationpeople_id === 1 && product_selected ?
                                 product_selected.purchase_unit :
                                 /*  EN CASO  DE QUE EL TIPO DE MOVIMIENTO  Y PRODUCTOSEA SELECCIONADO Y EL ROL SEA CLIENTE(2)
                                 SE VA A MOSTRAR LA UNIDAD DE VENTA */
-                                kindmov_selected && kindmov_selected.roles_id === 2 && product_selected ?
+                                kindmov_selected && kindmov_selected.classificationpeople_id === 2 && product_selected ?
                                     product_selected.sale_unit : ""
                         }
                     />
@@ -394,18 +498,18 @@ export function AddMovements({ kindOfMovement, onClose, onSubmit: on }: any) {
                                 A ENTRADA(1)
                             */
                             !kindmov_selected ? true :
-                                kindmov_selected.classification_kindmovement_id === 1 && kindmov_selected.roles_id === 1 ?
+                                kindmov_selected.classification_kindmovement_id === 1 && kindmov_selected.classificationpeople_id === 1 ?
                                     false :
-                                    kindmov_selected.classification_kindmovement_id === 2 && kindmov_selected.roles_id === 2 ?
+                                    kindmov_selected.classification_kindmovement_id === 2 && kindmov_selected.classificationpeople_id === 2 ?
                                         false : true
                         }
                         onChange={formik.handleChange}
                         type="number"
                         value={
                             !kindmov_selected ? formik.values.totalPrice :
-                            kindmov_selected.classification_kindmovement_id === 2 && kindmov_selected.roles_id === 2 ?
+                            kindmov_selected.classification_kindmovement_id === 2 && kindmov_selected.classificationpeople_id === 2 ?
                             !product_selected ? formik.values.totalPrice : formik.values.totalPrice= product_selected.p_sale_price * formik.values.quantity :
-                            kindmov_selected.classification_kindmovement_id === 2 && kindmov_selected.roles_id === 1 || kindmov_selected.roles_id === 2 ?
+                            kindmov_selected.classification_kindmovement_id === 2 && kindmov_selected.classificationpeople_id === 1 || kindmov_selected.classificationpeople_id === 2 ?
                             !product_selected ? formik.values.totalPrice : formik.values.totalPrice= product_selected.m_unit_price * formik.values.quantity :
                             formik.values.totalPrice
 

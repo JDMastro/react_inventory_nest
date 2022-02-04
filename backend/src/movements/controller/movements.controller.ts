@@ -206,89 +206,43 @@ export class MovementsController {
                 console.log(body.quantity)
                 return { success: false, data: null, error: { quantity: "La cantidad no puede ser mayor cantidad comprada en la orden" } }
             } else {
-                if (require_consecutive && consecutive_id && number_order === "") {
-                    /* SE OBTIENE EL CONSECUTIVO */
-                    const consecutive = await this._consecutiveService.findById(consecutive_id)
+                if(product.current_existence < body.quantity)
+                {
+                    return { success: false, data: null, error: { quantity: "La cantidad no puede ser mayor cantidad existente" } }
+                }else{
 
-                    /* SE CREA EL NUMBER_ORDER */
-                    new_number_order = `${consecutive.prefix}${consecutive.last_inserted}`
-
-                    const new_last_inserted = consecutive.last_inserted + 1
-
-                    /* SE ACTUALIZA EL CONSECUTIVO */
-                    await this._consecutiveService.update(consecutive.id, {
-                        description: consecutive.description,
-                        name: consecutive.name,
-                        prefix: consecutive.prefix,
-                        last_inserted: new_last_inserted
-                    })
-                    /* SE CREA EL HEADER */
-                    const header_res = await this._headerService.create({
-                        kind_movements_id,
-                        number_order: new_number_order,
-                        observation,
-                        person_id
-                    })
-                    /*  SE CREA EL MOVIMIENTO */
-                    movementSaved = await this._movementsService.create({
-                        header_id: header_res.id,
-                        product_id,
-                        quantity,
-                        quantity_returned: quantity_returned,
-                        total_purchasePrice,
-                        unit_price,
-                        status_id,
-                        amount_used : 0,
-                        suggest_generated : 0,
-                        suggest_units : 0,
-                        waste_quantity : 0,
-                        person_id : null,
-                        observation : null
-                    })
-
-                    await this._productsService.update(product_id, {
-                        current_existence: product.current_existence - quantity,
-                        description: product.description,
-                        isderivate: product.isderivate,
-                        name: product.name,
-                        product_parent_id: product.product_parent_id,
-                        purchase_unit_id: product.purchase_unit_id,
-                        reserved_quantity: product.reserved_quantity,
-                        sale_unit_id: product.sale_unit_id,
-                        sku: product.sku,
-                        user_id: product.user_id,
-                        code_bar: product.code_bar,
-                        to_discount: product.to_discount,
-                        waste_quantity: product.waste_quantity,
-                        sale_price: product.sale_price,
-                        actived : product.actived
-                    })
-
-
-
-
-
-
-                } else {
-
-                    const check_order_number = await this._headerService.findByOrderNumber(number_order)
-                    new_number_order = number_order
-
-                    if (!check_order_number) {
+                    //mov returned
+                    //if(mov_header.quantity_returned <= mov_header.quantity){}else{}
+                    if (require_consecutive && consecutive_id && number_order === "") {
+                        /* SE OBTIENE EL CONSECUTIVO */
+                        const consecutive = await this._consecutiveService.findById(consecutive_id)
+    
+                        /* SE CREA EL NUMBER_ORDER */
+                        new_number_order = `${consecutive.prefix}${consecutive.last_inserted}`
+    
+                        const new_last_inserted = consecutive.last_inserted + 1
+    
+                        /* SE ACTUALIZA EL CONSECUTIVO */
+                        await this._consecutiveService.update(consecutive.id, {
+                            description: consecutive.description,
+                            name: consecutive.name,
+                            prefix: consecutive.prefix,
+                            last_inserted: new_last_inserted
+                        })
                         /* SE CREA EL HEADER */
                         const header_res = await this._headerService.create({
                             kind_movements_id,
-                            number_order,
+                            number_order: new_number_order,
                             observation,
-                            person_id,
+                            person_id
                         })
-
                         /*  SE CREA EL MOVIMIENTO */
                         movementSaved = await this._movementsService.create({
                             header_id: header_res.id,
                             product_id,
                             quantity,
-                            quantity_returned: quantity_returned,
+                            //quantity_returned: quantity_returned,
+                            quantity_returned: quantity,
                             total_purchasePrice,
                             unit_price,
                             status_id,
@@ -297,44 +251,11 @@ export class MovementsController {
                             suggest_units : 0,
                             waste_quantity : 0,
                             person_id : null,
-                            observation : null
+                            observation : null,
+                            
                         })
 
-                        await this._productsService.update(product_id, {
-                            current_existence: product.current_existence - quantity,
-                            description: product.description,
-                            isderivate: product.isderivate,
-                            name: product.name,
-                            product_parent_id: product.product_parent_id,
-                            purchase_unit_id: product.purchase_unit_id,
-                            reserved_quantity: product.reserved_quantity,
-                            sale_unit_id: product.sale_unit_id,
-                            sku: product.sku,
-                            user_id: product.user_id,
-                            code_bar: product.code_bar,
-                            to_discount: product.to_discount,
-                            waste_quantity: product.waste_quantity,
-                            sale_price : product.sale_price,
-                            actived : product.actived
-                        })
-                    } else {
-                        /*  SE CREA EL MOVIMIENTO */
-                        movementSaved = await this._movementsService.create({
-                            header_id: check_order_number.id,
-                            product_id,
-                            quantity,
-                            quantity_returned: quantity_returned,
-                            total_purchasePrice,
-                            unit_price,
-                            status_id,
-                            amount_used : 0,
-                            suggest_generated : 0,
-                            suggest_units : 0,
-                            waste_quantity : 0,
-                            person_id : null,
-                            observation : null
-                        })
-
+    
                         await this._productsService.update(product_id, {
                             current_existence: product.current_existence - quantity,
                             description: product.description,
@@ -352,8 +273,104 @@ export class MovementsController {
                             sale_price: product.sale_price,
                             actived : product.actived
                         })
+    
+    
+    
+    
+    
+    
+                    } else {
+    
+                        const check_order_number = await this._headerService.findByOrderNumber(number_order)
+                        new_number_order = number_order
+    
+                        if (!check_order_number) {
+                            /* SE CREA EL HEADER */
+                            const header_res = await this._headerService.create({
+                                kind_movements_id,
+                                number_order,
+                                observation,
+                                person_id,
+                            })
+    
+                            /*  SE CREA EL MOVIMIENTO */
+                            movementSaved = await this._movementsService.create({
+                                header_id: header_res.id,
+                                product_id,
+                                quantity,
+                                //quantity_returned: quantity_returned,
+                                quantity_returned: quantity,
+                                total_purchasePrice,
+                                unit_price,
+                                status_id,
+                                amount_used : 0,
+                                suggest_generated : 0,
+                                suggest_units : 0,
+                                waste_quantity : 0,
+                                person_id : null,
+                                observation : null
+                            })
+    
+                            await this._productsService.update(product_id, {
+                                current_existence: product.current_existence - quantity,
+                                description: product.description,
+                                isderivate: product.isderivate,
+                                name: product.name,
+                                product_parent_id: product.product_parent_id,
+                                purchase_unit_id: product.purchase_unit_id,
+                                reserved_quantity: product.reserved_quantity,
+                                sale_unit_id: product.sale_unit_id,
+                                sku: product.sku,
+                                user_id: product.user_id,
+                                code_bar: product.code_bar,
+                                to_discount: product.to_discount,
+                                waste_quantity: product.waste_quantity,
+                                sale_price : product.sale_price,
+                                actived : product.actived
+                            })
+                        } else {
+                            /*  SE CREA EL MOVIMIENTO */
+                            movementSaved = await this._movementsService.create({
+                                header_id: check_order_number.id,
+                                product_id,
+                                quantity,
+                                quantity_returned: quantity_returned,
+                                total_purchasePrice,
+                                unit_price,
+                                status_id,
+                                amount_used : 0,
+                                suggest_generated : 0,
+                                suggest_units : 0,
+                                waste_quantity : 0,
+                                person_id : null,
+                                observation : null
+                            })
+    
+                            await this._productsService.update(product_id, {
+                                current_existence: product.current_existence - quantity,
+                                description: product.description,
+                                isderivate: product.isderivate,
+                                name: product.name,
+                                product_parent_id: product.product_parent_id,
+                                purchase_unit_id: product.purchase_unit_id,
+                                reserved_quantity: product.reserved_quantity,
+                                sale_unit_id: product.sale_unit_id,
+                                sku: product.sku,
+                                user_id: product.user_id,
+                                code_bar: product.code_bar,
+                                to_discount: product.to_discount,
+                                waste_quantity: product.waste_quantity,
+                                sale_price: product.sale_price,
+                                actived : product.actived
+                            })
+                        }
                     }
+
+
+
+
                 }
+            
 
 
             }
@@ -425,7 +442,7 @@ export class MovementsController {
                         suggest_units : 0,
                         waste_quantity : 0,
                         person_id : null,
-                        observation: null
+                        observation: null,
                     })
     
                     await this._productsService.update(product_id, {
@@ -479,7 +496,7 @@ export class MovementsController {
                             suggest_units : 0,
                             waste_quantity : 0,
                             person_id : null,
-                            observation: null
+                            observation: null,
                         })
     
                         await this._productsService.update(product_id, {
@@ -514,7 +531,7 @@ export class MovementsController {
                             suggest_units : 0,
                             waste_quantity : 0,
                             person_id : null,
-                            observation: null
+                            observation: null,
                         })
     
                         await this._productsService.update(product_id, {
@@ -578,7 +595,8 @@ export class MovementsController {
                         header_id: header_res.id,
                         product_id,
                         quantity,
-                        quantity_returned: quantity_returned,
+                        //quantity_returned: quantity_returned,
+                        quantity_returned: quantity,
                         total_purchasePrice,
                         unit_price,
                         status_id,
@@ -632,7 +650,7 @@ export class MovementsController {
                             header_id: header_res.id,
                             product_id,
                             quantity,
-                            quantity_returned: quantity_returned,
+                            quantity_returned: quantity,
                             total_purchasePrice,
                             unit_price,
                             status_id,
@@ -667,7 +685,7 @@ export class MovementsController {
                             header_id: check_order_number.id,
                             product_id,
                             quantity,
-                            quantity_returned: quantity_returned,
+                            quantity_returned: quantity,
                             total_purchasePrice,
                             unit_price,
                             status_id,
@@ -824,7 +842,7 @@ export class MovementsController {
                             suggest_units : parseFloat(body.suggested_amount),
                             waste_quantity : parseFloat(body.waste_quantity),
                             person_id : data['id'],
-                            observation: null
+                            observation: null,
                         
                         })
 
@@ -845,7 +863,7 @@ export class MovementsController {
                             suggest_units : parseFloat(body.suggested_amount),
                             waste_quantity : parseFloat(body.waste_quantity),
                             person_id : data['id'],
-                            observation: null
+                            observation: null,
                         })
                        }
        
@@ -941,7 +959,7 @@ export class MovementsController {
                             suggest_units : parseFloat(body.suggested_amount),
                             waste_quantity : 0,
                             person_id : data['id'],
-                            observation: null
+                            observation: null,
                         
                         })
 
@@ -959,7 +977,7 @@ export class MovementsController {
                              suggest_units : parseFloat(body.suggested_amount),
                              waste_quantity : parseFloat(body.waste_quantity),
                              person_id : data['id'],
-                             observation: null
+                             observation: null,
                          })
                         }
        
@@ -1081,7 +1099,7 @@ export class MovementsController {
                             suggest_units : parseFloat(body.suggested_amount),
                             waste_quantity : 0,
                             person_id : data['id'],
-                            observation: null
+                            observation: null,
                         
                         })
 
@@ -1099,7 +1117,7 @@ export class MovementsController {
                              suggest_units : parseFloat(body.suggested_amount),
                              waste_quantity : parseFloat(body.waste_quantity),
                              person_id : data['id'],
-                             observation: null
+                             observation: null,
                          })
                         }
        

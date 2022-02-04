@@ -10,6 +10,8 @@ import { Movements } from 'src/movements/entities/movements.entity';
 
 import { SettingsService } from '../../settings/service/settings.service'
 
+//.andWhere("p.actived = true")
+
 @Injectable()
 export class ProductsService {
     constructor(
@@ -48,6 +50,7 @@ export class ProductsService {
           
           //.where(`p.product_parent_id = ${product_parent_id} and (m.status_id = ${parseInt(status_id.value)} or m.status_id is null)`)
           .where(`p.product_parent_id = ${product_parent_id}`)
+          .andWhere("p.actived = true")
           //.andWhere("(m.status_id = :status_id", { status_id : parseInt(status_id.value) })
           //.orWhere("m.status_id m.status_id is null)")
           //.groupBy(["p.id", "m.suggest_units" , "m.suggest_generated", "m.amount_used", "m.waste_quantity"])
@@ -94,6 +97,7 @@ export class ProductsService {
             .innerJoin(Units, "u", "u.id = p.purchase_unit_id ")
             .innerJoin(Units, "u2", "u2.id = p.sale_unit_id")
             .where("p.isderivate = :isderivate", { isderivate })
+            .andWhere("p.actived = true")
             .orderBy("p.name", 'ASC')
             .getRawMany()
     }
@@ -118,6 +122,7 @@ export class ProductsService {
                  .groupBy("p2.product_parent_id")
            },"x","x.product_parent_id = p.id")
            .where("p.isderivate = :isderivate", { isderivate : false })
+           .andWhere("p.actived = true")
            .orderBy("p.name", 'ASC')
            .getRawMany()
     }
