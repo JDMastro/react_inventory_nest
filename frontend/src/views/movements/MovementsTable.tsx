@@ -50,7 +50,7 @@ export function MovementsTable() {
             },
         },
         {
-            name: 'creation_at',
+            name: 'h_creation_at',
             label: 'Fecha',
             options: {
                 filter: true,

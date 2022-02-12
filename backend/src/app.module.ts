@@ -20,24 +20,12 @@ import { SettingsModule } from './settings/settings.module';
 import { ClientManufacturerModule } from './client-manufacturer/client-manufacturer.module';
 import { SettingsStatusModule } from './settings-status/settings-status.module';
 import { PermissionModule } from './permission/permission.module';
+import { typeOrmModuleOptionsAsync } from "./config/typeorm.config";
 
 
 @Module({
   imports: [
-   
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'postgres',
-      password: '1995',
-      database: 'test',
-      entities: ['dist/**/*.entity{.ts,.js}'],
-      synchronize: false,
-      retryDelay: 3000,
-      retryAttempts: 10,
-      logging: true
-    }),
+    TypeOrmModule.forRootAsync(typeOrmModuleOptionsAsync),
     UsersModule,
     UnitsModule,
     ProductsModule,

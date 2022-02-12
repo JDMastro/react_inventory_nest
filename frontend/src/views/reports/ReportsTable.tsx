@@ -47,7 +47,7 @@ export function ReportsTable()
             },
         },
         {
-            name: 'creation_at',
+            name: 'h_creation_at',
             label: 'Fecha',
             options: {
                 filter: true,
@@ -144,7 +144,9 @@ export function ReportsTable()
     };
 
     const handleFormFilterSubmit = async (data: any) => {
+        setParams(data)
        await refDatatable.current.filter(data);
+
     }
 
     return (

@@ -2,7 +2,7 @@ import Axios, { AxiosResponse } from 'axios';
 import { getCookieToJson } from '../utils/cookie';
 
 const axios = Axios.create({
-	baseURL: 'http://localhost:3001/api/',
+	baseURL: `${process.env.REACT_APP_URL_BACK_END}`,
 	timeout: 15000,
 	headers : {"Content-Type": "application/json"},
 	withCredentials : true,

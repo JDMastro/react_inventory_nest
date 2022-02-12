@@ -3,6 +3,8 @@ import { Products } from "../../products/entities/products.entity";
 import { Header } from "../../header/entities/header.entity";
 import { Status } from "../../status/entities/status.entity";
 
+import { CreateDateColumn, UpdateDateColumn } from "typeorm";
+
 
 @Entity()
 export class Movements {
@@ -43,28 +45,34 @@ export class Movements {
     status_id: number
 
 
-    @Column({ default : false })
-    suggest : boolean
+    @Column({ default: false })
+    suggest: boolean
 
-    @Column({ default : 0, type: 'float' })
-    suggest_units : number
+    @Column({ default: 0, type: 'float' })
+    suggest_units: number
 
-    @Column({ default : 0, type: 'float' })
-    suggest_generated : number
+    @Column({ default: 0, type: 'float' })
+    suggest_generated: number
 
-    @Column({ default : 0, type: 'float' })
-    amount_used : number
+    @Column({ default: 0, type: 'float' })
+    amount_used: number
 
-    @Column({ default : 0, type: 'float' })
-    waste_quantity : number
-
-    @Column({ nullable: true })
-    person_id : number
+    @Column({ default: 0, type: 'float' })
+    waste_quantity: number
 
     @Column({ nullable: true })
-    observation : string
+    person_id: number
 
-    @Column("timestamp", { nullable: true, precision: 3, default: () => "CURRENT_TIMESTAMP(3)", onUpdate: "CURRENT_TIMESTAMP(3)" })
+    @Column({ nullable: true })
+    observation: string
+
+    //@Column("timestamp", { nullable: true, precision: 3, default: () => "CURRENT_TIMESTAMP(3)", onUpdate: "CURRENT_TIMESTAMP(3)" })
+    //updateAt: Date;
+
+    @CreateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)" })
+    created_at: Date;
+
+    @UpdateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)", onUpdate: "CURRENT_TIMESTAMP(6)" })
     updateAt: Date;
 
 }
