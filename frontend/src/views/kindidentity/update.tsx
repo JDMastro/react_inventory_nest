@@ -45,7 +45,6 @@ export function UpdateKindId({ onClose, data, onSubmit : on }: any)
                 setdisablebtn(false)
             }
         } catch (error) {
-            console.log(error)
         }
 
     }

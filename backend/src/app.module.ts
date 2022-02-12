@@ -17,9 +17,9 @@ import { MovementsModule } from './movements/movements.module';
 import { ConversionModule } from './conversion/conversion.module';
 import { SignsModule } from './signs/signs.module';
 import { SettingsModule } from './settings/settings.module';
-import { RolesModule } from './roles/roles.module';
 import { ClientManufacturerModule } from './client-manufacturer/client-manufacturer.module';
 import { SettingsStatusModule } from './settings-status/settings-status.module';
+import { PermissionModule } from './permission/permission.module';
 
 
 @Module({
@@ -35,7 +35,8 @@ import { SettingsStatusModule } from './settings-status/settings-status.module';
       entities: ['dist/**/*.entity{.ts,.js}'],
       synchronize: false,
       retryDelay: 3000,
-      retryAttempts: 10
+      retryAttempts: 10,
+      logging: true
     }),
     UsersModule,
     UnitsModule,
@@ -52,9 +53,9 @@ import { SettingsStatusModule } from './settings-status/settings-status.module';
     ConversionModule,
     SignsModule,
     SettingsModule,
-    RolesModule,
     ClientManufacturerModule,
     SettingsStatusModule,
+    PermissionModule,
   ],
   controllers: [AppController],
   providers: [AppService],

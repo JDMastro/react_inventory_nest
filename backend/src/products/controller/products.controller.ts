@@ -68,9 +68,12 @@ export class ProductsController {
     {
         //return await this._productsService.getByStatusSuggest(person_id, product_parent_id)
        try {
-            const cookie = request.cookies['jwt']
+          //  const cookie = request.cookies['jwt']
+          const token = request.headers.authorization
+          //console.log(token.slice(7,token.length))
 
-            const data = await this._usersService.verifyToken(cookie)
+          const data = await this._usersService.verifyToken(token.slice(7,token.length))
+            //const data = await this._usersService.verifyToken(cookie)
             if(!data){
                 console.log(data)
                throw new UnauthorizedException()

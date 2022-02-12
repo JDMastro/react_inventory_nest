@@ -12,6 +12,7 @@ import { initialFValuesTypes } from "../../types/initialFValues";
 import { initialValuesSignIn } from "../../initialValues";
 import { SignInSchema } from "../../schemas/signInSchema";
 import useAuth from "../../hooks/useAuth";
+import useUser from "../../hooks/useUser";
 
 
 function Copyright(props: any) {
@@ -32,6 +33,7 @@ export function SignIn() {
     const [disablebtn, setdisablebtn] = React.useState(false);
     const [openn, setOpenn] = React.useState(false);
     const { auth, login } = useAuth();
+    const { user } = useUser()
 
     const handleCloses = (event?: React.SyntheticEvent, reason?: string) => {
         if (reason === 'clickaway') {return;}
@@ -59,6 +61,15 @@ export function SignIn() {
             setdisablebtn(false)
         }
     }, [auth.error]);
+
+    React.useEffect(() => {
+        
+        if(Object.keys(user.data).length !== 0)
+        {
+            window.location.replace('/dashboard');
+        }
+
+    }, []);
 
     return (
         <Grid container component="main" sx={{ height: '100vh' }}>

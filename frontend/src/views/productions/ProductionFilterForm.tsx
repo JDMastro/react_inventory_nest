@@ -67,7 +67,7 @@ const ProductionFilterForm = ({ converted_current_existence_parent, setconverted
             <Grid container spacing={2} item xs={12}>
                 <Grid item xs={6}>
                     <Can
-                        perform="users:create"
+                        perform="inventario:prod:view"
                         yes={() => (
                             <SelectWrapperUi
                                 label='Productos'
@@ -104,8 +104,7 @@ const ProductionFilterForm = ({ converted_current_existence_parent, setconverted
                                         })
 
                                     SettingsRequest.findByKey().then(e => {
-                                        setkind_mov(e);
-                                        console.log(e)
+                                        setkind_mov(e)
                                         if (e.success) {
                                             setdisable_number_order(e.data.require_consecutive)
                                             if (e.data.require_consecutive) {
@@ -147,7 +146,7 @@ const ProductionFilterForm = ({ converted_current_existence_parent, setconverted
 
                 <Grid item xs={6}>
                     <Can
-                        perform="users:create"
+                        perform="inventario:prod:view"
                         yes={() => (
                             <TextFieldUi
                                 autofocus={false}
@@ -170,7 +169,7 @@ const ProductionFilterForm = ({ converted_current_existence_parent, setconverted
 
                 <Grid item xs={6}>
                     <Can
-                        perform="users:create"
+                        perform="inventario:prod:view"
                         yes={() => (
                             <TextFieldUi
                                 autofocus={false}
@@ -193,7 +192,7 @@ const ProductionFilterForm = ({ converted_current_existence_parent, setconverted
 
                 <Grid item xs={6}>
                     <Can
-                        perform="users:create"
+                        perform="inventario:prod:view"
                         yes={() => (
                             <TextFieldUi
                                 autofocus={false}
@@ -219,7 +218,7 @@ const ProductionFilterForm = ({ converted_current_existence_parent, setconverted
 
                 <Grid item xs={10}>
                     <Can
-                        perform="users:create"
+                        perform="inventario:prod:view"
                         yes={() => (
                             <TextFieldUi
                                 autofocus={false}
@@ -246,7 +245,7 @@ const ProductionFilterForm = ({ converted_current_existence_parent, setconverted
                 {
                  product === "" ? <span></span> :    <Grid item xs={2}>
                  <Can
-                     perform="users:create"
+                     perform="inventario:prod:view"
                      yes={() => (
                          <IconButton aria-label="delete" onClick={() => handleClickOpen()} ><VisibilityIcon color="primary" fontSize="medium" /></IconButton>
                      )}
@@ -258,7 +257,7 @@ const ProductionFilterForm = ({ converted_current_existence_parent, setconverted
 
                 <Grid item xs={12}>
                     <Can
-                        perform="users:create"
+                        perform="inventario:prod:view"
                         yes={() => (
                             <TextFieldUi
                                 autofocus={false}
@@ -308,50 +307,3 @@ const ProductionFilterForm = ({ converted_current_existence_parent, setconverted
 };
 
 export default ProductionFilterForm;
-
-
-/*
-
-(event: any) => {
-                                    handleSubmit({
-                                        product: event.target.value
-                                    })
-                                    formik.handleChange(event)
-
-                                    
-                                }
-
- <Grid item xs={4}>
-                    <Can
-                        perform="users:create"
-                        yes={() => (
-                            <SelectWrapperUi
-                                label='Productos'
-                                name="product"
-                                value={fields.product}
-                                onChange={(event: any) => {
-                                    setFields(event);
-                                    handleSubmit({
-                                        product: event.target.value
-                                    })
-
-                                    console.log("---<",fields)
-                                }}
-                                menuItems={
-                                    products.map(
-                                        (currentProduct: any) => (
-                                            <MenuItem value={currentProduct} key={currentProduct.p_id}>
-                                                {currentProduct.p_name}
-                                            </MenuItem>
-                                        ))
-                                }
-                                error={""}
-                            />
-                        )}
-                    />
-
-                </Grid>
-
-
-
-*/

@@ -19,10 +19,8 @@ export function AddProduction({ setreserved_quantity, setexistence_converted, se
     const [refresh, setrefresh] = useState(false);
 
     useEffect(()=>{ 
-        //console.log(number_order)
-        console.log(productchild)
         if(!isEmpty(number_order))
-        MovementRequest.findMovementByNumberOrder(number_order).then(e =>{ setmovements(e); console.log(e)})
+        MovementRequest.findMovementByNumberOrder(number_order).then(e =>{ setmovements(e)})
     },[refresh])
 
     const handleCloses = (event?: React.SyntheticEvent, reason?: string) => {
@@ -38,13 +36,10 @@ export function AddProduction({ setreserved_quantity, setexistence_converted, se
     };
 
     const onSubmit = async (values: initialFValuesTypes, formikHelpers: FormikHelpers<any>) => {
-        //console.log(productparent)
-        //console.log(productchild)
+        
         setdisablebtn(true)
         //const kind = kind_movement.find((e: any) => e.id === values.kind_movemet_id)
-        //console.log(kind_movement.find((e:any) => e.id === values.kind_movemet_id ))
-       
-        console.log(productchild)
+        
       
 
        if(values.total_amount_used !== "" && parseFloat(values.total_amount_used) > values.amount_to_take)
@@ -70,7 +65,6 @@ export function AddProduction({ setreserved_quantity, setexistence_converted, se
                 waste_quantity : values.waste_quantity === "" ? 0 : values.waste_quantity,
                 total_amount_used : values.total_amount_used
             }).then((res: any) => {
-                console.log("resssss",res)
                 if (res.success) {
                     //formikHelpers.setFieldValue("number_order", )
                     setnumber_order(res.new_number_order)
@@ -85,7 +79,6 @@ export function AddProduction({ setreserved_quantity, setexistence_converted, se
 
                     ProductsRequest.getByStatusSuggest(productparent.p_id).then(e => setproductDerivate(e))
 
-                    console.log(res)
                     setexistence_converted(res.coverted_quantity)
                     setcurrent_existence_parent(res.current_quantity)
                     setconverted_current_existence_parent(res.coverted_quantity)
@@ -95,8 +88,6 @@ export function AddProduction({ setreserved_quantity, setexistence_converted, se
                     {
                         setreserved_quantity(reserved_quantity - productchild.amount_used)
                     }else{
-                        console.log(values.amount_to_take)
-                        console.log("---->",eval(`${reserved_quantity} + ${values.amount_to_take}`))
                         setreserved_quantity(eval(`${reserved_quantity} + ${values.amount_to_take}`))
                     }
                     
@@ -348,7 +339,7 @@ export function AddProduction({ setreserved_quantity, setexistence_converted, se
                                 <TableCell align="center">{e.m_amount_used}</TableCell>
                                 <TableCell align="center">{e.m_waste_quantity}</TableCell>
                                
-                                {/*<TableCell align="center"><IconButton aria-label="delete" onClick={() => MovementRequest.deleteNovement(e.m_id).then(e => MovementRequest.findMovementByNumberOrder(number_order).then(e =>{ setmovements(e); console.log(e)}  ))} ><DeleteIcon fontSize="small" /></IconButton></TableCell>*/}
+                                {/*<TableCell align="center"><IconButton aria-label="delete" onClick={() => MovementRequest.deleteNovement(e.m_id).then(e => MovementRequest.findMovementByNumberOrder(number_order).then(e =>{ setmovements(e)}  ))} ><DeleteIcon fontSize="small" /></IconButton></TableCell>*/}
                             </TableRow>
 
                         )

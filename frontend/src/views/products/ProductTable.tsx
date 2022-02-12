@@ -133,7 +133,7 @@ export function ProductTable() {
                     return (
                         <>
                             <Can
-                                perform="users:create"
+                                perform="maestro:products:create"
                                 yes={() => (
                                     productSelected.p_actived ? (
                                         <IconButton
@@ -151,7 +151,7 @@ export function ProductTable() {
                                 )}
                             />
                             <Can
-                                perform="users:create"
+                                perform="maestro:products:update"
                                 yes={() => (
                                     <IconButton
                                         aria-label="update"
@@ -165,7 +165,7 @@ export function ProductTable() {
                                 )}
                             />
                             <Can
-                                perform="users:create"
+                                perform="maestro:products:delete"
                                 yes={() => (
 
                                     productSelected.p_actived ? (
@@ -254,18 +254,29 @@ export function ProductTable() {
             <MUIDataTable
                 ref={refDatatable}
                 fetchData={ProductsRequest.findAllWithPagination}
-                // filterForm={<UserTableFilterForm handleSubmit={() => (console.log(''))}/>}
+                // filterForm={<UserTableFilterForm handleSubmit={() => ()}/>}
                 columns={columns}
                 options={options}
                 title={"Lista de productos"}
             />
-            <FabUi
-                size="small"
-                color="primary"
-                onClick={() => setOpenAddDialogForm(true)}
-                ariaLabel="add"
-                icon={<AddIcon />}
+
+            <Can
+                perform="maestro:products:create"
+                yes={() => (
+
+                    <FabUi
+                        size="small"
+                        color="primary"
+                        onClick={() => setOpenAddDialogForm(true)}
+                        ariaLabel="add"
+                        icon={<AddIcon />}
+                    />
+
+
+                )}
             />
+
+
             <AlertDialogUi
                 handleClose={() => setOpenAddDialogForm(false)}
                 content={

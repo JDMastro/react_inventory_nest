@@ -59,7 +59,6 @@ export const UpdateSubProduct = ({units, data, onSubmit : on, onClose, parentpro
                 setdisablebtn(false)
             }
         } catch (error) {
-            console.log(error)
         }
 
     }

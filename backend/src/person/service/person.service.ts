@@ -132,4 +132,9 @@ export class PersonService {
 
         return this.getLastInserted(id)
     }
+
+    async findBydId(id : number)
+    {
+        return await this._personRepo.findOne(id)
+    }
 }

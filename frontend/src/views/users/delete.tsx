@@ -22,7 +22,7 @@ export function DeleteUsers({ onClose, data, onSubmit : on }: any) {
         setdisablebtn(true)
         try {
             const res = await UsersRequest.delete(data.id, data.u_person_id)
-            console.log(res)
+            
             if (res.success) {
                 setMsg("Eliminado exitosamente")
                 handleClick()
@@ -36,7 +36,6 @@ export function DeleteUsers({ onClose, data, onSubmit : on }: any) {
                 setdisablebtn(false)
             }
         } catch (error) {
-            console.log(error)
         }
         
     }

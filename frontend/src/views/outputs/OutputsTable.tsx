@@ -101,7 +101,7 @@ export function OutPutsTable() {
                 ref={refDatatable}
                 data={numberOrdersbyStatus}
                 //fetchData={StatusRequest.getAllNumberOrdersbyStatus}
-                // filterForm={<UserTableFilterForm handleSubmit={() => (console.log(''))}/>}
+                // filterForm={<UserTableFilterForm handleSubmit={() => }/>}
                 columns={columns}
                 options={options}
                 additionalDataByRow={{

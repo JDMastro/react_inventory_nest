@@ -51,7 +51,6 @@ export function UpdateUser({ kindId, onClose, data, onSubmit: on, classification
                 actived : values.actived
             })
 
-            console.log(res)
 
             if (res.success) {
                 setMsg("Actualizado exitosamente")
@@ -68,7 +67,6 @@ export function UpdateUser({ kindId, onClose, data, onSubmit: on, classification
                 setdisablebtn(false)
             }
         } catch (error) {
-            console.log(error)
         }
     }
 

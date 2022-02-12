@@ -1,4 +1,4 @@
-import { makeStyles } from '@mui/styles';
+//import { makeStyles } from '@mui/styles';
 import MUIDataTable from '../../components/table';
 import { clientManufacturerRequest } from "../../services/clientManufacturerService";
 import React from "react";
@@ -8,33 +8,10 @@ import { Divider } from '@mui/material';
 import { ButtonUi } from '../../components';
 import Stack from '@mui/material/Stack';
 
-const useStyles = makeStyles((theme: any) => ({
-    table: {
-        '& .MuiToolbar-root': {
-            display: 'none',
-        },
-        '& .MuiTableCell-root': {
-            paddingTop: 0,
-            paddingBottom: 0,
-            borderBottom: 'none',
-        }
-    },
-    tableHeadCellRight: {
-        paddingRight: 0,
-        '& > span': {
-            justifyContent: 'flex-end',
-        },
-    },
-    tableHeadCellCenter: {
-        paddingRight: 0,
-        '& > span': {
-            justifyContent: 'center',
-        },
-    },
-}));
+
 
 export function ClientManufacturer({ data, onClose }: any) {
-    const classes = useStyles();
+    //const classes = useStyles();
     const refDatatable: any = React.useRef();
 
     const columns = [
@@ -58,7 +35,7 @@ export function ClientManufacturer({ data, onClose }: any) {
                     return (
                         <>
                             <Can
-                                perform="users:create"
+                                perform="usuarios:accounts:toassign"
                                 yes={() => (
                                     <Switch
                                         checked={clientManufacturSelected.checking}
@@ -92,10 +69,9 @@ export function ClientManufacturer({ data, onClose }: any) {
         <>
             <MUIDataTable
                 ref={refDatatable}
-                className={classes.table}
                 fetchData={clientManufacturerRequest.getAll}
                 params={{ manufacture_id: data.u_person_id }}
-                // filterForm={<UserTableFilterForm handleSubmit={() => (console.log(''))}/>}
+                // filterForm={<UserTableFilterForm handleSubmit={() => }/>}
                 columns={columns}
                 options={options}
             />

@@ -16,6 +16,11 @@ export class kindmovementsService {
         return await this._kindMovementsRepo.find({ where : { classificationpeople_id : Not(3) } })
     }
 
+    /*async getAllForReports()
+    {
+        return await this._kindMovementsRepo.find()
+    }*/
+
     async findById(id:number)
     {
         return await this._kindMovementsRepo.findOne(id)

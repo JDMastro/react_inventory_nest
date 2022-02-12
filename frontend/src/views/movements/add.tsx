@@ -47,8 +47,6 @@ export function AddMovements({ kindOfMovement, onClose, onSubmit: on }: any) {
 
         setdisablebtns(true)
 
-        console.log(kindmov_selected)
-        console.log(values.number_order)
 
         if(!kindmov_selected.require_consecutive && values.number_order === "")
         {
@@ -118,7 +116,6 @@ export function AddMovements({ kindOfMovement, onClose, onSubmit: on }: any) {
                 })
     
     
-                console.log(res)
     
     
     
@@ -212,7 +209,6 @@ export function AddMovements({ kindOfMovement, onClose, onSubmit: on }: any) {
             })
 
 
-            console.log(res)
 
 
 
@@ -299,7 +295,7 @@ export function AddMovements({ kindOfMovement, onClose, onSubmit: on }: any) {
                               PRODUCTOS QUE NO SEAN DERIVADOS
                             */
                             if (kindmov_selected && kindmov_selected.classificationpeople_id === 1)
-                                ProductsRequest.findProductByDerivate(false).then(e =>{ console.log(e); setproducts(e)})
+                                ProductsRequest.findProductByDerivate(false).then(e =>{ setproducts(e)})
 
                             /*
                           EN CASO DE QUE SE HAYA SELECCIONADO EL TIPO DE MOVIMEINO Y
@@ -307,7 +303,7 @@ export function AddMovements({ kindOfMovement, onClose, onSubmit: on }: any) {
                           PRODUCTOS QUE SEAN DERIVADOS
                         */
                             if (kindmov_selected && kindmov_selected.classificationpeople_id === 2)
-                                ProductsRequest.findProductByDerivate(true).then(e =>{ console.log(e); setproducts(e)})
+                                ProductsRequest.findProductByDerivate(true).then(e =>{ setproducts(e)})
 
 
                             /*
@@ -316,11 +312,11 @@ export function AddMovements({ kindOfMovement, onClose, onSubmit: on }: any) {
                             */
 
                             if (kindmov_selected.classification_kindmovement_id === 2)
-                                MovementRequest.findByPersonId(evt.target.value).then(e => { setnumbers_orders(e); console.log(e) })
+                                MovementRequest.findByPersonId(evt.target.value).then(e => { setnumbers_orders(e) })
 
 
                             if (kindmov_selected.classification_kindmovement_id === 1)
-                                MovementRequest.findByPersonOutPuts(evt.target.value).then(e => { setnumbers_orders(e); console.log(e) })
+                                MovementRequest.findByPersonOutPuts(evt.target.value).then(e => { setnumbers_orders(e) })
 
                         }}
                         error={formik.errors.idperson}
@@ -371,7 +367,7 @@ export function AddMovements({ kindOfMovement, onClose, onSubmit: on }: any) {
                                         onChange={(evt: any) => {
                                             formik.setFieldValue("idproduct", "")
                                             formik.handleChange(evt)
-                                            MovementRequest.findByHeader(evt.target.value).then(e =>{console.log(e); setproducts(e)})
+                                            MovementRequest.findByHeader(evt.target.value).then(e =>{ setproducts(e)})
                                         }}
                                         error={formik.errors.orderReturned}
                                         label="Orden a devolver"
@@ -391,7 +387,7 @@ export function AddMovements({ kindOfMovement, onClose, onSubmit: on }: any) {
                                                 formik.setFieldValue("idproduct", "")
                                                 formik.handleChange(evt)
 
-                                               MovementRequest.findByHeader(evt.target.value).then(e =>{console.log(e); setproducts(e)})
+                                               MovementRequest.findByHeader(evt.target.value).then(e =>{ setproducts(e)})
                                             }}
                                             error={formik.errors.orderReturned}
                                             label="Orden a devolver"

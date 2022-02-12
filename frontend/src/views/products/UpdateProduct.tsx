@@ -59,7 +59,6 @@ export const UpdateProduct = ({ onClose, data, units, onSubmit : on } : any) =>
                 setdisablebtn(false)
             }
         } catch (error) {
-            console.log(error)
         }
 
     }

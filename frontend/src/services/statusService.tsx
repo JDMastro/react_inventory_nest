@@ -10,6 +10,7 @@ const Requests = {
     getAllNumberOrdersbyStatus : async (url: string) => await instance.get(url).then(responseBody),
     getAllnumberOrders : async (url: string) => await instance.get(url).then(responseBody),
     findStatusEmployee : async (url: string) => await instance.get(url).then(responseBody),
+    getAllForReports : async (url : string) => await instance.get(url).then(responseBody),
 }
 
 export const StatusRequest =
@@ -24,5 +25,6 @@ export const StatusRequest =
     //getAllNumberOrdersbyStatus : async (status_id : number, queryParameters? : any) => await Requests.getAllNumberOrdersbyStatus(urlFormatRest(`status/getAllNumberOrdersbyStatus/${status_id}`, queryParameters)),
 
     getAllnumberOrders : async ({ number_order, status_id } : any) => await Requests.getAllnumberOrders(`status/getAllnumberOrders/${number_order}/${status_id}`),
-    findStatusEmployee : async () => await Requests.findStatusEmployee('status/findStatusEmplyee') 
+    findStatusEmployee : async () => await Requests.findStatusEmployee('status/findStatusEmplyee'),
+    getAllForReports : async () => await Requests.getAllForReports(`status/getAllForReports`),
 }

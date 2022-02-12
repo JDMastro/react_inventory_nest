@@ -37,8 +37,6 @@ export function UpdateConversion({ data, units, signs, onClose, onSubmit : on }:
                 signs_id: values.signs_id
             })
 
-            console.log(res.data)
-
             setMsg("Actualzado corrrectamente")
             handleClick()
             on("UPDATED", res.data)
@@ -46,7 +44,6 @@ export function UpdateConversion({ data, units, signs, onClose, onSubmit : on }:
             setdisablebtn(false)
 
         } catch (error) {
-            console.log(error)
         }
 
     }

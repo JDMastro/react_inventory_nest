@@ -61,7 +61,6 @@ export function Addkindmovements({ consecutives, Classificationkindmovement, cla
                 onClose()
                 
             } catch (error) {
-                console.log(error)
                 setSeverity("error")
                 setMsg("¡Hubo un error :( !")
                 handleClick()

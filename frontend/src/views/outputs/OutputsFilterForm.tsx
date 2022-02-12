@@ -8,26 +8,25 @@ import { ouputsSchema } from "../../schemas/outputsSchema";
 import { initialFValuesTypes } from "../../types/initialFValues";
 
 export function OutputsFilterForm({ handleFormFilterSubmit, status, people }: any) {
-    const [statu, setStatu] = useState("")
-    const [person, setPerson] = useState("")
+    
 
     const onSubmit = async (values: initialFValuesTypes, formikHelpers: FormikHelpers<any>) => {
-        
+
         handleFormFilterSubmit(values)
     }
 
     const formik = UseForm({
-        status_id : "",
-        person_id : ""
+        status_id: "",
+        person_id: ""
     }, ouputsSchema, onSubmit)
 
     return (
         <Box component="form" onSubmit={formik.handleSubmit} m={2}>
             <Grid container spacing={2}>
 
-            <Grid item xs={5}>
+                <Grid item xs={5}>
                     <Can
-                        perform="users:create"
+                        perform="consultas:bystatus:view"
                         yes={() => (
                             <SelectWrapperUi
                                 label='Personas'
@@ -37,10 +36,10 @@ export function OutputsFilterForm({ handleFormFilterSubmit, status, people }: an
                                 menuItems={
                                     people.map(
                                         (currentPerson: any) => (
-                                            
+
                                             <MenuItem value={currentPerson.id} key={currentPerson.id}>
                                                 {currentPerson.p_fullname}
-                                        </MenuItem>
+                                            </MenuItem>
                                         ))
                                 }
                                 error={formik.errors.person_id}
@@ -49,10 +48,10 @@ export function OutputsFilterForm({ handleFormFilterSubmit, status, people }: an
                     />
 
                 </Grid>
-                
+
                 <Grid item xs={5}>
                     <Can
-                        perform="users:create"
+                        perform="consultas:bystatus:view"
                         yes={() => (
                             <SelectWrapperUi
                                 label='Estados'
@@ -77,7 +76,7 @@ export function OutputsFilterForm({ handleFormFilterSubmit, status, people }: an
 
                 <Grid item xs={2}>
                     <Can
-                        perform="users:create"
+                        perform="consultas:bystatus:view"
                         yes={() => (
                             <ButtonUi variant="contained" disabled={false} text="Buscar" type="submit" />
                         )}
@@ -87,7 +86,7 @@ export function OutputsFilterForm({ handleFormFilterSubmit, status, people }: an
 
 
 
-              
+
             </Grid>
         </Box>
     )

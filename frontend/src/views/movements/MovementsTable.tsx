@@ -11,6 +11,7 @@ import { formatWeight } from "../../utils/FormatNumbers";
 import { makeStyles } from '@mui/styles';
 import { MovementsIcons } from "./MovementsIcons";
 import { DateTimeFormat } from "../../utils/DateTimeFormat";
+import Can from "../../components/can";
 
 
 const useStyles = makeStyles((theme: any) => ({
@@ -120,10 +121,10 @@ export function MovementsTable() {
                 },
             },
         },
-       {
+        {
             name: 'type_icon',
             label: 'Estado',
-            options: { 
+            options: {
                 filter: false,
                 sort: false,
                 empty: true,
@@ -164,12 +165,22 @@ export function MovementsTable() {
                 columns={columns}
                 options={options}
             />
-            <FabUi
-                size="small"
-                color="primary" onClick={() => setOpenAddDialogForm(true)}
-                ariaLabel="add"
-                icon={<AddIcon />}
+
+
+            <Can
+                perform="inventario:mov:create"
+                yes={() => (
+
+                    <FabUi
+                        size="small"
+                        color="primary" onClick={() => setOpenAddDialogForm(true)}
+                        ariaLabel="add"
+                        icon={<AddIcon />}
+                    />
+                )}
             />
+
+
             <AlertDialogUi
                 maxWidth="md"
                 handleClose={() => setOpenAddDialogForm(false)}

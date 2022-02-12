@@ -64,7 +64,7 @@ export function SettingsStatusTable() {
                     return (
                         <>
                             <Can
-                                perform="users:create"
+                                perform="configuracion:status:update"
                                 yes={() => (
                                     <IconButton
                                         aria-label="update"
@@ -79,7 +79,7 @@ export function SettingsStatusTable() {
                                 )}
                             />
                             <Can
-                                perform="users:create"
+                                perform="configuracion:status:delete"
                                 yes={() => (
                                     <IconButton
                                         aria-label="delete"
@@ -91,7 +91,7 @@ export function SettingsStatusTable() {
                                         <DeleteIcon fontSize="small" color="error" />
                                     </IconButton>
                                 )}
-                                    />
+                            />
                         </>
                     )
                 }
@@ -127,19 +127,26 @@ export function SettingsStatusTable() {
                 ref={refDatatable}
                 fetchData={SettingsStatusRequest.getAll}
                 title={"Lista de configuración de estados"}
-                // filterForm={<UserTableFilterForm handleSubmit={() => (console.log(''))}/>}
+                // filterForm={<UserTableFilterForm handleSubmit={() => }/>}
                 columns={columns}
                 options={options}
             />
 
-
-            <FabUi
-                size="small"
-                color="primary"
-                onClick={() => setOpenAddDialogForm(true)}
-                ariaLabel="add"
-                icon={<AddIcon />}
+            <Can
+                perform="configuracion:status:create"
+                yes={() => (
+                    <FabUi
+                        size="small"
+                        color="primary"
+                        onClick={() => setOpenAddDialogForm(true)}
+                        ariaLabel="add"
+                        icon={<AddIcon />}
+                    />
+                )}
             />
+
+
+
 
             <AlertDialogUi
                 handleClose={() => setOpenAddDialogForm(false)}

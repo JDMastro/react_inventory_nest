@@ -17,6 +17,11 @@ export class StatusService {
         return await this._statusRepo.find({ order : { name : 'ASC' } });
     }
 
+    async getAllForReports()
+    {
+        return await this._statusRepo.find()
+    }
+
     async findAllWithPagination(page : number, perPage : number)
     {
         const data = await this._statusRepo.find({ skip : (page - 1) * perPage, take : perPage })

@@ -80,6 +80,12 @@ export class StatusController {
       return await this._statusService.getAllnumberOrders(number_orders,status_id)
     }
 
+    @Get('getAllForReports')
+    async getAllForReports()
+    {
+        return await this._statusService.getAllForReports()
+    }
+
     @Get('findStatusEmplyee')
     async findStatusEmplyee()
     {

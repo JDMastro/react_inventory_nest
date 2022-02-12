@@ -15,6 +15,12 @@ export class kindmovementsController {
         return await this._kindmovementsService.findKindMovClientOrProvider()
     }
 
+    /*@Get('getAllForReports')
+    async getAllForReports()
+    {
+        return await this._kindmovementsService.getAllForReports()
+    }*/
+
     @Get()
     async findAll(@Query() req) {
         return await this._kindmovementsService.findAll(req._page, req._limit)

@@ -13,8 +13,7 @@ import { UpdateUnits } from "./update";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { DeleteUnits } from "./delete";
 
-export function UnitsTable()
-{
+export function UnitsTable() {
     const refDatatable: any = React.useRef();
     const [units, setUnits] = React.useState<any>({});
     const [openAddDialogForm, setOpenAddDialogForm] = React.useState<boolean>(false);
@@ -52,10 +51,10 @@ export function UnitsTable()
                 empty: true,
                 customBodyRenderLite: (dataIndex: number) => {
                     const unitsSelected = refDatatable.current.findData(dataIndex);
-                    return(
+                    return (
                         <>
-                         <Can
-                                perform="users:create"
+                            <Can
+                                perform="maestro:units:update"
                                 yes={() => (
                                     <IconButton
                                         aria-label="update"
@@ -69,7 +68,7 @@ export function UnitsTable()
                                 )}
                             />
                             <Can
-                                perform="users:create"
+                                perform="maestro:units:delete"
                                 yes={() => (
                                     <IconButton
                                         aria-label="delete"
@@ -81,7 +80,7 @@ export function UnitsTable()
                                         <DeleteIcon fontSize="small" color="error" />
                                     </IconButton>
                                 )}
-                                    />
+                            />
                         </>
                     )
                 }
@@ -95,38 +94,43 @@ export function UnitsTable()
         download: true,
     };
 
-    const handleProductSaveClick = (oper : string, updatedConsecutive: any) => {
-        switch(oper)
-        {
-            case "CREATED" :
+    const handleProductSaveClick = (oper: string, updatedConsecutive: any) => {
+        switch (oper) {
+            case "CREATED":
                 refDatatable.current.createRecord(updatedConsecutive)
                 break;
-            case "UPDATED" :
+            case "UPDATED":
                 refDatatable.current.updateRecord(updatedConsecutive.id, updatedConsecutive)
                 break;
-            case "DELETED" :
+            case "DELETED":
                 refDatatable.current.deleteRecord(updatedConsecutive.id);
                 break;
-            default : break;
+            default: break;
         }
         //refDatatable.current.updateRecord(updatedProduct.id, updatedProduct);
     };
 
     return (
         <>
-          <MUIDataTable
+            <MUIDataTable
                 ref={refDatatable}
                 fetchData={UnitsRequest.findAllWithPagination}
                 title={"Lista de unidades"}
-                // filterForm={<UserTableFilterForm handleSubmit={() => (console.log(''))}/>}
+                // filterForm={<UserTableFilterForm handleSubmit={() => }/>}
                 columns={columns}
                 options={options}
             />
-              <FabUi
-                size="small"
-                color="primary" onClick={() => setOpenAddDialogForm(true)}
-                ariaLabel="add"
-                icon={<AddIcon />}
+
+            <Can
+                perform="maestro:units:create"
+                yes={() => (
+                    <FabUi
+                        size="small"
+                        color="primary" onClick={() => setOpenAddDialogForm(true)}
+                        ariaLabel="add"
+                        icon={<AddIcon />}
+                    />
+                )}
             />
             <AlertDialogUi
                 maxWidth="md"
@@ -140,7 +144,7 @@ export function UnitsTable()
                 open={openAddDialogForm}
                 title=""
             />
-             <AlertDialogUi
+            <AlertDialogUi
                 handleClose={() => setOpenEditDialogForm(false)}
                 content={
                     <UpdateUnits

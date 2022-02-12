@@ -91,7 +91,7 @@ export function PersonTable() {
                     return (
                         <>
                             <Can
-                                perform="users:create"
+                                perform="maestro:providers:update"
                                 yes={() => (
                                     <IconButton
                                         aria-label="update"
@@ -105,21 +105,21 @@ export function PersonTable() {
                                 )}
                             />
                             <Can
-                                perform="users:create"
+                                perform="maestro:providers:delete"
                                 yes={() => (
                                     personSelected.p_actived ? (
                                         <IconButton
-                                        aria-label="delete"
-                                        onClick={() => {
-                                            setPerson(personSelected);
-                                            setOpenDeleteDialogForm(true);
-                                        }}
-                                    >
-                                        <DeleteIcon fontSize="small" color="error" />
-                                    </IconButton>
+                                            aria-label="delete"
+                                            onClick={() => {
+                                                setPerson(personSelected);
+                                                setOpenDeleteDialogForm(true);
+                                            }}
+                                        >
+                                            <DeleteIcon fontSize="small" color="error" />
+                                        </IconButton>
                                     ) : (<span></span>)
                                 )}
-                                    />
+                            />
                         </>
                     )
                 }
@@ -164,13 +164,20 @@ export function PersonTable() {
                 options={options}
             />
 
-            <FabUi
-                size="small"
-                color="primary"
-                onClick={() => setOpenAddDialogForm(true)}
-                ariaLabel="add"
-                icon={<AddIcon />}
+            <Can
+                perform="maestro:providers:create"
+                yes={() => (
+                    <FabUi
+                        size="small"
+                        color="primary"
+                        onClick={() => setOpenAddDialogForm(true)}
+                        ariaLabel="add"
+                        icon={<AddIcon />}
+                    />
+                )}
             />
+
+
             <AlertDialogUi
                 handleClose={() => setOpenAddDialogForm(false)}
                 content={
@@ -200,9 +207,9 @@ export function PersonTable() {
                 handleClose={() => setOpenDeleteDialogForm(false)}
                 content={
                     <DeletePerson
-                    data={person}
-                    onSubmit={handleProductSaveClick}
-                    onClose={() => setOpenDeleteDialogForm(false)}
+                        data={person}
+                        onSubmit={handleProductSaveClick}
+                        onClose={() => setOpenDeleteDialogForm(false)}
                     />
                 }
                 open={openDeleteDialogForm}

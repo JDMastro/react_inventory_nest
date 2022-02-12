@@ -130,7 +130,6 @@ export const ProductSubTable: React.FC<ProductSubTableProps> = (props: ProductSu
                 setCellProps: () => ({ style: { textAlign: 'left' } }),
                 customBodyRenderLite: (dataIndex: number) => {
                     const productSelected = props.refDatatable.current.findData(dataIndex);
-                    console.log("----",productSelected)
                     return (
                         <>
                             {/*<Can
@@ -152,7 +151,7 @@ export const ProductSubTable: React.FC<ProductSubTableProps> = (props: ProductSu
                                !productSelected ? (<span></span>) :
                               !props.parentProduct.p_actived  && !productSelected.p_actived ? (<span></span>) : 
                                (  <Can
-                                perform="users:create"
+                                perform="maestro:products:update"
                                 yes={() => (
                                     <IconButton
                                         aria-label="update"
@@ -170,7 +169,7 @@ export const ProductSubTable: React.FC<ProductSubTableProps> = (props: ProductSu
                                     }
                             {productSelected && productSelected.p_actived ? (
                                 <Can
-                                    perform="users:create"
+                                    perform="maestro:products:delete"
                                     yes={() => (
                                         <IconButton
                                             aria-label="update"
@@ -218,7 +217,7 @@ export const ProductSubTable: React.FC<ProductSubTableProps> = (props: ProductSu
                 className={classes.table}
                 fetchData={ProductsRequest.getDerivate}
                 params={{ parentId: props.parentProduct.id }}
-                // filterForm={<UserTableFilterForm handleSubmit={() => (console.log(''))}/>}
+                // filterForm={<UserTableFilterForm handleSubmit={() => ()}/>}
                 columns={columns}
                 options={options}
             />

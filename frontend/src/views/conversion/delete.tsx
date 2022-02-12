@@ -34,7 +34,6 @@ export function DeleteConversion({ onClose, data, onSubmit : on }: any)
                 
            
         } catch (error) {
-            console.log(error)
         }
 
     }

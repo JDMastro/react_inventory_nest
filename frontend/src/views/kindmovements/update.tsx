@@ -59,7 +59,6 @@ export function UpdateMovements({ consecutives, Classificationkindmovement, clas
         }
             
         } catch (error) {
-            console.log(error)
             setSeverity("error")
             setMsg("¡Hubo un error :( !")
             handleClick()

@@ -51,7 +51,6 @@ export function AddConsecutive({ onClose, onSubmit : on }: any)
                 setdisablebtn(false)
             }
         } catch (error) {
-            console.log(error)
         }
       
     }

@@ -7,7 +7,7 @@ import { TableNormalUi, ButtonUi } from "../../components";
 
 export function StartProduction({ handleClose, data }: any) {
     const [persons, setpersons] = useState([])
-    //console.log(data)
+    
     useEffect(() => { MovementRequest.findStartedMovements(data.p_id).then(e => setpersons(e)) }, [])
     return (
         <Box>

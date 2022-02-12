@@ -19,6 +19,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { ProductionRejected } from "./ProductionRejected";
 import EmojiObjectsIcon from '@mui/icons-material/EmojiObjects';
 
+import Can from "../../components/can";
+
 
 
 
@@ -91,8 +93,22 @@ const Production: React.FC = () => {
                             alignItems="center"
                             spacing={2}
                         >
-                            <IconButton disabled={isEnable} aria-label="update" onClick={() => handleClickOpenModalAdd(productDerivate[value])}><EmojiObjectsIcon  color={productDerivate[value] ? productDerivate[value].amount_used > 0 ? "warning" : "success" : "success"} fontSize="small" /></IconButton>
-                            <IconButton disabled={productDerivate[value] ? productDerivate[value].amount_used > 0 ? false: true : false} aria-label="update" onClick={() =>{handleClickOpenModalRejected(productDerivate[value]); }}><DeleteIcon  /></IconButton>
+                            <Can
+                            perform="inventario:prod:create"
+                            yes={() => (
+                                <IconButton disabled={isEnable} aria-label="update" onClick={() => handleClickOpenModalAdd(productDerivate[value])}><EmojiObjectsIcon  color={productDerivate[value] ? productDerivate[value].amount_used > 0 ? "warning" : "success" : "success"} fontSize="small" /></IconButton>
+                            
+                           
+                            )}
+                        />
+                        <Can
+                            perform="inventario:prod:create"
+                            yes={() => (
+                                <IconButton disabled={productDerivate[value] ? productDerivate[value].amount_used > 0 ? false: true : false} aria-label="update" onClick={() =>{handleClickOpenModalRejected(productDerivate[value]); }}><DeleteIcon  /></IconButton>
+                           
+                            )}
+                        />
+                            
                     </Stack>
 
                     );
@@ -121,16 +137,15 @@ const Production: React.FC = () => {
         //await refDatatable.fetchData(res)
         const res = await ProductsRequest.getByStatusSuggest(data.product.p_id)
         setproductParent(data.product)
-        console.log(res)
+       
         setproductDerivate(res)
 
-        console.log(res)
         
         if(res.length > 0)
         //res[0]?.h_number_order ? "" : 
         res[0].h_number_order ? setnumber_order(res[0].h_number_order) : setnumber_order("")
            //setnumber_order(res[0].h_number_order)
-        //console.log("----",res)
+       
         setexistence_converted(data.existence_converted)
     }
 

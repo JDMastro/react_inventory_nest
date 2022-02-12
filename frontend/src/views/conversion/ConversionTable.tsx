@@ -178,7 +178,7 @@ export function ConversionTable() {
                 ref={refDatatable}
                 fetchData={ConversionRequest.getAll}
                 title={"Lista de conversion"}
-                // filterForm={<UserTableFilterForm handleSubmit={() => (console.log(''))}/>}
+                // filterForm={<UserTableFilterForm handleSubmit={() => ()}/>}
                 columns={columns}
                 options={options}
             />

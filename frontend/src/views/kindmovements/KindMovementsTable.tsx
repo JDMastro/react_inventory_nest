@@ -84,7 +84,7 @@ export function KindMovementsTable() {
                     return(
                         <>
                          <Can
-                                perform="users:create"
+                                perform="maestro:kindmov:update"
                                 yes={() => (
                                     <IconButton
                                         aria-label="update"
@@ -98,7 +98,7 @@ export function KindMovementsTable() {
                                 )}
                             />
                             <Can
-                                perform="users:create"
+                                perform="maestro:kindmov:delete"
                                 yes={() => (
                                     <IconButton
                                         aria-label="delete"
@@ -146,17 +146,23 @@ export function KindMovementsTable() {
                 ref={refDatatable}
                 fetchData={KindMovementsRequest.getAll}
                 title={"Lista de Tipos de Movimientos"}
-                // filterForm={<UserTableFilterForm handleSubmit={() => (console.log(''))}/>}
+                // filterForm={<UserTableFilterForm handleSubmit={() => }/>}
                 columns={columns}
                 options={options}
             />
-             <FabUi
-                size="small"
-                color="primary"
-                onClick={() => setOpenAddDialogForm(true)}
-                ariaLabel="add"
-                icon={<AddIcon />}
-            />
+              <Can
+                                perform="maestro:kindmov:create"
+                                yes={() => (
+                                    <FabUi
+                                    size="small"
+                                    color="primary"
+                                    onClick={() => setOpenAddDialogForm(true)}
+                                    ariaLabel="add"
+                                    icon={<AddIcon />}
+                                />
+                                )}
+                                    />
+           
             <AlertDialogUi
                 handleClose={() => setOpenAddDialogForm(false)}
                 content={

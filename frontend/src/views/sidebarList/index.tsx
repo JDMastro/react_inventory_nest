@@ -13,6 +13,8 @@ import Collapse from '@mui/material/Collapse';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { Profile } from "../profile";
 import Can from "../../components/can";
+import CloseIcon from '@mui/icons-material/Close';
+import useAuth from '../../hooks/useAuth';
 
 
 
@@ -23,6 +25,8 @@ export function SideBarList() {
     const [openInventary, setOpenInventary] = React.useState(false);
     const [openConsultas, setConsultas] = React.useState(false);
     const [settings, setSettings] = React.useState(false);
+
+    const { logout } = useAuth();
 
 
     const handleClick = () => {
@@ -80,7 +84,7 @@ export function SideBarList() {
                 <Collapse in={open} timeout="auto" unmountOnExit>
                     <List component="div" disablePadding>
                         <Can
-                            perform="users:view"
+                            perform="maestro:consecutive:view"
                             yes={() => (
                                 <ListItemButton
                                     sx={{ pl: 5 }}
@@ -93,69 +97,113 @@ export function SideBarList() {
                                 </ListItemButton>
                             )}
                         />
-                        <ListItemButton sx={{ pl: 5 }}
-                            selected={selectedIndex === 9}
-                            onClick={(event: any) => handleListItemClick(event, 9)}
-                            component={Link}
-                            to={`/dashboard/maestro/status`}>
 
-                            <ListItemText primary="Estados" />
-                        </ListItemButton>
+                        <Can
+                            perform="maestro:status:view"
+                            yes={() => (
+                                <ListItemButton sx={{ pl: 5 }}
+                                    selected={selectedIndex === 9}
+                                    onClick={(event: any) => handleListItemClick(event, 9)}
+                                    component={Link}
+                                    to={`/dashboard/maestro/status`}>
 
-
-                        <ListItemButton sx={{ pl: 5 }}
-                            selected={selectedIndex === 4}
-                            onClick={(event: any) => handleListItemClick(event, 4)}
-                            component={Link}
-                            to={`/dashboard/maestro/units`}>
-
-                            <ListItemText primary="Unidades" />
-                        </ListItemButton>
-
-                        <ListItemButton sx={{ pl: 5 }}
-                            selected={selectedIndex === 1}
-                            onClick={(event: any) => handleListItemClick(event, 1)}
-                            component={Link}
-                            to={`/dashboard/maestro/product`}>
-
-                            <ListItemText primary="Productos" />
-                        </ListItemButton>
-
-
-                        <ListItemButton sx={{ pl: 5 }}
-                            selected={selectedIndex === 3}
-                            onClick={(event: any) => handleListItemClick(event, 3)}
-                            component={Link}
-                            to={`/dashboard/maestro/kindid`}>
-
-                            <ListItemText primary="Tipo de identificación" />
-                        </ListItemButton>
-
-                        <ListItemButton sx={{ pl: 5 }}
-                            selected={selectedIndex === 5}
-                            onClick={(event: any) => handleListItemClick(event, 5)}
-                            component={Link}
-                            to={`/dashboard/maestro/person`}>
-
-                            <ListItemText primary="Proveedores" />
-                        </ListItemButton>
+                                    <ListItemText primary="Estados" />
+                                </ListItemButton>
+                            )}
+                        />
 
 
 
+                        <Can
+                            perform="maestro:units:view"
+                            yes={() => (
+                                <ListItemButton sx={{ pl: 5 }}
+                                    selected={selectedIndex === 4}
+                                    onClick={(event: any) => handleListItemClick(event, 4)}
+                                    component={Link}
+                                    to={`/dashboard/maestro/units`}>
+
+                                    <ListItemText primary="Unidades" />
+                                </ListItemButton>
+                            )}
+                        />
+
+                        <Can
+                            perform="maestro:products:view"
+                            yes={() => (
+                                <ListItemButton sx={{ pl: 5 }}
+                                    selected={selectedIndex === 1}
+                                    onClick={(event: any) => handleListItemClick(event, 1)}
+                                    component={Link}
+                                    to={`/dashboard/maestro/product`}>
+
+                                    <ListItemText primary="Productos" />
+                                </ListItemButton>
+                            )}
+                        />
+
+
+                        <Can
+                            perform="maestro:kindids:view"
+                            yes={() => (
+                                <ListItemButton sx={{ pl: 5 }}
+                                    selected={selectedIndex === 3}
+                                    onClick={(event: any) => handleListItemClick(event, 3)}
+                                    component={Link}
+                                    to={`/dashboard/maestro/kindid`}>
+
+                                    <ListItemText primary="Tipo de identificación" />
+                                </ListItemButton>
+                            )}
+                        />
+
+
+                        <Can
+                            perform="maestro:providers:view"
+                            yes={() => (
+
+                                <ListItemButton sx={{ pl: 5 }}
+                                    selected={selectedIndex === 5}
+                                    onClick={(event: any) => handleListItemClick(event, 5)}
+                                    component={Link}
+                                    to={`/dashboard/maestro/person`}>
+
+                                    <ListItemText primary="Proveedores" />
+                                </ListItemButton>
+                            )}
+                        />
+
+
+                        <Can
+                            perform="maestro:kindmov:view"
+                            yes={() => (
+
+                                <ListItemButton sx={{ pl: 5 }}
+                                    selected={selectedIndex === 6}
+                                    onClick={(event: any) => handleListItemClick(event, 6)}
+                                    component={Link}
+                                    to={`/dashboard/maestro/kindmovements`}
+                                >
+
+                                    <ListItemText primary="Tipos de movimiento" />
+                                </ListItemButton>
+                            )}
+                        />
 
 
 
 
 
-                        <ListItemButton sx={{ pl: 5 }}
-                            selected={selectedIndex === 6}
-                            onClick={(event: any) => handleListItemClick(event, 6)}
-                            component={Link}
-                            to={`/dashboard/maestro/kindmovements`}
-                        >
 
-                            <ListItemText primary="Tipos de movimiento" />
-                        </ListItemButton>
+
+
+
+
+
+
+
+
+
 
 
 
@@ -182,23 +230,62 @@ export function SideBarList() {
                     {openConsultas ? <ExpandLess /> : <ExpandMore />}
                 </ListItemButton>
                 <Collapse in={openConsultas} timeout="auto" unmountOnExit>
+
                     <List component="div" disablePadding>
-                        <ListItemButton sx={{ pl: 5 }}
-                            selected={selectedIndex === 14}
-                            onClick={(event: any) => handleListItemClick(event, 14)}
-                            component={Link}
-                            to={`/dashboard/inventary/outputs`}>
+                        <Can
+                            perform="consultas:bystatus:view"
+                            yes={() => (
 
-                            <ListItemText
-                                disableTypography
-                                primary="Por estado"
-                            />
-                        </ListItemButton>
+                                <ListItemButton sx={{ pl: 5 }}
+                                    selected={selectedIndex === 14}
+                                    onClick={(event: any) => handleListItemClick(event, 14)}
+                                    component={Link}
+                                    to={`/dashboard/inventary/outputs`}>
+
+                                    <ListItemText
+                                        disableTypography
+                                        primary="Por estado"
+                                    />
+                                </ListItemButton>
 
 
 
+
+
+                            )}
+                        />
 
                     </List>
+
+                    <List component="div" disablePadding>
+                        <Can
+                            perform="consultas:reports:view"
+                            yes={() => (
+
+                                <ListItemButton sx={{ pl: 5 }}
+                                    selected={selectedIndex === 18}
+                                    onClick={(event: any) => handleListItemClick(event, 18)}
+                                    component={Link}
+                                    to={`/dashboard/inventary/reports`}>
+
+                                    <ListItemText
+                                        disableTypography
+                                        primary="Reportes"
+                                    />
+                                </ListItemButton>
+
+
+
+
+
+                            )}
+                        />
+
+                    </List>
+
+
+
+
                 </Collapse>
 
 
@@ -215,27 +302,48 @@ export function SideBarList() {
                 </ListItemButton>
                 <Collapse in={openInventary} timeout="auto" unmountOnExit>
                     <List component="div" disablePadding>
-                        <ListItemButton sx={{ pl: 5 }}
-                            selected={selectedIndex === 7}
-                            onClick={(event: any) => handleListItemClick(event, 7)}
-                            component={Link}
-                            to={`/dashboard/inventary/movements`}>
 
-                            <ListItemText
-                                disableTypography
-                                primary="Movimiento"
-                            />
-                        </ListItemButton>
 
-                        <ListItemButton sx={{ pl: 5 }}
-                            selected={selectedIndex === 11}
-                            onClick={(event: any) => handleListItemClick(event, 11)}
-                            component={Link}
-                            to={`/dashboard/maestro/productions`}
-                        >
+                        <Can
+                            perform="inventario:mov:view"
+                            yes={() => (
 
-                            <ListItemText primary="Produccion" />
-                        </ListItemButton>
+                                <ListItemButton sx={{ pl: 5 }}
+                                    selected={selectedIndex === 7}
+                                    onClick={(event: any) => handleListItemClick(event, 7)}
+                                    component={Link}
+                                    to={`/dashboard/inventary/movements`}>
+
+                                    <ListItemText
+                                        disableTypography
+                                        primary="Movimiento"
+                                    />
+                                </ListItemButton>
+                            )}
+                        />
+
+
+                        <Can
+                            perform="inventario:prod:view"
+                            yes={() => (
+                                <ListItemButton sx={{ pl: 5 }}
+                                    selected={selectedIndex === 11}
+                                    onClick={(event: any) => handleListItemClick(event, 11)}
+                                    component={Link}
+                                    to={`/dashboard/maestro/productions`}
+                                >
+
+                                    <ListItemText primary="Produccion" />
+                                </ListItemButton>
+                            )}
+                        />
+
+
+
+
+
+
+
 
 
 
@@ -243,18 +351,24 @@ export function SideBarList() {
                     </List>
                 </Collapse>
 
+                <Can
+                    perform="usuarios:accounts:view"
+                    yes={() => (
+                        <ListItemButton
+                            selected={selectedIndex === 8}
+                            onClick={(event: any) => handleListItemClick(event, 8)}
+                            component={Link}
+                            to={`/dashboard/security/users`}
+                        >
+                            <ListItemIcon style={{ marginRight: '-25px' }} >
+                                <DashboardIcon fontSize="small" />
+                            </ListItemIcon>
+                            <ListItemText primary="Usuarios" />
+                        </ListItemButton>
+                    )}
+                />
 
-                <ListItemButton
-                    selected={selectedIndex === 8}
-                    onClick={(event: any) => handleListItemClick(event, 8)}
-                    component={Link}
-                    to={`/dashboard/security/users`}
-                >
-                    <ListItemIcon style={{ marginRight: '-25px' }} >
-                        <DashboardIcon fontSize="small" />
-                    </ListItemIcon>
-                    <ListItemText primary="Usuarios" />
-                </ListItemButton>
+
 
                 <ListItemButton onClick={handleClickSettings}>
                     <ListItemIcon style={{ marginRight: '-25px' }}>
@@ -267,39 +381,77 @@ export function SideBarList() {
                     {settings ? <ExpandLess /> : <ExpandMore />}
                 </ListItemButton>
                 <Collapse in={settings} timeout="auto" unmountOnExit>
-                    <ListItemButton
-                        sx={{ pl: 5 }}
-                        selected={selectedIndex === 15}
-                        onClick={(event: any) => handleListItemClick(event, 15)}
-                        component={Link}
-                        to={`/dashboard/maestro/settings`}
-                    >
-                        <ListItemText primary="Configuración" />
-                    </ListItemButton>
 
-                    <ListItemButton
-                        sx={{ pl: 5 }}
-                        selected={selectedIndex === 16}
-                        onClick={(event: any) => handleListItemClick(event, 16)}
-                        component={Link}
-                        to={`/dashboard/maestro/settings/roles`}
-                    >
-                        <ListItemText primary="Roles" />
-                    </ListItemButton>
 
-                    <ListItemButton
-                        sx={{ pl: 5 }}
-                        selected={selectedIndex === 17}
-                        onClick={(event: any) => handleListItemClick(event, 17)}
-                        component={Link}
-                        to={`/dashboard/maestro/settings/status`}
-                    >
-                        <ListItemText primary="Estado" />
-                    </ListItemButton>
+
+                    <Can
+                        perform="configuracion:var:view"
+                        yes={() => (
+                            <ListItemButton
+                                sx={{ pl: 5 }}
+                                selected={selectedIndex === 15}
+                                onClick={(event: any) => handleListItemClick(event, 15)}
+                                component={Link}
+                                to={`/dashboard/maestro/settings`}
+                            >
+                                <ListItemText primary="Configuración" />
+                            </ListItemButton>
+                        )}
+                    />
+
+                    <Can
+                        perform="configuracion:permi:view"
+                        yes={() => (
+                            <ListItemButton
+                                sx={{ pl: 5 }}
+                                selected={selectedIndex === 16}
+                                onClick={(event: any) => handleListItemClick(event, 16)}
+                                component={Link}
+                                to={`/dashboard/maestro/settings/permission`}
+                            >
+                                <ListItemText primary="Permisos" />
+                            </ListItemButton>
+                        )}
+                    />
+
+
+
+
+                    <Can
+                        perform="configuracion:status:view"
+                        yes={() => (
+                            <ListItemButton
+                                sx={{ pl: 5 }}
+                                selected={selectedIndex === 17}
+                                onClick={(event: any) => handleListItemClick(event, 17)}
+                                component={Link}
+                                to={`/dashboard/maestro/settings/status`}
+                            >
+                                <ListItemText primary="Estado" />
+                            </ListItemButton>
+                        )}
+                    />
+
+
+
+
 
 
 
                 </Collapse>
+
+
+                <ListItemButton
+                    selected={selectedIndex === 17}
+                    onClick={(event: any) => logout()}
+
+                >
+                    <ListItemIcon style={{ marginRight: '-25px' }} >
+                        <CloseIcon fontSize="small" />
+                    </ListItemIcon>
+                    <ListItemText primary="Cerrar sesión" />
+                </ListItemButton>
+                )
 
 
 

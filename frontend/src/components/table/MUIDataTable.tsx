@@ -111,7 +111,8 @@ const MUIDataTable: any = React.forwardRef<React.ReactNode, any>(
           const [newKey] = key.split('=');
           obj[`${newKey}`] = overwrittenFilters[key];
         } else if (!key.match(/:/)) {
-          obj[`${key}:ilike`] = overwrittenFilters[key];
+          //obj[`${key}:ilike`] = overwrittenFilters[key];
+          obj[`${key}`] = overwrittenFilters[key];
         } else {
           obj[`${key}`] = overwrittenFilters[key];
         }

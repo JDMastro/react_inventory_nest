@@ -18,7 +18,7 @@ export const findWhereAction = (data: any) => async (dispatch: Function) => {
     dispatch(findWhereInitAction());
     try {
         let response = await UsersRequest.me({});
-        response.permissions = ['users:view', 'users:edit'];
+        //response.permissions = ['users:view', 'users:edit', 'users:create'];
         dispatch(findWhereSuccessAction(response));
     } catch (error) {
         return dispatch(findWhereErrorAction(error));

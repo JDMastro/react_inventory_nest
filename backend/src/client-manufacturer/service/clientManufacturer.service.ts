@@ -10,9 +10,10 @@ export class ClientManufacturerService {
         @InjectRepository(ClientManufacturer) private _clientManufacturer: Repository<ClientManufacturer>,
     ) { }
 
-    async findByManufactureId(manufacurer_id : number)
+    async findByManufactureId(manufacurer_id : number, page: number, perPage: number)
     {
-        return { data : await getManager().createQueryBuilder("person", "p")
+
+        const data = await getManager().createQueryBuilder("person", "p")
         .select(['p.fullname', 'case when  aux.cm_client_id is null then false else true end checking', 'p.id as id'])
         .distinct(true)
         .leftJoinAndSelect(
@@ -23,7 +24,17 @@ export class ClientManufacturerService {
         },'aux','aux.cm_client_id = p.id')
         .where("p.classificationpeople_id =2")
         .andWhere("p.actived")
-        .getRawMany() }
+        .offset((page - 1) * perPage)
+        .limit(perPage)
+
+        const total = await data.getCount()
+        return {
+            data: await data.getRawMany(),
+            total,
+            page_count: perPage,
+            current_page: page,
+            last_page: Math.ceil(total / perPage)
+        }
     }
 
     async getLastInserted(clientmanufacturer_id : number, manufacurer_id : number)

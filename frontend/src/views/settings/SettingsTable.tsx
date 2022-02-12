@@ -57,7 +57,7 @@ export function SettingsTable()
                     return (
                         <>
                         <Can
-                                perform="users:create"
+                                perform="configuracion:var:update"
                                 yes={() => (
                                     <IconButton
                                         aria-label="update"

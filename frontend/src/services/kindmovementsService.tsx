@@ -9,6 +9,7 @@ const Requests = {
     findAllWithoutProduction : async (url : string) => await instance.get(url).then(responseBody),
     findWithOnlyProduction : async (url : string) => await instance.get(url).then(responseBody),
     findKindMovClientOrProvider : async (url : string) => await instance.get(url).then(responseBody),
+    //getAllForReports : async (url : string) => await instance.get(url).then(responseBody),
 }
 
 export const KindMovementsRequest =
@@ -20,4 +21,6 @@ export const KindMovementsRequest =
     findAllWithoutProduction : async () => await Requests.findAllWithoutProduction(`kindmovements/findAllWithoutProduction`),
     findWithOnlyProduction : async () => await Requests.findAllWithoutProduction(`kindmovements/findWithOnlyProduction`),
     findKindMovClientOrProvider : async () => await Requests.findKindMovClientOrProvider(`kindmovements/findKindMovClientOrProvider`),
+    //getAllForReports : async () => await Requests.getAllForReports(`kindmovements/getAllForReports`),
+
 }

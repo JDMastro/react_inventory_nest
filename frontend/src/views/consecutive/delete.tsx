@@ -37,7 +37,6 @@ export function DeleteConsecutive({ onClose, data, onSubmit : on }: any)
                 setdisablebtn(false)
             }
         } catch (error) {
-            console.log(error)
         }
 
     }

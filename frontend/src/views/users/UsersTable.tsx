@@ -128,7 +128,7 @@ export function UsersTable() {
                     return (
                         <>
                             <Can
-                                perform="users:create"
+                                perform="usuarios:accounts:update"
                                 yes={() => (
                                     <IconButton
                                         aria-label="update"
@@ -142,7 +142,7 @@ export function UsersTable() {
                                 )}
                             />
                             <Can
-                                perform="users:create"
+                                perform="usuarios:accounts:delete"
                                 yes={() => (
                                     userSelected.p_actived ? (
                                         <IconButton
@@ -158,7 +158,7 @@ export function UsersTable() {
                                 )}
                             />
                             <Can
-                                perform="users:create"
+                                perform="usuarios:accounts:toassign"
                                 yes={() => (
                                     userSelected.p_actived ? (
                                         <IconButton
@@ -216,17 +216,25 @@ export function UsersTable() {
                 ref={refDatatable}
                 fetchData={UsersRequest.getAll}
                 title={"Lista de usuarios"}
-                // filterForm={<UserTableFilterForm handleSubmit={() => (console.log(''))}/>}
+                // filterForm={<UserTableFilterForm handleSubmit={() => ()}/>}
                 columns={columns}
                 options={options}
             />
 
-            <FabUi
-                size="small"
-                color="primary" onClick={() => setOpenAddDialogForm(true)}
-                ariaLabel="add"
-                icon={<AddIcon />}
+            <Can
+                perform="usuarios:accounts:create"
+                yes={() => (
+                    <FabUi
+                        size="small"
+                        color="primary" onClick={() => setOpenAddDialogForm(true)}
+                        ariaLabel="add"
+                        icon={<AddIcon />}
+                    />
+
+                )}
             />
+
+
             <AlertDialogUi
                 maxWidth="md"
                 handleClose={() => setOpenAddDialogForm(false)}

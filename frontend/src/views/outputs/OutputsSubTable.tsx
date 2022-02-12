@@ -28,18 +28,16 @@ const useStyles = makeStyles((theme: any) => ({
     }
 }));
 
-export function OutputsSubTable({ statu, parentOutputs, refSubDatatable, statusChild } : any)
-{
+export function OutputsSubTable({ statu, parentOutputs, refSubDatatable, statusChild }: any) {
     const classes = useStyles();
     const [output, setOutput] = useState<any>({});
 
-   //statu
+    //statu
 
-   useEffect(()=>{ console.log(statusChild) },[])
-    
+
     const [openEditDialogForm, setOpenEditDialogForm] = useState<boolean>(false);
 
-   
+
     const columns = [
         {
             name: 'p_name',
@@ -55,7 +53,7 @@ export function OutputsSubTable({ statu, parentOutputs, refSubDatatable, statusC
                 filter: true,
                 customBodyRender: (value: any) => {
                     return formatWeight(value);
-                  },
+                },
             },
         },
         {
@@ -77,10 +75,10 @@ export function OutputsSubTable({ statu, parentOutputs, refSubDatatable, statusC
                 empty: true,
                 customBodyRenderLite: (dataIndex: number) => {
                     const outputsSelected = refSubDatatable.current.findData(dataIndex);
-                    return(
+                    return (
                         <>
-                           <Can
-                                perform="users:create"
+                            <Can
+                                perform="consultas:bystatus:update"
                                 yes={() => (
                                     <IconButton
                                         aria-label="update"
@@ -92,7 +90,7 @@ export function OutputsSubTable({ statu, parentOutputs, refSubDatatable, statusC
                                         <EditIcon fontSize="small" color="primary" />
                                     </IconButton>
                                 )}
-                                    />
+                            />
                         </>
                     )
                 }
@@ -107,8 +105,8 @@ export function OutputsSubTable({ statu, parentOutputs, refSubDatatable, statusC
     };
 
     const handleStateSaveClick = (oper: string, updatedProduct: any) => {
-        
-        
+
+
         switch (oper) {
             case "DELETED":
                 refSubDatatable.current.deleteRecord(updatedProduct.id);
@@ -117,20 +115,20 @@ export function OutputsSubTable({ statu, parentOutputs, refSubDatatable, statusC
         }
         //refDatatable.current.updateRecord(updatedProduct.id, updatedProduct);
     };
-    
+
     return (
         <>
-        <MUIDataTable
+            <MUIDataTable
                 ref={refSubDatatable}
                 className={classes.table}
                 fetchData={StatusRequest.getAllnumberOrders}
-                params={{ number_order : parentOutputs.h_number_order, status_id : statu }}
-                // filterForm={<UserTableFilterForm handleSubmit={() => (console.log(''))}/>}
+                params={{ number_order: parentOutputs.h_number_order, status_id: statu }}
+                // filterForm={<UserTableFilterForm handleSubmit={() => }/>}
                 columns={columns}
                 options={options}
             />
 
-<AlertDialogUi
+            <AlertDialogUi
                 handleClose={() => setOpenEditDialogForm(false)}
                 content={
                     <Status

@@ -52,7 +52,6 @@ export function UpdateSettingStatus({ data, status, onClose, onSubmit: on }: any
                 setdisablebtn(false)
             }
         } catch (err) {
-            console.log(err)
         }
     }
 

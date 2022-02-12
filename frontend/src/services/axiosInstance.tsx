@@ -2,7 +2,7 @@ import Axios, { AxiosResponse } from 'axios';
 import { getCookieToJson } from '../utils/cookie';
 
 const axios = Axios.create({
-	baseURL: 'https://herokuinvback.herokuapp.com/api/',
+	baseURL: 'http://localhost:3001/api/',
 	timeout: 15000,
 	headers : {"Content-Type": "application/json"},
 	withCredentials : true,

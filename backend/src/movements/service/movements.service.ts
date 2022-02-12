@@ -100,7 +100,7 @@ export class MovementsService {
                 "m.quantity",
                 "m.total_purchasePrice",
                 "m.unit_price",
-                "h.creation_at",
+                "m.updateAt as h_creation_at",
                 `case 
                 when ( 
                     exists (
@@ -142,6 +142,53 @@ export class MovementsService {
              .orderBy("m.id", 'DESC')
              
              .getRawMany()*/
+    }
+
+    async findAllReports(page : number, perPage : number, startDate : any, finishDate : any, status_id: number) {
+
+        const data = await getManager().createQueryBuilder("movements", "m")
+            .select([
+                "m.waste_quantity",
+                "h.number_order",
+                "m.id",
+                "ckm.name",
+                "p.name",
+                "m.quantity",
+                "m.total_purchasePrice",
+                "m.unit_price",
+                "m.updateAt as h_creation_at",
+                `case 
+                when ( 
+                    exists (
+                        select value from settings s where s.key='ESTADOS_MOV_RECHAZADOS' and position(CAST(m.status_id as varchar) in value) > 0) 
+                        ) then 'RECHAZADO' 
+                when (exists (
+                        select value from settings s where s.key='ESTADOS_MOV_ACEPTADOS' and position(CAST(m.status_id as varchar) in value) > 0) 
+                        ) then 'ACEPTADO' 
+                    else 'PENDIENTE' end as type_icon`
+            ])
+            .innerJoin(Header, "h", "h.id = m.header_id")
+            .innerJoin(KindMovements, "km", "km.id = h.kind_movements_id")
+            .innerJoin(ClassificationKindMovement, "ckm", "ckm.id = km.classification_kindmovement_id")
+            .innerJoin(Products, "p", "p.id = m.product_id")
+            .where('m.status_id = :status_id', { status_id })
+            .andWhere(`DATE(m.updateAt) between '${startDate}' and '${finishDate}'`)
+            .orderBy("cast (m.updateAt as Date)", "DESC")
+            .orderBy("m.id", 'DESC')
+            .orderBy("h.number_order", 'DESC')
+            //.getRawMany()
+            .offset((page - 1) * perPage)
+          .limit(perPage)
+
+          const total = await data.getCount()
+
+          return {
+            data : await data.getRawMany(),
+            total,
+            page_count : perPage,
+            current_page : page,
+            last_page : Math.ceil(total/perPage)
+          }
     }
 
     async findMovementByNumberOrder(order_number: string) {

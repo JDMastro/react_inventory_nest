@@ -1,5 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn, Unique, JoinColumn, OneToOne } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, Unique, JoinColumn, OneToOne, ManyToMany } from 'typeorm';
 import { Person } from "../../person/entities/person.entity";
+import { PermissionUser } from "../../permission/entities/permission_user.entity";
 
 @Entity()
 @Unique("idx_users", ["email", "code"])
@@ -39,6 +40,11 @@ export class Users {
 
   @Column({ default: true })
   actived : boolean
+
+  @ManyToMany(() => PermissionUser, PermissionUser => PermissionUser.user)
+  PermissionUser: PermissionUser[];
+
+  
 
 
 }

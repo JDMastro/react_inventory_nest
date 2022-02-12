@@ -33,7 +33,7 @@ export function DeleteSettingStatus({ onClose, data, onSubmit : on }: any)
                 
            
         } catch (error) {
-            console.log(error)
+            
         }
 
     }

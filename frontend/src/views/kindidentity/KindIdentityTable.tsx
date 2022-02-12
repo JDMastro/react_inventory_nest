@@ -13,15 +13,14 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 import { DeleteKindId } from "./delete";
 
-export function KindIdentityTable()
-{
+export function KindIdentityTable() {
     const refDatatable: any = React.useRef();
     const [kindid, setKindid] = React.useState<any>({});
     const [openAddDialogForm, setOpenAddDialogForm] = React.useState<boolean>(false);
     const [openEditDialogForm, setOpenEditDialogForm] = React.useState<boolean>(false);
     const [openDeleteDialogForm, setOpenDeleteDialogForm] = React.useState<boolean>(false);
 
-    const columns=[
+    const columns = [
         {
             name: 'id',
             label: 'Id',
@@ -54,8 +53,8 @@ export function KindIdentityTable()
                     const kindIdentitySelected = refDatatable.current.findData(dataIndex);
                     return (
                         <>
-                         <Can
-                                perform="users:create"
+                            <Can
+                                perform="maestro:kindids:update"
                                 yes={() => (
                                     <IconButton
                                         aria-label="update"
@@ -69,7 +68,7 @@ export function KindIdentityTable()
                                 )}
                             />
                             <Can
-                                perform="users:create"
+                                perform="maestro:kindids:delete"
                                 yes={() => (
                                     <IconButton
                                         aria-label="delete"
@@ -95,41 +94,46 @@ export function KindIdentityTable()
         download: true,
     };
 
-    const handleProductSaveClick = (oper : string, updatedConsecutive: any) => {
-        switch(oper)
-        {
-            case "CREATED" :
+    const handleProductSaveClick = (oper: string, updatedConsecutive: any) => {
+        switch (oper) {
+            case "CREATED":
                 refDatatable.current.createRecord(updatedConsecutive)
                 break;
-            case "UPDATED" :
+            case "UPDATED":
                 refDatatable.current.updateRecord(updatedConsecutive.id, updatedConsecutive)
                 break;
-            case "DELETED" :
+            case "DELETED":
                 refDatatable.current.deleteRecord(updatedConsecutive.id);
                 break;
-            default : break;
+            default: break;
         }
         //refDatatable.current.updateRecord(updatedProduct.id, updatedProduct);
     };
 
     return (
         <>
-         <MUIDataTable
+            <MUIDataTable
                 ref={refDatatable}
                 fetchData={KindIdRequest.findAllWithPagination}
                 title={"Lista de tipos de identificación"}
-                // filterForm={<UserTableFilterForm handleSubmit={() => (console.log(''))}/>}
+                // filterForm={<UserTableFilterForm handleSubmit={() => }/>}
                 columns={columns}
                 options={options}
             />
-
-<FabUi
-                size="small"
-                color="primary" 
-                onClick={() => setOpenAddDialogForm(true)}
-                ariaLabel="add"
-                icon={<AddIcon />}
+            <Can
+                perform="maestro:kindids:create"
+                yes={() => (
+                    <FabUi
+                        size="small"
+                        color="primary"
+                        onClick={() => setOpenAddDialogForm(true)}
+                        ariaLabel="add"
+                        icon={<AddIcon />}
+                    />
+                )}
             />
+
+
             <AlertDialogUi
                 handleClose={() => setOpenAddDialogForm(false)}
                 content={
@@ -141,7 +145,7 @@ export function KindIdentityTable()
                 open={openAddDialogForm}
                 title=""
             />
-             <AlertDialogUi
+            <AlertDialogUi
                 handleClose={() => setOpenEditDialogForm(false)}
                 content={
                     <UpdateKindId

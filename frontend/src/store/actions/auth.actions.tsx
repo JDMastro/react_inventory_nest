@@ -25,7 +25,7 @@ export const logoutErrorAction = (payload: any) => ({
 });
 
 
-export const authAction = (data: any) => async (dispatch: any) => {
+export const authAction = (data: any) => async (dispatch: Function) => {
     dispatch(authInitAction());
     try {
         const response = await UsersRequest.login(data);
@@ -34,9 +34,11 @@ export const authAction = (data: any) => async (dispatch: any) => {
         setCookieJson('iv_at', { tokenType, accessToken });
         dispatch(authSuccessAction());
         window.location.replace('/dashboard');
-    } catch (error) {
-        console.log('error', error)
-        dispatch(authErrorAction(error));
+    } catch (error:any) {
+        //console.log(error.response.data.message)
+        //console.log(error.data.message)
+        //console.log(response.data.message)
+        dispatch(authErrorAction(error.response.data.message));
     }
 };
 

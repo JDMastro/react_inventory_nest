@@ -15,8 +15,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { DeleteConsecutive } from "./delete";
 
 
-export function ConsecutiveTable()
-{
+export function ConsecutiveTable() {
     const refDatatable: any = React.useRef();
     const [consecutive, setConsecutive] = React.useState<any>({});
     const [openAddDialogForm, setOpenAddDialogForm] = React.useState<boolean>(false);
@@ -64,8 +63,8 @@ export function ConsecutiveTable()
                     const consecutiveSelected = refDatatable.current.findData(dataIndex);
                     return (
                         <>
-                         <Can
-                                perform="users:create"
+                            <Can
+                                perform="maestro:consecutive:update"
                                 yes={() => (
                                     <IconButton
                                         aria-label="update"
@@ -79,7 +78,7 @@ export function ConsecutiveTable()
                                 )}
                             />
                             <Can
-                                perform="users:create"
+                                perform="maestro:consecutive:delete"
                                 yes={() => (
                                     <IconButton
                                         aria-label="delete"
@@ -91,7 +90,7 @@ export function ConsecutiveTable()
                                         <DeleteIcon fontSize="small" color="error" />
                                     </IconButton>
                                 )}
-                                    />
+                            />
                         </>
                     )
                 }
@@ -105,19 +104,18 @@ export function ConsecutiveTable()
         download: true,
     };
 
-    const handleProductSaveClick = (oper : string, updatedConsecutive: any) => {
-        switch(oper)
-        {
-            case "CREATED" :
+    const handleProductSaveClick = (oper: string, updatedConsecutive: any) => {
+        switch (oper) {
+            case "CREATED":
                 refDatatable.current.createRecord(updatedConsecutive)
                 break;
-            case "UPDATED" :
+            case "UPDATED":
                 refDatatable.current.updateRecord(updatedConsecutive.id, updatedConsecutive)
                 break;
-            case "DELETED" :
+            case "DELETED":
                 refDatatable.current.deleteRecord(updatedConsecutive.id);
                 break;
-            default : break;
+            default: break;
         }
         //refDatatable.current.updateRecord(updatedProduct.id, updatedProduct);
     };
@@ -125,35 +123,43 @@ export function ConsecutiveTable()
 
     return (
         <>
-           <MUIDataTable
+            <MUIDataTable
                 ref={refDatatable}
                 fetchData={ConsecutiveRequest.findAllWithPagination}
                 title={"Lista de consecutivo"}
-                // filterForm={<UserTableFilterForm handleSubmit={() => (console.log(''))}/>}
+                // filterForm={<UserTableFilterForm handleSubmit={() => }/>}
                 columns={columns}
                 options={options}
             />
-             <FabUi
-                size="small"
-                color="primary" 
-                onClick={() => setOpenAddDialogForm(true)}
-                ariaLabel="add"
-                icon={<AddIcon />}
+
+            <Can
+                perform="maestro:consecutive:create"
+                yes={() => (
+                    <FabUi
+                        size="small"
+                        color="primary"
+                        onClick={() => setOpenAddDialogForm(true)}
+                        ariaLabel="add"
+                        icon={<AddIcon />}
+                    />
+                )}
             />
+
+
 
             <AlertDialogUi
                 handleClose={() => setOpenAddDialogForm(false)}
                 content={
                     <AddConsecutive
-                      onClose={() => setOpenAddDialogForm(false)}
-                      onSubmit={handleProductSaveClick}
+                        onClose={() => setOpenAddDialogForm(false)}
+                        onSubmit={handleProductSaveClick}
                     />
                 }
                 open={openAddDialogForm}
                 title=""
             />
 
-<AlertDialogUi
+            <AlertDialogUi
                 handleClose={() => setOpenEditDialogForm(false)}
                 content={
                     <UpdateConsecutive
@@ -165,7 +171,7 @@ export function ConsecutiveTable()
                 title=""
             />
 
-<AlertDialogUi
+            <AlertDialogUi
                 handleClose={() => setOpenDeleteDialogForm(false)}
                 content={
                     <DeleteConsecutive

@@ -52,7 +52,6 @@ export function AddSettingsStatus({ onClose, onSubmit: on, status }: any) {
                 setdisablebtn(false)
             }
         } catch (err) {
-            console.log(err)
         }
     }
 

@@ -60,7 +60,6 @@ export function AddProduct({ onClose, units, onSubmit : on } : any)
                 setdisablebtn(false)
             }
         } catch (error) {
-            console.log(error)
         }
     }
 

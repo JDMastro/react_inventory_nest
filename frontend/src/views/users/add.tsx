@@ -66,7 +66,6 @@ export function AddUsers({ onClose, kindId, onSubmit : on, classificationPeople 
 
                 
                 setdisablebtn(false)
-                console.log(res.data)
                 on("CREATED", res.data)
                 onClose()
 
@@ -79,7 +78,6 @@ export function AddUsers({ onClose, kindId, onSubmit : on, classificationPeople 
             }
 
         } catch (error) {
-            console.log(error)
         }
 
     }

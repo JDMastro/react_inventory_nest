@@ -10,6 +10,8 @@ import { Person } from "../../person/entities/person.entity";
 import { JwtService } from '@nestjs/jwt';
 import { Response, Request } from "express";
 
+//import { ExtractJwt } from 'passport-jwt';
+
 
 @Controller('api/users')
 export class UsersController {
@@ -29,20 +31,28 @@ export class UsersController {
         const { email, password } = body
         const user = await this.UsersService.findUserByEmail(email)
 
-        if (!user)
-            return { success: false, data: null, error: "Credenciales invalidas" }
+        
 
+        if (!user){
+            throw new UnauthorizedException("Credenciales invalidas")
+         }
         if (! await compare_password(password, user.password) )
-            return { success: false, data: null, error: "Credenciales invalidas" }
-
+           { 
+            throw  new UnauthorizedException("Credenciales invalidas")
+         }
         if(!user.actived)
-            return { success: false, data: null, error: "Credenciales invalidas" }
+           { throw  new UnauthorizedException("Credenciales invalidas")
 
+        }
+        
         const jwt = await this.jwtService.signAsync({ id : user.person_id })
 
-        response.cookie('jwt',jwt,{ httpOnly : true, path : "/", secure : true, sameSite :"none" })
+       // response.cookie('jwt',jwt,{ httpOnly : true, path : "/", secure : true, sameSite :"none" })
 
-        return { success: true, data: null, error: null }
+        return { 
+            accessToken : jwt,
+            tokenType : "Bearer"
+        }
     }
 
     @Post("register")
@@ -193,24 +203,41 @@ export class UsersController {
     @Post('logout')
     async logout(@Res({ passthrough : true }) response : Response)
     {
-        response.clearCookie('jwt')
-        return {
+       // response.clearCookie('jwt')
+      /*  return {
             success : true
-        }
+        }*/
     }
 
 
-    @Get('test')
+    @Get('me')
     async test(@Req() request :Request )
     {
+        //console.log(request.headers.authorization)
         try {
-            const cookie = request.cookies['jwt']
+            //const cookie = request.cookies['jwt']
+            const token = request.headers.authorization
+            //console.log(token.slice(7,token.length))
 
-            const data = await this.jwtService.verifyAsync(cookie)
+            const data = await this.jwtService.verifyAsync(token.slice(7,token.length))
+            //console.log(data)
+
             if(!data)
                throw new UnauthorizedException()
 
-            return data['id']
+            //data['id']
+
+            //const user = await this._personService.findBydId(data['id'])
+            //const permissions = await this.UsersService.userPermission(user.id)
+            const user = await this._personService.findBydId(data['id'])
+            const credentials = await this.UsersService.findUserByPersonId(data['id'])
+            const permissions = await this.UsersService.userPermission(credentials.id)
+
+            return {
+                id : user.id,
+                fullname : user.fullname,
+                permissions : permissions.map(e => e.p_permission)
+            }
         } catch (e) {
             throw new UnauthorizedException()
         }

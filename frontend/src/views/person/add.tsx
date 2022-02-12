@@ -50,7 +50,6 @@ export function AddPerson({ kindId, onClose, onSubmit : on }: any) {
                 handleClick()
                 setdisablebtn(false)
                 on("CREATED", res.data)
-                console.log(res)
                 onClose()
             } else {
                 res.errors.map((e: any) => formikHelpers.setFieldError(e.field, e.msg))
@@ -60,7 +59,6 @@ export function AddPerson({ kindId, onClose, onSubmit : on }: any) {
                 setdisablebtn(false)
             }
         } catch (error) {
-            console.log(error)
         }
 
     }

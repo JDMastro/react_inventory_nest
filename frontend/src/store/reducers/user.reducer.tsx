@@ -30,7 +30,7 @@ export default function reducer(state = initialState, action: any = {}) {
             return {
                 ...state,
                 data: {},
-                loading: true,
+                loading: false,
                 error: action.payload,
             };
         default:

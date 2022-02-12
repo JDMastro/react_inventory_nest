@@ -31,8 +31,6 @@ export function ProductionRejected({ productparent, setproductDerivate, reserved
 
     const onSubmit = async (values: initialFValuesTypes, formikHelpers: FormikHelpers<any>) => {
         setdisablebtn(true)
-        //console.log(reserved_quantity)
-        //console.log(productRejected)
         await MovementRequest.productionrejected(productRejected.id, {
             observation: values.observation
         }).then(e => {

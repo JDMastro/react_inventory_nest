@@ -31,7 +31,7 @@ function stringAvatar(name: string) {
         sx: {
             bgcolor: stringToColor(name),
         },
-        children: `${name.split(' ')[0][0]}${name.split(' ')[1][0]}`,
+        children: `${name.split('')[0][0]}${name.split('')[1][0]}`,
     };
 }
 
@@ -43,7 +43,9 @@ export function AvatarUi({ title }: avatarProps) {
             alignItems="center"
             spacing={2}
         >
-            <Avatar {...stringAvatar(title)} sx={{ height: 70, width: 70 }} />
+            <Avatar 
+            {...(title && {...stringAvatar(title)})} 
+            sx={{ height: 70, width: 70 }} />
             { title }
         </Stack>
     )

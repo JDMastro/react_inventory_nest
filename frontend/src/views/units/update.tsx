@@ -37,7 +37,6 @@ export function UpdateUnits({ onClose, data, onSubmit : on }: any) {
                 setdisablebtn(false)
                 on("UPDATED", res.data)
                 onClose()
-                console.log(res.data)
             } else {
                 formikHelpers.setFieldError(res.errors.field, res.errors.msg)
                 setSeverity("error")
@@ -46,7 +45,6 @@ export function UpdateUnits({ onClose, data, onSubmit : on }: any) {
                 setdisablebtn(false)
             }
         } catch (error) {
-            console.log(error)
         }
 
     }

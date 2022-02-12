@@ -3,6 +3,8 @@ import { getCookieToJson  } from '../../utils/cookie';
 import { AuthProvider } from './context';
 import useUser from '../../hooks/useUser';
 import useAuth from "../../hooks/useAuth";
+import Pogress from "../../assets/progress.gif";
+import { Box } from "@mui/material";
 
 const Authentication : React.FC = ({children}) => {
     const auth = getCookieToJson('iv_at') || null;
@@ -16,13 +18,20 @@ const Authentication : React.FC = ({children}) => {
     };
 
     React.useEffect(() => {
-        if (authProviderValue.isAuthenticated) {
+       // if (authProviderValue.isAuthenticated) {
             findWhere();
-        }
+       // }
     }, []);
 
     return currentUser.loading
-        ? (<div>Loading...</div>)
+        ? (<Box sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            p: 1,
+            m: 1,
+            bgcolor: 'background.paper',
+            borderRadius: 1,
+          }}><img src={Pogress} alt="loading..." /></Box>)
         : (<AuthProvider value={authProviderValue}>{children}</AuthProvider>);
 };
 

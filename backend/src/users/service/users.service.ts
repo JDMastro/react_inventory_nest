@@ -7,6 +7,8 @@ import { Kindidentity } from "../../kindidentity/entities/kindidentity.entity";
 import { Person } from "../../person/entities/person.entity";
 import { classificationPeople } from "../../classification_people/entities/classificationPeople.entity";
 import { JwtService } from '@nestjs/jwt';
+import { PermissionUser } from "../../permission/entities/permission_user.entity";
+import { Permission } from "../../permission/entities/permission.entity";
 
 @Injectable()
 export class UsersService {
@@ -53,6 +55,11 @@ export class UsersService {
     async findUserById(id : number)
     {
         return await this.UsersRepo.findOne({ where: { id } })
+    }
+
+    async findUserByPersonId(id : number)
+    {
+        return await this.UsersRepo.findOne({ where: { person_id : id } })
     }
 
     async findUserByCode(code : string)
@@ -109,5 +116,14 @@ export class UsersService {
         const updated = await this.UsersRepo.save(person)
 
         return this.getLastInserted(updated.id)
+    }
+
+    async userPermission(user_id : number){
+        return await getManager().createQueryBuilder("users","u")
+        .select(["p.permission"])
+           .innerJoin(PermissionUser,"pu","u.id = pu.user_id")
+           .innerJoin(Permission, "p","p.id = pu.permission_id ")
+           .where("u.id = :user_id",{ user_id })
+           .getRawMany()
     }
 }

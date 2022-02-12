@@ -1,6 +1,7 @@
 import { Controller, Get } from '@nestjs/common';
 import { ClassificationPeopleService } from "../service/classificationPeople.service";
 
+
 @Controller('api/classificationPeople')
 export class ClassificationPeopleController {
     constructor(
