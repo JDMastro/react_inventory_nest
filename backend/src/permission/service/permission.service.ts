@@ -1,18 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { getConnection, getManager, Repository } from 'typeorm';
-import { Permission } from "../entities/permission.entity";
-import { Users } from "../../users/entities/users.entity";
-import { UsersService } from "../../users/service/users.service";
+//import { Permission } from "../entities/permission.entity";
+//import { Users } from "../../users/entities/users.entity";
+//import { UsersService } from "../../users/service/users.service";
 import { PermissionUser } from "../entities/permission_user.entity";
-import { IsNull } from "typeorm";
+//import { IsNull } from "typeorm";
 
 @Injectable()
 export class PermissionService {
     constructor(
-        @InjectRepository(Permission) private _permissionRepo: Repository<Permission>,
+       // @InjectRepository(Permission) private _permissionRepo: Repository<Permission>,
         @InjectRepository(PermissionUser) private _permissionUserRepo: Repository<PermissionUser>,
-        private _usersService: UsersService
+        //private _usersService: UsersService
     ) { }
 
     async findAll(user_id: number, page: number, perPage: number) {

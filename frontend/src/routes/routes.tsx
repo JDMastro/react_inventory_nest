@@ -39,7 +39,7 @@ export const Routes = () => {
 export const DashboardRoute = () => {
     return (
         <Switch>
-            <ProtectedRoute exact path="/dashboard/" perform="" component={() => <div>Dashboard</div>} />
+            <ProtectedRoute exact path="/dashboard/" perform="dashboard:view" component={() => <div>Dashboard</div>} />
             <ProtectedRoute path="/dashboard/maestro/units" perform="maestro:units:view" component={Units} />
             <ProtectedRoute path="/dashboard/maestro/product" perform="maestro:products:view" component={Products} />
             {/*<ProtectedRoute exact path="/dashboard/maestro/products/v2" component={ProductV2} />*/}

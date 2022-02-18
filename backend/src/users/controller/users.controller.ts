@@ -10,6 +10,7 @@ import { Person } from "../../person/entities/person.entity";
 import { JwtService } from '@nestjs/jwt';
 import { Response, Request } from "express";
 
+
 //import { ExtractJwt } from 'passport-jwt';
 
 
@@ -18,7 +19,7 @@ export class UsersController {
     constructor(
         private UsersService: UsersService,
         private _personService: PersonService,
-        private jwtService: JwtService
+        private jwtService: JwtService,
     ) { }
 
     @Get()
@@ -115,6 +116,13 @@ export class UsersController {
             users.person_id = per.id
 
             res = await this.UsersService.create(users)
+
+            await this.UsersService.addPermissionToUser(res.id, 54)
+
+            /*await getConnection()
+                .createQueryBuilder()
+                .insert*/
+
 
         }
 

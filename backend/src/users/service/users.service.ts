@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { getManager, Repository } from 'typeorm';
+import { getConnection, getManager, Repository } from 'typeorm';
 import { Users } from "../entities/users.entity";
 import { UsersDto } from "../dto/users.dto";
 import { Kindidentity } from "../../kindidentity/entities/kindidentity.entity";
@@ -10,10 +10,14 @@ import { JwtService } from '@nestjs/jwt';
 import { PermissionUser } from "../../permission/entities/permission_user.entity";
 import { Permission } from "../../permission/entities/permission.entity";
 
+
+
+
 @Injectable()
 export class UsersService {
     constructor(
         @InjectRepository(Users) private UsersRepo: Repository<Users>,
+       // @InjectRepository(PermissionUser) private _permissionUserRepo: Repository<PermissionUser>,
         private jwtService: JwtService
     ) { }
 
@@ -40,6 +44,17 @@ export class UsersService {
             current_page : page,
             last_page : Math.ceil(total/perPage)
           }
+    }
+
+    async addPermissionToUser(user_id : number, permission_id: number)
+    {
+       // await this._permissionUserRepo.save({ permission_id, user_id })
+       await getConnection()
+             .createQueryBuilder()
+             .insert()
+             .into(PermissionUser)
+             .values({ user_id, permission_id })
+             .execute();
     }
 
     async verifyToken(token : any)
